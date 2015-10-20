@@ -33,3 +33,5 @@ curses.nocbreak()
 stdscr.keypad(0)
 curses.echo()
 curses.endwin()
+
+print txtbox.Value()

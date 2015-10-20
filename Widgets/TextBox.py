@@ -10,6 +10,9 @@ class TextBox(BaseWidget):
         self.Buffer = ""
         self.Refresh()
         
+    def Value(self):
+        return self.Text
+        
     def CaptureText(self):
         # Special keys handled by CaptureText()
         #   ESC:       exits without capturing anything, current widget still highlighted
@@ -62,7 +65,13 @@ class TextBox(BaseWidget):
             
             # BACKSPACE
             elif key in [curses.KEY_BACKSPACE, ord('\b'), 10]:
+                # erase last character entered
                 self.Text = self.Text[:-1]
+                # update buffer
+                self.Buffer = self.Text[-(self.Characters - 1):]
+                # remove last character from visual screen
+                if len(self.Buffer) < (self.Characters - 1):
+                    self.Win.addstr(0, len(self.Buffer), " ")
             
             else:
                 self.Text += chr(key)

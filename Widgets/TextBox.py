@@ -7,11 +7,24 @@ class TextBox(BaseWidget):
     def __init__(self, height, width, y, x):
         BaseWidget.__init__(self, height, width, y, x)
         self.Text = ""
-        self.Buffer = ""
+        self.DisplayText = ""
         self.Refresh()
         
     def Value(self):
         return self.Text
+        
+    def __SetDisplayText(self, display_type):
+        # display_type settings:
+        #        "STANDARD" - normal display for widget
+        #        "TYPING" - display for widget while typing
+        if display_type == "STANDARD":
+            self.DisplayText = self.Text[:(self.Characters - 1)]
+            if len(self.Text) >= self.Characters:
+                self.DisplayText = self.DisplayText[:self.Characters-4] + "..."
+        elif display_type == "TYPING":
+            self.DisplayText = self.Text[-(self.Characters - 1):]
+        else:
+            print "Invalid display setting for TextBox Widget."
         
     def CaptureText(self):
         # Special keys handled by CaptureText()
@@ -23,6 +36,7 @@ class TextBox(BaseWidget):
         
         
         capturing = True
+        old_text = self.Text
         
         while capturing:
             key = self.Win.getch()
@@ -40,18 +54,19 @@ class TextBox(BaseWidget):
                 n = self.Win.getch()
                 if n == -1:
                     # ESC was pressed and not ALT
+                    self.Text = old_text
+                    self.__SetDisplayText("STANDARD")
                     capturing = False
                 self.Win.nodelay(False)
         
             # ENTER
             elif key in [curses.KEY_ENTER, ord('\n'), 10]:
-                self.Buffer = self.Text[:(self.Characters - 1)]
-                if len(self.Text) >= self.Characters:
-                    self.Buffer = self.Buffer[:self.Characters-4] + "..."
+                self.__SetDisplayText("STANDARD")
                 capturing = False
             
             # TAB
-            elif key == 9:
+            elif key in [ord('\t'), 9]:
+                self.__SetDisplayText("STANDARD")
                 capturing = False
                 # TODO: give notification to screen object that TAB was pressed (for selecting next widget)
                 #       potentially can use curses.ungetch(key) here
@@ -67,15 +82,12 @@ class TextBox(BaseWidget):
             elif key in [curses.KEY_BACKSPACE, ord('\b'), 10]:
                 # erase last character entered
                 self.Text = self.Text[:-1]
-                # update buffer
-                self.Buffer = self.Text[-(self.Characters - 1):]
-                # remove last character from visual screen
-                if len(self.Buffer) < (self.Characters - 1):
-                    self.Win.addstr(0, len(self.Buffer), " ")
+                self.__SetDisplayText("TYPING")
             
             else:
                 self.Text += chr(key)
-                self.Buffer = self.Text[-(self.Characters - 1):]
+                self.DisplayText = self.Text[-(self.Characters - 1):]
                 
-            self.Win.addstr(0, 0, self.Buffer)
+            self.Win.addstr(0, 0, " " * (self.Characters - 1))
+            self.Win.addstr(0, 0, self.DisplayText)
             self.Refresh()

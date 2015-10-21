@@ -8,6 +8,7 @@ class TextBox(BaseWidget):
         BaseWidget.__init__(self, height, width, y, x)
         self.Text = ""
         self.DisplayText = ""
+        self.TextMode = curses.A_NORMAL
         self.Refresh()
         
     def Value(self):
@@ -37,6 +38,7 @@ class TextBox(BaseWidget):
         
         capturing = True
         old_text = self.Text
+        self.TextMode = curses.A_REVERSE
         
         while capturing:
             key = self.Win.getch()
@@ -61,11 +63,13 @@ class TextBox(BaseWidget):
         
             # ENTER
             elif key in [curses.KEY_ENTER, ord('\n'), 10]:
+                self.TextMode = curses.A_NORMAL
                 self.__SetDisplayText("STANDARD")
                 capturing = False
             
             # TAB
             elif key in [ord('\t'), 9]:
+                self.TextMode = curses.A_NORMAL
                 self.__SetDisplayText("STANDARD")
                 capturing = False
                 # TODO: give notification to screen object that TAB was pressed (for selecting next widget)
@@ -89,5 +93,7 @@ class TextBox(BaseWidget):
                 self.DisplayText = self.Text[-(self.Characters - 1):]
                 
             self.Win.addstr(0, 0, " " * (self.Characters - 1))
-            self.Win.addstr(0, 0, self.DisplayText)
+            self.Win.addstr(0, 0, self.DisplayText, self.TextMode)
             self.Refresh()
+            
+        

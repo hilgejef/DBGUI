@@ -6,13 +6,14 @@ from BaseWidget import BaseWidget
 class CheckBox(BaseWidget):
     def __init__(self, checked_text, unchecked_text, y, x):
         height = 1
-        width = max(len(checked_text), len(unchecked_text)) + 4
+        width = max(len(checked_text), len(unchecked_text)) + 5
         BaseWidget.__init__(self, height, width, y, x)
         self.CheckedText = "< " + checked_text + " >"
         self.UncheckedText = "< " + unchecked_text + " >"
+        self.Text = self.UncheckedText
         self.TextMode = curses.A_NORMAL
         self.Checked = False
-        self.Win.addstr(self.UncheckedText, self.TextMode)
+        self.Win.addstr(0, 0, self.Text, self.TextMode)
         self.Refresh()
         
     def Value(self):
@@ -21,17 +22,23 @@ class CheckBox(BaseWidget):
     def Check(self):
         self.Checked = not self.Checked
         if self.Checked:
-            displayText = self.CheckedText
+            self.Text = self.CheckedText
         else:
-            displayText = self.UncheckedText
+            self.Text = self.UncheckedText
         
-        self.Win.addstr(" " * self.Characters)
-        self.Win.addstr(displayText, self.TextMode)
+        self.DisplayText()
+        
+    def DisplayText(self):
+        self.Win.addstr(0, 0, " " * (self.Characters - 1))
+        self.Win.addstr(0, 0, self.Text, self.TextMode)
         self.Refresh()
         
     def Active(self):
         selected = True
+        # highlight current widget to show it is active
         self.TextMode = curses.A_REVERSE
+        self.DisplayText()
+        self.Refresh()
         
         while selected:
             key = self.Win.getch()
@@ -42,7 +49,9 @@ class CheckBox(BaseWidget):
                 capturing = False
 
             elif key in [ord('\t'), 9]:
+                # stop highlighting current widget
                 self.TextMode = curses.A_NORMAL
+                self.DisplayText()
                 selected = False
                 # TODO: give notification to screen object that TAB was pressed (for selecting next widget)
                 #       potentially can use curses.ungetch(key) here

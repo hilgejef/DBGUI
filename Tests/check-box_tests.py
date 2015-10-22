@@ -30,6 +30,7 @@ txtbox = TextBox(1, 16, 5, 15)
 
 # Testing CheckBox
 chkbox = CheckBox("On", "Off", 8, 8)
+chkbox.Active()
 
 # Clean up handled in Global file 
 curses.nocbreak()

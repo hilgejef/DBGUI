@@ -69,3 +69,8 @@ class BaseWidget:
         except:
             # TODO: Replace with global status screen output
             print "Could not move panel to bottom of the stack."
+    
+    # Added virtual Active() function so that active can be used
+    # across all widgets
+    def Active(self):
+        pass

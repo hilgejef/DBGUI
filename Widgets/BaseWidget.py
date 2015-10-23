@@ -10,6 +10,8 @@ class BaseWidget:
         self.X = x
         self.Win = curses.newwin(lines, characters, y, x)
         self.Pnl = curses.panel.new_panel(self.Win)
+        self.Text = ""
+        self.TextMode = curses.A_NORMAL
     
     def Refresh(self):
         try:
@@ -70,7 +72,24 @@ class BaseWidget:
             # TODO: Replace with global status screen output
             print "Could not move panel to bottom of the stack."
     
-    # Added virtual Active() function so that active can be used
+    # Updates the display with the current text mode
+    def UpdateDisplay(self):
+        self.Win.erase()
+        self.Win.addstr(self.Text, self.TextMode)
+        self.Refresh()
+    
+    # Highlights the text by reversing the foreground/background
+    def Highlight(self):
+        self.TextMode = curses.A_REVERSE
+        self.UpdateDisplay()
+    
+    # UnHighlights the text by setting foreground/background to current
+    # terminal colors
+    def UnHighlight(self):
+        self.TextMode = curses.A_NORMAL
+        self.UpdateDisplay()
+    
+    # Virtual Active() function so that active can be used
     # across all widgets
     def Active(self):
         pass

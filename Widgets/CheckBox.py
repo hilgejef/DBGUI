@@ -11,7 +11,6 @@ class CheckBox(BaseWidget):
         self.CheckedText = "< " + checked_text + " >"
         self.UncheckedText = "< " + unchecked_text + " >"
         self.Text = self.UncheckedText
-        self.TextMode = curses.A_NORMAL
         self.Checked = False
         self.UpdateDisplay()
         

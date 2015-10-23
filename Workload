@@ -1,11 +1,20 @@
-Feature additions
+Feature additions:
+  - BaseWidget function for change on focus to reverse background and foreground
+  - BaseWidget 'Active' function for entering the widget
+  - Refactor widgets to use Window.erase() to clear text
+  - Refactor button to inherit from Label to avoid redundancy
+  - Button -> MenuItem
+  - BaseWidget -> DataTable
+  - BaseWidget -> PopUp
+  - PopUp -> PopUpOkCancel
+  - PopUp -> PopYesNoCancel
 
-
-
+Bugs:
+  
 
 
 Rich
-
+  - Backspace does not work in TextBox under Debian environment
 
 
 Jon

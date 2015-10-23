@@ -1,6 +1,5 @@
 import curses
 import curses.panel
-#from BaseWidget import BaseWidget
 from Label import Label
 
 """ Button """
@@ -20,11 +19,14 @@ class Button(Label):
             
             # capture ENTER, TAB, and BACKTAB keystrokes
             if key in [curses.KEY_ENTER, ord('\n'), 10]:
-                self.CallMethod()
-                
                 # should I leave the deselecting of the widget for the screen handler object?
+                #   - I think this should be handled here so that the behavior will be consistent
+                #     accross the application. Can't think of a good reason not to do it here. - Rich
                 self.UnHighlight()
                 selected = False
+                self.CallMethod()
+                
+                
 
             elif key in [ord('\t'), 9]:
                 # stop highlighting current widget

@@ -3,7 +3,6 @@ Feature additions:
   - BaseWidget 'Active' function for entering the widget
   - Refactor widgets to use Window.erase() to clear text
   - Refactor button to inherit from Label to avoid redundancy
-  - Button -> MenuItem
   - BaseWidget -> DataTable
   - BaseWidget -> PopUp
   - PopUp -> PopUpOkCancel

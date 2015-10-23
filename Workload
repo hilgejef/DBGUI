@@ -8,9 +8,6 @@ Bugs:
 Rich
   - Backspace does not work in TextBox under Debian environment
   - Global file with program flow
-  - BaseWidget 'Active' function for entering the widget
-  - Refactor widgets to use Window.erase() to clear text
-
 
 Jon
   - BaseWidget -> DataTable
@@ -24,4 +21,6 @@ Jeff
   
 Completed:
   - Refactor button to inherit from Label to avoid redundancy
-  - BaseWidget function for change on focus to reverse background and foreground (Opted to put in Label.  We can discuss on Sunday.)
+  - BaseWidget function for change on focus to reverse background and foreground
+  - Refactor widgets to use Window.erase() to clear text
+  - BaseWidget 'Active' function for entering the widget

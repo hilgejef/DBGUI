@@ -13,8 +13,7 @@ class CheckBox(BaseWidget):
         self.Text = self.UncheckedText
         self.TextMode = curses.A_NORMAL
         self.Checked = False
-        self.Win.addstr(0, 0, self.Text, self.TextMode)
-        self.Refresh()
+        self.UpdateDisplay()
         
     def Value(self):
         return self.Checked
@@ -26,19 +25,12 @@ class CheckBox(BaseWidget):
         else:
             self.Text = self.UncheckedText
         
-        self.DisplayText()
-        
-    def DisplayText(self):
-        self.Win.addstr(0, 0, " " * (self.Characters - 1))
-        self.Win.addstr(0, 0, self.Text, self.TextMode)
-        self.Refresh()
+        self.UpdateDisplay()
         
     def Active(self):
         selected = True
         # highlight current widget to show it is active
-        self.TextMode = curses.A_REVERSE
-        self.DisplayText()
-        self.Refresh()
+        self.Highlight()
         
         while selected:
             key = self.Win.getch()
@@ -49,8 +41,7 @@ class CheckBox(BaseWidget):
 
             elif key in [ord('\t'), 9]:
                 # stop highlighting current widget
-                self.TextMode = curses.A_NORMAL
-                self.DisplayText()
+                self.UnHighlight()
                 selected = False
                 # TODO: give notification to screen object that TAB was pressed (for selecting next widget)
                 #       potentially can use curses.ungetch(key) here

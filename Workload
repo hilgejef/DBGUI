@@ -2,11 +2,12 @@ Feature additions:
 
 
 Bugs:
+  Fix Label to allow for '\n'.  Handle appropriately to add newlines to the Label.
   
-
-
 Rich
   - Backspace does not work in TextBox under Debian environment
+  - ConnectionObject
+  - ConnectionString
 
 Jon
   - BaseWidget -> DataTable

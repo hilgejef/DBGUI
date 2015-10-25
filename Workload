@@ -7,7 +7,6 @@ Bugs:
 
 Rich
   - Backspace does not work in TextBox under Debian environment
-  - Global file with program flow
 
 Jon
   - BaseWidget -> DataTable
@@ -20,6 +19,8 @@ Jeff
 
   
 Completed:
+  - Added entry point for application. 'CursesDatabase.py'.  We can change later with the title of our application
+  - Global file with program flow (called the class 'Core', as it's the core of the application)
   - Refactor button to inherit from Label to avoid redundancy
   - BaseWidget function for change on focus to reverse background and foreground
   - Refactor widgets to use Window.erase() to clear text

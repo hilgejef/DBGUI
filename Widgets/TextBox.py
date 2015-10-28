@@ -27,7 +27,7 @@ class TextBox(BaseWidget):
         else:
             print "Invalid display setting for TextBox Widget."
         
-    def CaptureText(self):
+    def Active(self):
         # Special keys handled by CaptureText()
         #   ESC:       exits without capturing anything, current widget still highlighted
         #   ENTER:     exits with capturing all previously entered text, current widget still highlighted
@@ -38,7 +38,7 @@ class TextBox(BaseWidget):
         
         capturing = True
         old_text = self.Text
-        self.TextMode = curses.A_REVERSE
+        self.Highlight()
         
         while capturing:
             key = self.Win.getch()
@@ -63,17 +63,16 @@ class TextBox(BaseWidget):
         
             # ENTER
             elif key in [curses.KEY_ENTER, ord('\n'), 10]:
-                self.TextMode = curses.A_NORMAL
+                self.UnHighlight()
                 self.__SetDisplayText("STANDARD")
                 capturing = False
             
             # TAB
             elif key in [ord('\t'), 9]:
-                self.TextMode = curses.A_NORMAL
+                self.UnHighlight()
                 self.__SetDisplayText("STANDARD")
                 capturing = False
-                # TODO: give notification to screen object that TAB was pressed (for selecting next widget)
-                #       potentially can use curses.ungetch(key) here
+                curses.ungetch('\t') # Notify the core that tab was pressed
             
             # SHIFT+TAB
             

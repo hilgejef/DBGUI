@@ -25,12 +25,9 @@ class Button(Label):
                 self.UnHighlight()
                 selected = False
                 self.CallMethod()
-                
-                
-
+            
             elif key in [ord('\t'), 9]:
                 # stop highlighting current widget
                 self.UnHighlight()
                 selected = False
-                # TODO: give notification to screen object that TAB was pressed (for selecting next widget)
-                #       potentially can use curses.ungetch(key) here
+                curses.ungetch('\t') # Notify the core that tab was pressed

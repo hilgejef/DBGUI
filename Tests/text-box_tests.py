@@ -26,7 +26,7 @@ lbltwo = Label("A second label!", 10, 5)
 
 # Testing TextBox
 txtbox = TextBox(1, 16, 5, 15)
-txtbox.CaptureText()
+txtbox.Active()
 
 # Clean up handled in Global file 
 curses.nocbreak()

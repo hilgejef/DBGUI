@@ -6,8 +6,8 @@ Bugs:
   
 Rich
   - Backspace does not work in TextBox under Debian environment
-  - ConnectionObject
-  - ConnectionString
+  - BaseScreen
+  - ConnectionObjects
 
 Jon
   - BaseWidget -> DataTable

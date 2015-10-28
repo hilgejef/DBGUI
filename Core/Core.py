@@ -89,7 +89,11 @@ class Core:
         
         # Next initialize curses for use
         Core.stdscr = curses.initscr()
-        curses.curs_set(1)
+        try:
+            # Not all terminals support hiding the cursor
+            curses.curs_set(1)
+        except:
+            pass
         curses.cbreak()
         curses.noecho()
         Core.stdscr.keypad(1)

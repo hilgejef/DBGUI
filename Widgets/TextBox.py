@@ -7,27 +7,61 @@ class TextBox(BaseWidget):
     def __init__(self, height, width, y, x):
         BaseWidget.__init__(self, height, width, y, x)
         self.Text = ""
-        self.DisplayText = ""
+        self.DisplayText = " " * (self.Characters - 1)
+        self.DisplayMode = "STANDARD"
         self.TextMode = curses.A_NORMAL
         self.Refresh()
         
     def Value(self):
         return self.Text
         
-    def __SetDisplayText(self, display_type):
-        # display_type settings:
+    # Overwrite BaseWidget method
+    def UpdateDisplay(self):
+        self.Win.erase()
+        self.SetDisplayText()
+        self.Win.addstr(self.DisplayText, self.TextMode)
+        self.Refresh()
+        
+    def SetDisplayText(self):
+        # self.DisplayMode settings:
         #        "STANDARD" - normal display for widget
         #        "TYPING" - display for widget while typing
-        if display_type == "STANDARD":
+        if self.DisplayMode == "STANDARD":
             self.DisplayText = self.Text[:(self.Characters - 1)]
             if len(self.Text) >= self.Characters:
                 self.DisplayText = self.DisplayText[:self.Characters-4] + "..."
-        elif display_type == "TYPING":
+        elif self.DisplayMode == "TYPING":
             self.DisplayText = self.Text[-(self.Characters - 1):]
         else:
             print "Invalid display setting for TextBox Widget."
         
-    def Active(self):
+        if len(self.DisplayText) < (self.Characters - 1):
+            fill_in_with_blanks = " " * (len(self.DisplayText) - (self.Characters - 1))
+            self.DisplayText = self.DisplayText + fill_in_with_blanks
+        
+    def Active(self):        
+        # Special keys handled by Active()
+        #   ENTER:     enters into capture text mode
+        #   TAB:       exits with capturing and moves to next widget
+        
+        self.Win.move(0,0)
+        capturing = True
+        
+        while capturing:
+            self.Win.move(0,0)
+            key = self.Win.getch()
+            
+            # ENTER
+            if key in [curses.KEY_ENTER, ord('\n'), 10]:
+                self.CaptureText()
+            
+            # TAB
+            elif key in [ord('\t'), 9]:
+                curses.ungetch('\t') # Notify the core that tab was pressed
+                capturing = False
+            
+        
+    def CaptureText(self):
         # Special keys handled by CaptureText()
         #   ESC:       exits without capturing anything, current widget still highlighted
         #   ENTER:     exits with capturing all previously entered text, current widget still highlighted
@@ -39,6 +73,7 @@ class TextBox(BaseWidget):
         capturing = True
         old_text = self.Text
         self.Highlight()
+        self.UpdateDisplay()
         
         while capturing:
             key = self.Win.getch()
@@ -57,20 +92,21 @@ class TextBox(BaseWidget):
                 if n == -1:
                     # ESC was pressed and not ALT
                     self.Text = old_text
-                    self.__SetDisplayText("STANDARD")
+                    self.UnHighlight()
+                    self.DisplayMode = "STANDARD"
                     capturing = False
                 self.Win.nodelay(False)
         
             # ENTER
             elif key in [curses.KEY_ENTER, ord('\n'), 10]:
                 self.UnHighlight()
-                self.__SetDisplayText("STANDARD")
+                self.DisplayMode = "STANDARD"
                 capturing = False
             
             # TAB
             elif key in [ord('\t'), 9]:
                 self.UnHighlight()
-                self.__SetDisplayText("STANDARD")
+                self.DisplayMode = "STANDARD"
                 capturing = False
                 curses.ungetch('\t') # Notify the core that tab was pressed
             
@@ -85,14 +121,12 @@ class TextBox(BaseWidget):
             elif key in [curses.KEY_BACKSPACE, ord('\b'), 10]:
                 # erase last character entered
                 self.Text = self.Text[:-1]
-                self.__SetDisplayText("TYPING")
+                self.DisplayMode = "TYPING"
             
             else:
                 self.Text += chr(key)
-                self.DisplayText = self.Text[-(self.Characters - 1):]
+                self.DisplayMode = "TYPING"
                 
-            self.Win.addstr(0, 0, " " * (self.Characters - 1))
-            self.Win.addstr(0, 0, self.DisplayText, self.TextMode)
-            self.Refresh()
+            self.UpdateDisplay()
             
         

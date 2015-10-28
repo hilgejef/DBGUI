@@ -1,0 +1,33 @@
+Known Bug List:
+
+BUG#        PRIORITY:        DATE:
+TITLE:
+STEPS TO REPLICATE:
+NOTES:
+
+
+BUG# 000       PRIORITY: Med        DATE: 10/28
+TITLE: Screen vanishes when Tab is pressed for the first time
+STEPS TO REPLICATE:
+1. Open BasicScreenTest.py
+2. Hit Tab - screen should go blank except for cursor location
+3. Hit Tab a second time - screen will come back
+NOTES:  Subsequent Tab keys will not make the screen vanish again
+
+
+BUG# 001       PRIORITY: Low       DATE: 10/28
+TITLE: TextBox widget not properly highlighting full width of widget
+STEPS TO REPLICATE:
+1. Highlight TextBox widget object (BasicScreenTest.py is a good place to do this)
+2. Hit Enter - the widget background does not change to highlighted
+3. Enter text - the text entered will be properly highlighted, but the remaining width of the widget will not
+NOTES:  I suspect the problem is with the SetDisplayText() method
+
+
+BUG# 002       PRIORITY: Low        DATE: 10/28
+TITLE: Cursor disappears when entering text into TextBox widget
+STEPS TO REPLICATE:
+1. Highlight Textbox widget
+2. Hit Enter - the cursor now moves to a different location.
+NOTES:
+NOTES:

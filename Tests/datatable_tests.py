@@ -10,7 +10,7 @@ stdscr.keypad(1)
 
 # Test DataTable
 datatbl = DataTable(8, 30, 2, 2)
-datatbl.UpdateDisplay()
+datatbl.Active()
 
 # Clean up handled in Global file 
 curses.nocbreak()

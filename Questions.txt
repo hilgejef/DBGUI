@@ -1,8 +1,3 @@
 Jeff -- 
 
-1. Can't call Label.__init__ with text value that includes \n
-2. PopUp might need access to Screen? To Show/Hide other widgets when it's called.
-2a. Alternatively -- Screen has special logic for PopUp?
-2b. Alternatively -- PopUp just pads with whitespace?
-3. What are PopUpOkCancel and PopUpYesNoCancel? Design document doesn't specify, PopUp only listed
-as text field + requirement to press enter to dismiss.
+1. Having problem importing Core -- potential naming conflict with Python default module?

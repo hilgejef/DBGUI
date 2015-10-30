@@ -15,7 +15,7 @@ Jon
   - BaseWidget -> TextBoxPopUp
 
 Jeff
-  - BaseWidget -> PopUp
+  - BaseScreen -> PopUp
   - PopUp -> PopUpOkCancel
   - PopUp -> PopYesNoCancel
 

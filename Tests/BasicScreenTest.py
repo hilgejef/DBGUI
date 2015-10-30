@@ -1,6 +1,6 @@
 import sys
 import curses
-from Core import Core
+from CDBCore import CDBCore
 from Label import Label
 from TextBox import TextBox
 from Button import Button
@@ -26,6 +26,6 @@ class TestScreen(BaseScreen):
         self.ActionWidgets.append(btn)
     
 if __name__ == "__main__":
-    Core.InitCurses()
-    Core.CurrentScreen = TestScreen()
-    Core.Main()
+    CDBCore.InitCurses()
+    CDBCore.CurrentScreen = TestScreen()
+    CDBCore.Main()

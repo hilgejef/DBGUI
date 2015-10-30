@@ -9,7 +9,7 @@
 #
 ################################################################
 
-from Core import Core
+from CDBCore import CDBCore
 
 if __name__ == "__main__":
-    Core.Main()
+    CDBCore.Main()

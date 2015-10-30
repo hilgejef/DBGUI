@@ -7,10 +7,10 @@ class TextBox(BaseWidget):
     def __init__(self, height, width, y, x):
         BaseWidget.__init__(self, height, width, y, x)
         self.Text = ""
-        self.DisplayText = " " * (self.Characters - 1)
+        self.DisplayText = ' ' * (width - 1)
         self.DisplayMode = "STANDARD"
         self.TextMode = curses.A_NORMAL
-        self.Refresh()
+        self.UpdateDisplay()
         
     def Value(self):
         return self.Text
@@ -36,19 +36,19 @@ class TextBox(BaseWidget):
             print "Invalid display setting for TextBox Widget."
         
         if len(self.DisplayText) < (self.Characters - 1):
-            fill_in_with_blanks = " " * (len(self.DisplayText) - (self.Characters - 1))
-            self.DisplayText = self.DisplayText + fill_in_with_blanks
+            fill_in_with_blanks = ' ' * ((self.Characters - 1) - len(self.DisplayText))
+            self.DisplayText += fill_in_with_blanks
         
     def Active(self):        
         # Special keys handled by Active()
         #   ENTER:     enters into capture text mode
         #   TAB:       exits with capturing and moves to next widget
         
-        self.Win.move(0,0)
+        self.Highlight()
         capturing = True
         
         while capturing:
-            self.Win.move(0,0)
+            #self.Win.move(0,0)
             key = self.Win.getch()
             
             # ENTER
@@ -57,6 +57,7 @@ class TextBox(BaseWidget):
             
             # TAB
             elif key in [ord('\t'), 9]:
+                self.UnHighlight()
                 curses.ungetch('\t') # Notify the core that tab was pressed
                 capturing = False
             
@@ -72,10 +73,11 @@ class TextBox(BaseWidget):
         
         capturing = True
         old_text = self.Text
-        self.Highlight()
-        self.UpdateDisplay()
+        self.UnHighlight()
         
         while capturing:
+            self.Win.move(0, min(len(self.Text), self.Characters - 1))
+            
             key = self.Win.getch()
             
             # in case no delay mode is set to true
@@ -92,21 +94,21 @@ class TextBox(BaseWidget):
                 if n == -1:
                     # ESC was pressed and not ALT
                     self.Text = old_text
-                    self.UnHighlight()
                     self.DisplayMode = "STANDARD"
+                    self.Highlight()
                     capturing = False
                 self.Win.nodelay(False)
         
             # ENTER
             elif key in [curses.KEY_ENTER, ord('\n'), 10]:
-                self.UnHighlight()
                 self.DisplayMode = "STANDARD"
+                self.Highlight()
                 capturing = False
             
             # TAB
             elif key in [ord('\t'), 9]:
-                self.UnHighlight()
                 self.DisplayMode = "STANDARD"
+                self.UnHighlight()
                 capturing = False
                 curses.ungetch('\t') # Notify the core that tab was pressed
             
@@ -128,5 +130,3 @@ class TextBox(BaseWidget):
                 self.DisplayMode = "TYPING"
                 
             self.UpdateDisplay()
-            
-        

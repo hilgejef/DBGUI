@@ -21,6 +21,7 @@ Jeff
 
   
 Completed:
+  - Changed Core to CDBCore.
   - Added entry point for application. 'CursesDatabase.py'.  We can change later with the title of our application
   - Global file with program flow (called the class 'Core', as it's the core of the application)
   - Refactor button to inherit from Label to avoid redundancy

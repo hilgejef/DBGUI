@@ -1,3 +1,4 @@
 Jeff -- 
 
 1. Having problem importing Core -- potential naming conflict with Python default module?
+  - Fixed

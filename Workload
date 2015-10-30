@@ -8,12 +8,11 @@ Rich
   - Backspace does not work in TextBox under Debian environment
   - BaseScreen
   - ConnectionObjects
-
+  
 Jon
   - BaseWidget -> DataTable
   - Create Unit Tests
   - BaseWidget -> TextBoxPopUp
-
 
 Jeff
   - BaseWidget -> PopUp

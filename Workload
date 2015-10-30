@@ -11,6 +11,9 @@ Rich
   
 Jon
   - BaseWidget -> DataTable
+    - DataTable in working form
+    - Still needs to adjust output based on cursor position
+  - Fix DataTable bugs
   - Create Unit Tests
   - BaseWidget -> TextBoxPopUp
 

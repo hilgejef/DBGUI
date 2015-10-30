@@ -30,4 +30,22 @@ STEPS TO REPLICATE:
 1. Highlight Textbox widget
 2. Hit Enter - the cursor now moves to a different location.
 NOTES:
+
+
+BUG# 003       PRIORITY: High       DATE: 10/29
+TITLE: DataTable window does not display at correct Y, X position
+STEPS TO REPLICATE: 
 NOTES:
+Trying to put a DataTable widget at position 0, X causes a segmentation fault.
+DataTable at different Y, X position will cause it to actually be position Y * 2, X * 2
+Cursor is at position Y, X
+
+
+***FIXED***
+BUG# 004       PRIORITY: High       DATE: 10/29
+TITLE: DataTable window does not display at correct Y, X position
+STEPS TO REPLICATE: 
+NOTES:
+Trying to put a DataTable widget at position 0, X causes a segmentation fault.
+DataTable at different Y, X position will cause it to actually be position Y * 2, X * 2
+Cursor is at position Y, X

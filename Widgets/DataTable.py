@@ -89,10 +89,11 @@ class DataTable(BaseWidget):
 
     def UpdateDisplay(self):
         #UpdateDisplay picks the part of the pad that the cursor is in and 
-        #self.UpdatePadWindow()
+        #self.UpdatePadWindow()   TODO:  creates the Y, X coordinates of the pad based on cursor location
+        
+        self.Pad.erase()
         self.UpdatePad()
-        self.Pad.overlay(self.Win, self.DisplayPadY, self.DisplayPadX, self.Y, self.X, self.Lines - 1, self.Characters - 1)
-        #self.Pad.overlay(self.Win)
+        self.Pad.refresh(0, 0, self.Y, self.X, self.Y + self.Lines - 1, self.X + self.Characters - 1)
         self.Refresh()
         
     def UpdatePadWindow(self):

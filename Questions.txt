@@ -6,7 +6,9 @@ Jeff --
    -- I switched CDBCore to standard class style, but saved the previous one as CDBCore.bak in case
    I shouldn't have.
 2. Any idea why I have to instantiate CDBCore by calling CDBCore.CDBCore() even after importing it via
-   "from CDBCore import CDBCore"? The instance is triple nested (CDBCore.CDBCore.CDBcore).
+     "from CDBCore import CDBCore"? The instance is triple nested (CDBCore.CDBCore.CDBcore).
+   EDIT: I get it, it's Package.Module.Class -- but why is it only like this for the CDBCore directory
+     and not any others?
 3. Home Screen basic layout -- Maybe 1 label with name of Program, then multiple buttons. Maybe: 
 	Label: Welcome Message
 	Button: Connection Wizard 

@@ -45,3 +45,10 @@ Trying to put a DataTable widget at position 0, X causes a segmentation fault.
 DataTable at different Y, X position will cause it to actually be position Y * 2, X * 2
 Cursor is at position Y, X
 FIXED 10/30
+
+
+BUG# 004       PRIORITY: Med       DATE: 10/30
+TITLE: DataTable does not display upon initialization with BasicScreen
+STEPS TO REPLICATE: 
+NOTES:
+Upon highlighting widget it will properly display

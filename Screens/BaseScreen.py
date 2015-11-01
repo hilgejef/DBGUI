@@ -13,31 +13,31 @@ class BaseScreen:
     # Hides the screen by hiding all widgets
     def Hide(self):
         for w in self.PassiveWidgets:
-            w.Pnl.hide()
+            w.Hide()
         for w in self.ActionWidgets:
-            w.Pnl.hide()
+            w.Hide()
     
     # Shows the screen by displaying all widgets
     def Show(self):
         for w in self.PassiveWidgets:
-            w.Pnl.show()
+            w.Show()
         for w in self.ActionWidgets:
-            w.Pnl.show()        
+            w.Show()        
         self.ActionWidgets[self.CurrentWidget].Active()
     
-    # Moves all of the screen's widgets to the bottom
+    # Moves all of the screen's widgets to the top
     def ToTop(self):
         for w in self.PassiveWidgets:
-            w.Pnl.bottom()
+            w.ToTop()
         for w in self.ActionWidgets:
-            w.Pnl.bottom()
+            w.ToTop()
     
     # Moves all of the screen's widgets to the bottom
     def ToBottom(self):
         for w in self.PassiveWidgets:
-            w.Pnl.bottom()
+            w.ToBottom()
         for w in self.ActionWidgets:
-            w.Pnl.bottom()
+            w.ToBottom()
     
     # Advance to the next active widget
     def NextWidget(self):

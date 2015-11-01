@@ -10,7 +10,7 @@ def testMethod():
     pass
     
 if __name__ == "__main__":
-    stdscr = curses.initscr()
+    CDBCore.InitCurses()
     popup = PopUpOkCancel("This is a test", testMethod, testMethod)
-    print len(popup.ActiveWidgets)
-    print popup.CurrentWidget
+    CDBCore.CurrentScreen = popup
+    CDBCore.Main()

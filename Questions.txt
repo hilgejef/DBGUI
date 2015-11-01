@@ -8,7 +8,10 @@ Jeff --
 2. Any idea why I have to instantiate CDBCore by calling CDBCore.CDBCore() even after importing it via
    "from CDBCore import CDBCore"? The instance is triple nested (CDBCore.CDBCore.CDBcore).
 3. Home Screen basic layout -- Maybe 1 label with name of Program, then multiple buttons. Maybe: 
-	1. Connect to MySql
-	2. Connect to Postgres
-	3. Help
-	4. ?
+	Label: Welcome Message
+	Button: Connection Wizard 
+	Button: Main Menu
+	Button: Instructions/Help
+	?
+4. I can only import CDBCore by changing that directory's __init__.py file to contain
+    "from CDBCore import CDBCore". Worried that will break compatibility with your environments.

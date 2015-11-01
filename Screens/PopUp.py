@@ -10,10 +10,9 @@ from Button import Button
 """ PopUp """
 class PopUp(BaseScreen):
     def __init__(self, label, buttons):
-        BaseScreen.__init__()
+        BaseScreen.__init__(self)
         self.PassiveWidgets = label
         self.ActiveWidgets = buttons
-        self.Show()
 
 # PopUpOkCancel = 1 Label and 2 Buttons
 # Called with text string and 2 functions
@@ -22,9 +21,9 @@ class PopUp(BaseScreen):
 class PopUpOkCancel(PopUp):
     def __init__(self, text, okMethod, cancelMethod):
         label = Label(text, 1, 1)
-        okButton = Button("OK", okMethod, 14, 1)
-        cancelButton = Button("Cancel", cancelMethod, 1, 1)
-        PopUp.__init__([label], [okButton, cancelButton])
+        okButton = Button("OK", okMethod, 10, 12)
+        cancelButton = Button("Cancel", cancelMethod, 10, 2)
+        PopUp.__init__(self, [label], [okButton, cancelButton])
 
 # PopUpYesNoCancel = 1 Label and 3 Buttons
 # Called with text string and 3 functions
@@ -32,8 +31,8 @@ class PopUpOkCancel(PopUp):
 class PopUpYesNoCancel(PopUp):
     def __init__(self, text, yesMethod, noMethod, cancelMethod):
         label = Label(text, 1, 1)
-        yesButton = Button("Yes", yesMethod, 14, 1)
-        noButton = Button("No", noMethod, 7, 1)
-        cancelButton = Button("Cancel", cancelMethod, 1, 1)
-        PopUp.__init__([label], [yesButton, noButton, cancelButton])    
+        yesButton = Button("Yes", yesMethod, 10, 12)
+        noButton = Button("No", noMethod, 10, 7)
+        cancelButton = Button("Cancel", cancelMethod, 10, 2)
+        PopUp.__init__(self, [label], [yesButton, noButton, cancelButton])    
         

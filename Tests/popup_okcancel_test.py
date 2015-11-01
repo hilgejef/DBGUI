@@ -1,5 +1,5 @@
 import curses
-from Core import Core
+from CDBCore import CDBCore
 from Label import Label
 from Button import Button
 from BaseScreen import BaseScreen
@@ -10,7 +10,7 @@ def testMethod():
     pass
     
 if __name__ == "__main__":
-    Core.InitCurses()
+    stdscr = curses.initscr()
     popup = PopUpOkCancel("This is a test", testMethod, testMethod)
-    Core.CurrentScreen = popup
-    Core.Main()
+    print len(popup.ActiveWidgets)
+    print popup.CurrentWidget

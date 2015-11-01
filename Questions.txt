@@ -1,4 +1,14 @@
 Jeff -- 
 
-1. Having problem importing Core -- potential naming conflict with Python default module?
-  - Fixed
+1. CDBCore uses static methods while requesting access to class variables such as stdscr, ConnectionString, etc?
+   More importantly, shouldn't CDBCore use standard class patterns (__init__, instance methods) considering
+   that CDBCore must contain variable data (such as different History or CurrentScreens, etc)?
+   -- I switched CDBCore to standard class style, but saved the previous one as CDBCore.bak in case
+   I shouldn't have.
+2. Any idea why I have to instantiate CDBCore by calling CDBCore.CDBCore() even after importing it via
+   "from CDBCore import CDBCore"? The instance is triple nested (CDBCore.CDBCore.CDBcore).
+3. Home Screen basic layout -- Maybe 1 label with name of Program, then multiple buttons. Maybe: 
+	1. Connect to MySql
+	2. Connect to Postgres
+	3. Help
+	4. ?

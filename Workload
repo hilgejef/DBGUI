@@ -6,8 +6,8 @@ Bugs:
   
 Rich
   - Backspace does not work in TextBox under Debian environment
-  - BaseScreen
-  - ConnectionObjects
+  - MySQLConnection object
+  - PostgreSQLConnection object
   
 Jon
   - Create Unit Tests
@@ -21,6 +21,8 @@ Jeff
 
   
 Completed:
+  - BaseConnection finished (to be updated during MySQL and PostgreSQL object creation)
+  - BaseScreen finished?
   - DataTable Widget done and ready for ResultsObject!
   - TextBox bugs should now be fixed.
   - Changed Core to CDBCore.

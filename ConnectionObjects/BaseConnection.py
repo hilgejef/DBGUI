@@ -19,12 +19,13 @@
 ###############################################################################
 
 class BaseConnection:
-    def __init__(self, user, password, host = None, port = None, database = None):
+    def __init__(self, user, password, host, port, database):
         self.User = user
         self.Password = password
         self.Host = host
         self.Port = port
-        self.database = database
+        self.Database = database
+        self.Connection = None
     
     # Opens a connection to the DB server. To be overloaded in children.  
     def Connect(self):
@@ -43,4 +44,4 @@ class BaseConnection:
     # Parses the results of a query into a format that can be used by the 
     # DataTable widget.
     def ParseResults(self, results):
-        return False # TODO: Update with result status object as return value
+        return None

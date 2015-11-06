@@ -1,12 +1,12 @@
-Feature additions:
-  - MySQLConnection parsing algorithm
+Feature additions:  
 
 Bugs:
   Fix Label to allow for '\n'.  Handle appropriately to add newlines to the Label.
   
 Rich
   - Backspace does not work in TextBox under Debian environment
-  - COnnection Wizard
+  - MySQLConnection parsing algorithm
+  - Connection Wizard
   - PostgreSQLConnection object
   
 Jon
@@ -21,6 +21,7 @@ Jeff
 
   
 Completed:
+  - Created ResultsStatus object and integrated with MySQLConnection.
   - MySQLConnection object
   - BaseConnection finished (to be updated during MySQL and PostgreSQL object creation)
   - BaseScreen finished?

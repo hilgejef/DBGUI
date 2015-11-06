@@ -39,6 +39,7 @@ class MySQLConnection(BaseConnection):
                                                           host=self.Host,
                                                           port=self.Port,
                                                           database=self.Database)
+            return True
         except mysql.connector.Error as ex:
             msg = "Could not connect to database: "
             
@@ -49,12 +50,14 @@ class MySQLConnection(BaseConnection):
             else:
                 msg += str(ex)
             print msg #TODO: Popup, and status notification
+            return False
                                                   
     # Executes a given query within the database. Open to SQL injection.
     def QueryString(self, query):
         try:
             cursor = self.Connection.cursor()
             cursor.execute(query)
+            self.Connection.commit()
             cursor.close()
             data = self.ParseResults(cursor) # Store these results in result status object
             return True # TODO: Update with result status object as return value
@@ -63,8 +66,16 @@ class MySQLConnection(BaseConnection):
     
     # Executes a given buffered query within the database.
     def QueryBuffered(self, query, values):
-        return False # TODO: Update with result status object as return value
-    
+        try:
+            cursor = self.Connection.cursor()
+            cursor.execute(query, values)
+            self.Connection.commit()
+            cursor.close()
+            data = self.ParseResults(cursor) # Store these results in result status object
+            return True # TODO: Update with result status object as return value
+        except Exception as ex:
+            print "Could not execute query:\n" + str(ex) #TODO: Wrap into ResultStatusObject
+
     # Parses the results of a query into a format that can be used by the 
     # DataTable widget.
     def ParseResults(self, results):

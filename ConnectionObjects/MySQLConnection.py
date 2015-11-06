@@ -68,7 +68,7 @@ class MySQLConnection(BaseConnection):
             data = self.ParseResults(cursor) 
             return ResultStatus(True, None, data)
         except Exception as ex:
-            print ResultStatus(False, "Could not execute query:\n" + str(ex))
+            return ResultStatus(False, "Could not execute query:\n" + str(ex))
     
     # Executes a given query within the database. Open to SQL injection.
     def QueryString(self, query):

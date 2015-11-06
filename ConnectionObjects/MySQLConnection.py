@@ -1,7 +1,7 @@
 ###############################################################################
 # Author:		Rich Gagliano
 # Date Created:		11/2/2015
-# Date Modified:	11/2/2015
+# Date Modified:	11/5/2015
 # File Name:		MySQLConnection.py
 #
 # Overview:
@@ -10,6 +10,7 @@
 ###############################################################################
 
 import mysql.connector
+from ResultStatus import ResultStatus
 from BaseConnection import BaseConnection
 
 class MySQLConnection(BaseConnection):
@@ -39,43 +40,44 @@ class MySQLConnection(BaseConnection):
                                                           host=self.Host,
                                                           port=self.Port,
                                                           database=self.Database)
-            return True
+            return ResultStatus()
         except mysql.connector.Error as ex:
-            msg = "Could not connect to database: "
+            result = ResultStatus(False, "Could not connect to database: ")
             
             if ex.errno == 1044:
-                msg += "Invalid username or password."
+                result.Message += "Invalid username or password."
             elif ex.errno == 1049:
-                msg += "Database does not exist."
+                result.Message += "Database does not exist."
             else:
-                msg += str(ex)
-            print msg #TODO: Popup, and status notification
-            return False
-                                                  
-    # Executes a given query within the database. Open to SQL injection.
-    def QueryString(self, query):
+                result.Message += str(ex)
+            return result
+             
+    # Internal query function to handle both buffered and string queries
+    # (I wanted to keep string and buffered queries separate as a mental 
+    #  check to ensure we are using the appropriate one in our application.
+    #  You could call _Query() directly, but this was not the intent.)
+    def _Query(self, query, values = None):
         try:
             cursor = self.Connection.cursor()
-            cursor.execute(query)
+            if values is None:
+                cursor.execute(query)
+            else:
+                cursor.execute(query, values)
             self.Connection.commit()
             cursor.close()
-            data = self.ParseResults(cursor) # Store these results in result status object
-            return True # TODO: Update with result status object as return value
+            data = self.ParseResults(cursor) 
+            return ResultStatus(True, None, data)
         except Exception as ex:
-            print "Could not execute query:\n" + str(ex) #TODO: Wrap into ResultStatusObject
+            print ResultStatus(False, "Could not execute query:\n" + str(ex))
+    
+    # Executes a given query within the database. Open to SQL injection.
+    def QueryString(self, query):
+        return self._Query(query)
     
     # Executes a given buffered query within the database.
     def QueryBuffered(self, query, values):
-        try:
-            cursor = self.Connection.cursor()
-            cursor.execute(query, values)
-            self.Connection.commit()
-            cursor.close()
-            data = self.ParseResults(cursor) # Store these results in result status object
-            return True # TODO: Update with result status object as return value
-        except Exception as ex:
-            print "Could not execute query:\n" + str(ex) #TODO: Wrap into ResultStatusObject
-
+        return self._Query(query, values)
+    
     # Parses the results of a query into a format that can be used by the 
     # DataTable widget.
     def ParseResults(self, results):

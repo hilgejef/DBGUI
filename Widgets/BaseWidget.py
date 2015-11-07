@@ -3,7 +3,7 @@ import curses.panel
 
 """ Base Widget """
 class BaseWidget:
-    def __init__(self, lines, characters, y, x):
+    def __init__(self, lines, characters, y, x, color_pair=1):
         self.Lines = lines
         self.Characters = characters
         self.Y = y
@@ -12,6 +12,7 @@ class BaseWidget:
         self.Pnl = curses.panel.new_panel(self.Win)
         self.Text = ""
         self.TextMode = curses.A_NORMAL
+        self.ColorPair = curses.color_pair(color_pair)
     
     def Refresh(self):
         try:
@@ -38,7 +39,7 @@ class BaseWidget:
     def BordersOn(self):
         try:
             # TODO: Decide on border rules
-            pass
+            self.Win.box()
         except:
             # TODO: Replace with global status screen output
             print "Could not draw borders."
@@ -75,7 +76,7 @@ class BaseWidget:
     # Updates the display with the current text mode
     def UpdateDisplay(self):
         self.Win.erase()
-        self.Win.addstr(self.Text, self.TextMode)
+        self.Win.addstr(self.Text, self.TextMode | self.ColorPair)
         self.Refresh()
     
     # Highlights the text by reversing the foreground/background

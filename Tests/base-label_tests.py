@@ -1,9 +1,11 @@
 import curses
 from BaseWidget import BaseWidget
-from Label import Label
+from Label import BaseLabel
 
 # These actions will be handled in the Global file
 stdscr = curses.initscr()
+curses.start_color()
+curses.init_pair(1, curses.COLOR_BLUE, curses.COLOR_WHITE)
 curses.cbreak()
 curses.noecho()
 stdscr.keypad(1)
@@ -20,8 +22,8 @@ bw.ToTop()
 bw.ToBottom()
 
 # Testing Label
-lbl = Label("Hello", 3, 3)
-lbltwo = Label("A second label!", 10, 5)
+lbl = BaseLabel("Hello", 2, 20, 3, 3)
+lbltwo = BaseLabel("A second label!", 2, 20, 10, 5)
 
 # Pause to view
 stdscr.getch()

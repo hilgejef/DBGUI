@@ -1,4 +1,3 @@
-
 class BaseScreen:
     def __init__(self):
         self.ActionWidgets = []

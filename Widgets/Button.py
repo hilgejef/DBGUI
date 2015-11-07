@@ -1,12 +1,12 @@
 import curses
 import curses.panel
-from Label import Label
+from Label import BaseLabel
 
-""" Button """
-class Button(Label):
-    def __init__(self, text, method, y, x):
+""" BaseButton """
+class BaseButton(BaseLabel):
+    def __init__(self, text, method, l, c, y, x):
         text = "[ " + text + " ]"
-        Label.__init__(self, text, y, x)
+        BaseLabel.__init__(self, text, l, c, y, x)
         self.CallMethod = method
         
     def Active(self):
@@ -31,3 +31,9 @@ class Button(Label):
                 self.UnHighlight()
                 selected = False
                 curses.ungetch('\t') # Notify the core that tab was pressed
+
+
+""" Button """
+class Button(BaseButton):
+    def __init__(self, text, method, y, x):
+        BaseButton.__init__(self, text, method, 1, len(text) + 1, y, x)

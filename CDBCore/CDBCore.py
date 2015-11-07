@@ -89,6 +89,10 @@ class CDBCore:
         
         # Next initialize curses for use
         CDBCore.stdscr = curses.initscr()
+
+        # Initialize color
+        curses.start_color()
+
         try:
             # Not all terminals support hiding the cursor
             curses.curs_set(1)
@@ -97,4 +101,9 @@ class CDBCore:
         curses.cbreak()
         curses.noecho()
         CDBCore.stdscr.keypad(1)
+
+    @staticmethod
+    def InitColor():
+        # Create color pairings
+        curses.init_pair(1, curses.COLOR_BLUE, curses.COLOR_WHITE)
 

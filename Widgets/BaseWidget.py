@@ -3,7 +3,7 @@ import curses.panel
 
 """ Base Widget """
 class BaseWidget:
-    def __init__(self, lines, characters, y, x, color_pair=1):
+    def __init__(self, lines, characters, y, x, boxed=False, text_color=1, bkgd_color=2):
         self.Lines = lines
         self.Characters = characters
         self.Y = y
@@ -11,8 +11,12 @@ class BaseWidget:
         self.Win = curses.newwin(lines, characters, y, x)
         self.Pnl = curses.panel.new_panel(self.Win)
         self.Text = ""
+        self.Boxed = boxed
         self.TextMode = curses.A_NORMAL
-        self.ColorPair = curses.color_pair(color_pair)
+        self.TextColor = curses.color_pair(text_color)
+        self.BkgdColor = curses.color_pair(bkgd_color)
+
+        self.Win.bkgd(' ', self.BkgdColor)
     
     def Refresh(self):
         try:
@@ -76,9 +80,11 @@ class BaseWidget:
     # Updates the display with the current text mode
     def UpdateDisplay(self):
         self.Win.erase()
-        self.Win.addstr(self.Text, self.TextMode | self.ColorPair)
+        if self.Boxed:
+            self.Win.box()
+        self.Win.addstr(self.Text, self.TextMode | self.TextColor)
         self.Refresh()
-    
+
     # Highlights the text by reversing the foreground/background
     def Highlight(self):
         self.TextMode = curses.A_REVERSE

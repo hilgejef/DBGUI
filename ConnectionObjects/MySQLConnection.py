@@ -83,12 +83,12 @@ class MySQLConnection(BaseConnection):
     
     # Parses the results of a query into a format that can be used by the 
     # DataTable widget.
-    # NOTE: Current structure us a list in the following format
+    # NOTE: Current structure uses a list in the following format
     #		list[0]: list of headers
     #		list[1]: list of list of data rows
     #
     #	    This was chosen for performance.  If we decide to parse into Labels
-    #	    here, this will change to a loop.  PRoblem is identifying coordinates
+    #	    here, this will change to a loop.  Problem is identifying coordinates
     #	    of each Label.  I would think the DataTable widget should handle this,
     #	    so I am just returning the data here to be utilized later.
     def ParseResults(self, cursor):

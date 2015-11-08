@@ -3,40 +3,27 @@ from BaseWidget import BaseWidget
 from Label import Label
 from TextBox import TextBox
 from CheckBox import CheckBox
-from Button import Button
+from Button import BaseButton
 
 
 # These actions will be handled in the Global file
 stdscr = curses.initscr()
 curses.start_color()
+curses.init_pair(1, curses.COLOR_RED, curses.COLOR_WHITE)
+curses.init_pair(2, curses.COLOR_GREEN, curses.COLOR_BLUE)
+curses.init_pair(3, curses.COLOR_BLACK, curses.COLOR_YELLOW)
+stdscr.bkgd(' ', curses.color_pair(3))
 curses.cbreak()
 curses.noecho()
 stdscr.keypad(1)
 
-# Testing BaseWidget
-bw = BaseWidget(1, 2, 3, 4)
-bw.Refresh()
-bw.Hide()
-bw.Show()
-bw.BordersOn()
-bw.BordersOff()
-bw.Move(6, 6)
-bw.ToTop()
-bw.ToBottom()
-
-# Testing Label
-lbl = Label("Hello", 3, 3)
-lbltwo = Label("A second label!", 10, 5)
-
-# Testing TextBox
-txtbox = TextBox(1, 16, 5, 15)
-
-# Testing CheckBox
-chkbox = CheckBox("On", "Off", 8, 8)
+def testMethod():
+	pass
 
 # Testing Button
-btn = Button("Test: Run to select Checkbox", chkbox.Active, 15, 15)
-btn.Active()
+btn = BaseButton("t", testMethod, 5, 20, 15, 15)
+# btn.Active()
+print btn.Text
 
 # Clean up handled in Global file 
 curses.nocbreak()

@@ -3,20 +3,24 @@ import curses.panel
 
 """ Base Widget """
 class BaseWidget:
-    def __init__(self, lines, characters, y, x, boxed=False, text_color=1, bkgd_color=2):
-        self.Lines = lines
-        self.Characters = characters
+    def __init__(self, height, width, y, x, boxed=False, center=False, text_color=1, bkgd_color=2,
+                 y_offset=0, x_offset=0):
+        self.height = height
+        self.width = width
+        self.Lines = height
+        self.Characters = width
         self.Y = y
         self.X = x
-        self.Win = curses.newwin(lines, characters, y, x)
+        self.Win = curses.newwin(height, width, y, x)
         self.Pnl = curses.panel.new_panel(self.Win)
         self.Text = ""
         self.Boxed = boxed
+        self.Centered = center
         self.TextMode = curses.A_NORMAL
         self.TextColor = curses.color_pair(text_color)
         self.BkgdColor = curses.color_pair(bkgd_color)
-
-        self.Win.bkgd(' ', self.BkgdColor)
+        self.YOffset = 0
+        self.XOffset = 0
     
     def Refresh(self):
         try:
@@ -80,9 +84,19 @@ class BaseWidget:
     # Updates the display with the current text mode
     def UpdateDisplay(self):
         self.Win.erase()
+
         if self.Boxed:
             self.Win.box()
-        self.Win.addstr(self.Text, self.TextMode | self.TextColor)
+
+        self.Win.bkgd(' ', self.BkgdColor)
+
+        if self.Centered:
+            pass
+            # TODO: Add centering for text
+
+        for line, substr in enumerate(self.Text.split('\n')):
+            self.Win.addstr(self.YOffset + line, self.XOffset, 
+                            substr, self.TextMode | self.TextColor)
         self.Refresh()
 
     # Highlights the text by reversing the foreground/background

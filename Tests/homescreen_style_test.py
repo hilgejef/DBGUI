@@ -12,9 +12,11 @@ class HomeScreen(BaseScreen):
     def __init__(self):
         BaseScreen.__init__(self)
         label = BaseLabel("Welcome to Database Explorer", 10, 10, 1, 1)
-        button = BaseButton("OK", 5, 5, 11, 11)
+        BaseScreen.PassiveWidgets.append(label)
 
 if __name__ == "__main__":
+    print "Initializing and Displaying HomeScreen" # TESTING
     CDBCore.InitCurses()
+    CDBCore.InitColor()
     CDBCore.CurrentScreen = HomeScreen()
     CDBCore.Main()

@@ -4,8 +4,10 @@ from BaseWidget import BaseWidget
 
 """ BaseLabel """
 class BaseLabel(BaseWidget):
-	def __init__(self, text, l, c, y, x, boxed=False, color_pair=1):
-		BaseWidget.__init__(self, l, c, y, x, boxed, color_pair)
+	def __init__(self, text, height, width, y, x, boxed=False, center=False, text_color=1, bkgd_color=2,
+                 y_offset=0, x_offset=0):
+		BaseWidget.__init__(self, height, width, y, x, boxed, center, text_color, bkgd_color,
+			                y_offset, x_offset)
 		self.Text = text
 
 """ Label """

@@ -8,6 +8,13 @@ class BaseScreen:
     # Initializes the screen on construction (virtual)
     def Init(self):
         pass
+
+    # Calls UpdateDisplay() on all widgets
+    def Update(self):
+        for w in self.PassiveWidgets:
+            w.UpdateDisplay()
+        for w in self.ActiveWidgets:
+            w.UpdateDisplay()
     
     # Hides the screen by hiding all widgets
     def Hide(self):

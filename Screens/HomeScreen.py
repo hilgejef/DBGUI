@@ -10,4 +10,4 @@ class HomeScreen(BaseScreen):
         	              "Richard Gagliano\n" +
         	              "Jon Moore\n" +
         	              "Jeffrey Hilger", 10, 10, 1, 1)
-        BaseScreen.PassiveWidgets.append(label)
+        self.PassiveWidgets.append(label)

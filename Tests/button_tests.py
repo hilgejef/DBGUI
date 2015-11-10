@@ -1,8 +1,5 @@
 import curses
 from BaseWidget import BaseWidget
-from Label import Label
-from TextBox import TextBox
-from CheckBox import CheckBox
 from Button import BaseButton
 
 
@@ -22,8 +19,12 @@ def testMethod():
 
 # Testing Button
 btn = BaseButton("t", testMethod, 5, 20, 15, 15)
-# btn.Active()
-print btn.Text
+
+# Make Button Active
+btn.Active()
+
+# Pause to view
+# stdscr.getch()
 
 # Clean up handled in Global file 
 curses.nocbreak()

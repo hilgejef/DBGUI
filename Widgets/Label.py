@@ -9,6 +9,7 @@ class BaseLabel(BaseWidget):
 		BaseWidget.__init__(self, height, width, y, x, boxed, center, text_color, bkgd_color,
 			                y_offset, x_offset)
 		self.Text = text
+		self.UpdateDisplay()
 
 """ Label """
 class Label(BaseLabel):

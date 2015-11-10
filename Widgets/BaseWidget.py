@@ -97,6 +97,7 @@ class BaseWidget:
         for line, substr in enumerate(self.Text.split('\n')):
             self.Win.addstr(self.YOffset + line, self.XOffset, 
                             substr, self.TextMode | self.TextColor)
+            
         self.Refresh()
 
     # Highlights the text by reversing the foreground/background

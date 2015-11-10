@@ -2,8 +2,6 @@ import sys
 import curses
 from CDBCore import CDBCore
 from Label import Label
-from TextBox import TextBox
-from Button import Button
 from BaseScreen import BaseScreen
 
 class TestScreen(BaseScreen):

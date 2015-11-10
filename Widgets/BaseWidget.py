@@ -19,8 +19,14 @@ class BaseWidget:
         self.TextMode = curses.A_NORMAL
         self.TextColor = curses.color_pair(text_color)
         self.BkgdColor = curses.color_pair(bkgd_color)
-        self.YOffset = 0
-        self.XOffset = 0
+        self.YOffset = y_offset
+        self.XOffset = x_offset
+
+    def __len__(self):
+        if self.Boxed:
+            return len(self.Text) + 2
+        else:
+            return len(self.Text)
     
     def Refresh(self):
         try:
@@ -94,9 +100,10 @@ class BaseWidget:
             pass
             # TODO: Add centering for text
 
-        for line, substr in enumerate(self.Text.split('\n')):
-            self.Win.addstr(self.YOffset + line, self.XOffset, 
-                            substr, self.TextMode | self.TextColor)
+        else:
+            for line, substr in enumerate(self.Text.split('\n')):
+                self.Win.addstr(self.YOffset + line, self.XOffset, 
+                                substr, self.TextMode | self.TextColor)
             
         self.Refresh()
 

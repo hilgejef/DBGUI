@@ -11,5 +11,5 @@ class HomeScreen(BaseScreen):
         	              "-- Written By --\n" +
         	              "Richard Gagliano\n" +
         	              "Jon Moore\n" +
-        	              "Jeffrey Hilger", 10, 10, 1, 1)
+        	              "Jeffrey Hilger", 13, 40, 5, 20, boxed=True, y_offset=4, x_offset=5)
         self.PassiveWidgets.append(label)

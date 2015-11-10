@@ -6,7 +6,6 @@ from Label import BaseLabel
 class BaseButton(BaseLabel):
     def __init__(self, text, method, height, width, y, x, boxed=False, center=False, text_color=1, bkgd_color=2,
                  y_offset=0, x_offset=0):
-        text = "[ " + text + " ]"
         BaseLabel.__init__(self, text, height, width, y, x, boxed, center, text_color, bkgd_color,
                             y_offset, x_offset)
         self.CallMethod = method

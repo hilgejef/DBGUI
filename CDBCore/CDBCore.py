@@ -83,9 +83,10 @@ class CDBCore:
     
     # Initializes the curses library for use, and registers cleanup
     @staticmethod
-    def InitCurses():
+    def InitCurses(debug=False):
         # First register proper cleanup of curses
-        atexit.register(CDBCore.CleanupCurses)
+        if not debug:
+            atexit.register(CDBCore.CleanupCurses)
         
         # Next initialize curses for use
         CDBCore.stdscr = curses.initscr()
@@ -107,7 +108,7 @@ class CDBCore:
         # Create color pairings
         curses.init_pair(1, curses.COLOR_BLUE, curses.COLOR_WHITE)
         curses.init_pair(2, curses.COLOR_BLACK, curses.COLOR_WHITE)
-        curses.init_pair(3, curses.color_YELLOW, curses.COLOR_BLUE)
+        curses.init_pair(3, curses.COLOR_YELLOW, curses.COLOR_BLUE)
 
         # Initialize main background color
         CDBCore.stdscr.bkgd(' ', curses.color_pair(3))

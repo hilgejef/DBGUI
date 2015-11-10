@@ -29,7 +29,8 @@ class BaseScreen:
             w.Show()
         for w in self.ActionWidgets:
             w.Show()        
-        self.ActionWidgets[self.CurrentWidget].Active()
+        if self.ActionWidgets:
+            self.ActionWidgets[self.CurrentWidget].Active()
     
     # Moves all of the screen's widgets to the top
     def ToTop(self):
@@ -50,7 +51,8 @@ class BaseScreen:
         self.CurrentWidget += 1
         if self.CurrentWidget >= len(self.ActionWidgets):
             self.CurrentWidget = 0
-        self.ActionWidgets[self.CurrentWidget].Active()
+        if self.ActionWidgets:
+            self.ActionWidgets[self.CurrentWidget].Active()
     
     # Virtual method to be overloaded
     # Must return the next screen to be visited

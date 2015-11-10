@@ -16,14 +16,6 @@ class TestScreen(BaseScreen):
         lbltwo = Label("Password:", 6, 3)
         self.PassiveWidgets.append(lbl)
         self.PassiveWidgets.append(lbltwo)
-        
-        # Active widgets
-        txtbox = TextBox(1, 16, 3, 20)
-        txtboxtwo = TextBox(1, 16, 5, 20)
-        btn = Button("EXIT", sys.exit, 15, 12)
-        self.ActionWidgets.append(txtbox)
-        self.ActionWidgets.append(txtboxtwo)
-        self.ActionWidgets.append(btn)
     
 if __name__ == "__main__":
     CDBCore.InitCurses()

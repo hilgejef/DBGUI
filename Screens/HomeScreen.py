@@ -5,6 +5,8 @@ from Button import BaseButton
 class HomeScreen(BaseScreen):
     def __init__(self):
         BaseScreen.__init__(self)
+
+    def Init(self):
         label = BaseLabel("Welcome to Database Explorer\n" +
         	              "-- Written By --\n" +
         	              "Richard Gagliano\n" +

@@ -89,7 +89,9 @@ class DataTable(BaseWidget):
         text = " " * self.RowLabelWidth
         text += self.ColumnDelimiter
         for l in self.ColLabels:
-            text += l[:self.ColWidth]          # displays on first X chars up to ColWidth
+            dataText = l[:self.ColWidth]          # displays on first X chars up to ColWidth
+            spaceFiller = " " * (self.ColWidth - len(dataText))
+            text += dataText + spaceFiller
             text += self.ColumnDelimiter
         self.Pad.addstr(0, 0, text)
         
@@ -103,6 +105,8 @@ class DataTable(BaseWidget):
             self.Pad.addstr(2 + y, self.RowLabelWidth, self.ColumnDelimiter, curses.A_NORMAL)
             for x in range(self.Columns):
                 text = self.DataCells[y][x]
+                spaceFiller = " " * (self.ColWidth - len(text))
+                text = text + spaceFiller
                 if x == self.PosX and y == self.PosY:
                     self.Pad.addstr(2 + y, self.RowLabelWidth + len(self.ColumnDelimiter) + (x * (self.ColWidth + len(self.ColumnDelimiter))), text, curses.A_REVERSE)
                 else:
@@ -112,9 +116,9 @@ class DataTable(BaseWidget):
     def UpdatePadWindowYX(self):
         # Updates the Y, X positions of variables that determine how pad is displayed
         #
-        # Upper Left of Row Labels:  self.PadRowLabels_DisplayY, self.PadRowLabels_DisplayX
-        # Upper Left of Column Labels:  self.PadColLabels_DisplayY, self.PadColLabels_DisplayX
-        # Upper Left of Table Data:  self.PadData_DisplayY, self.PadData_DisplayX
+        # Upper Left of Row Labels:  self.Pad_DisplayY, 0
+        # Upper Left of Column Labels:  0, self.Pad_DisplayX
+        # Upper Left of Table Data:  self.Pad_DisplayY, self.Pad_DisplayX
         
         data_table_lines = self.Lines - self.RowHeight - 1
         data_table_chars = self.Characters - self.RowLabelWidth
@@ -134,6 +138,13 @@ class DataTable(BaseWidget):
         # if cursor has moved to left of displayed window then move window left
         if ((self.PosX * (self.ColWidth + len(self.ColumnDelimiter))) + self.RowLabelWidth + len(self.ColumnDelimiter)) < self.Pad_DisplayX:
             self.Pad_DisplayX -= self.ColWidth + len(self.ColumnDelimiter)
+           
+        # make sure displayX has not moved too far right
+        if self.Pad_DisplayX > self.TotalX - data_table_chars:
+            self.Pad_DisplayX = self.TotalX - data_table_chars - len(self.ColumnDelimiter) - 1
+            
+        # make sure displayY has not moved too far down
+        # needed?
         
     def UpdateDisplay(self):
         #UpdateDisplay displays row numbers, column labels, and the data

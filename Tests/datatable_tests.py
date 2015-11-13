@@ -9,7 +9,16 @@ curses.noecho()
 stdscr.keypad(1)
 
 # Test DataTable
-datatbl = DataTable(8, 30, 10, 4)
+resultsobj = [["colA", "columnB", "CCCCCCCCCCCCCCCCC", "colD"],
+             [["data00", "data01", "data02", "data03"],
+              ["datahereis toolong", "more data here", "row2data3", "data13"],
+              ["20", "21", "22", "23"],
+              ["aa", "ab", "ac", "ad"],
+              ["once upon a time there was ", "test test test", "datadatadata", "allofthis is f"],
+              ["", "", "", ""],
+              ["last0", "last1", "last2", "last3"],
+              ]]
+datatbl = DataTable(8, 30, 10, 4, resultsobj)
 datatbl.Active()
 
 # Clean up handled in Global file 

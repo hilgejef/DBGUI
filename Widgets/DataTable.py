@@ -40,7 +40,7 @@ class DataTable(BaseWidget):
         self.RowLabelWidth = 2
 
         # load data from resultsObj to be displayed
-        self.LoadResultsObject(resultsObj)
+        self.LoadResultsObject(resultsObj)    # must be called upon init to set graphics for widget
         self.UpdateDisplay()
 
         
@@ -56,10 +56,14 @@ class DataTable(BaseWidget):
         if resultsObj is None:
             self.ColLabels = [" " * self.ColWidth for i in range(self.Columns)]
             self.DataCells = [[" " * self.ColWidth for i in range(self.Columns)] for j in range(self.Rows)]
+            self.EnableCursor = False
         else:
             # from Results Object it reads headers and then data 
             self.ColLabels = resultsObj[0]
             self.DataCells = resultsObj[1]
+            self.EnableCursor = True
+            self.PosY = 0
+            self.PosX = 0
         
             self.Rows = len(resultsObj[1])              # number of rows
             self.Columns = len(resultsObj[1][0])        # number of columns
@@ -77,6 +81,28 @@ class DataTable(BaseWidget):
         # upper left position of the 3 distinct portions of the pad
         self.Pad_DisplayY = self.RowHeight + 1
         self.Pad_DisplayX = self.RowLabelWidth
+    
+    # set delimiter between columns to a string
+    def SetDelimiter(self, delimString):
+        if len(delimString) < 1:
+            raise ValueError("Delimiter cannot be empty string")
+        else:
+            self.ColumnDelimiter = delimString;
+            
+            # update pad X value and recreate pad
+            self.TotalX = self.Columns * (self.ColWidth + len(self.ColumnDelimiter)) + self.RowLabelWidth + len(self.ColumnDelimiter)
+            self.Pad = curses.newpad(self.TotalY + 1, self.TotalX + 1)
+            self.UpdateDisplay()
+          
+    # set column width
+    def SetColumnWidth(self, cw):
+        if cw < 4:           # could go down to 1 but the user needs to see something
+            raise ValueError("Column Width cannot be less than 4")
+        else:
+            self.ColWidth = cw
+            self.TotalX = self.Columns * (self.ColWidth + len(self.ColumnDelimiter)) + self.RowLabelWidth + len(self.ColumnDelimiter)
+            self.Pad = curses.newpad(self.TotalY + 1, self.TotalX + 1)
+            self.UpdateDisplay()
         
     def UpdatePad(self):
         # self.Pad contains the entire graphical output of the DataTable
@@ -107,7 +133,7 @@ class DataTable(BaseWidget):
                 text = self.DataCells[y][x]
                 spaceFiller = " " * (self.ColWidth - len(text))
                 text = text + spaceFiller
-                if x == self.PosX and y == self.PosY:
+                if x == self.PosX and y == self.PosY and self.EnableCursor:
                     self.Pad.addstr(2 + y, self.RowLabelWidth + len(self.ColumnDelimiter) + (x * (self.ColWidth + len(self.ColumnDelimiter))), text, curses.A_REVERSE)
                 else:
                     self.Pad.addstr(2 + y, self.RowLabelWidth + len(self.ColumnDelimiter) + (x * (self.ColWidth + len(self.ColumnDelimiter))), text, curses.A_NORMAL)
@@ -138,13 +164,14 @@ class DataTable(BaseWidget):
         # if cursor has moved to left of displayed window then move window left
         if ((self.PosX * (self.ColWidth + len(self.ColumnDelimiter))) + self.RowLabelWidth + len(self.ColumnDelimiter)) < self.Pad_DisplayX:
             self.Pad_DisplayX -= self.ColWidth + len(self.ColumnDelimiter)
-           
+        
+        # TODO: fix -> not working properly
         # make sure displayX has not moved too far right
         if self.Pad_DisplayX > self.TotalX - data_table_chars:
             self.Pad_DisplayX = self.TotalX - data_table_chars - len(self.ColumnDelimiter) - 1
             
         # make sure displayY has not moved too far down
-        # needed?
+        # only needed if RowHeight is customizable
         
     def UpdateDisplay(self):
         #UpdateDisplay displays row numbers, column labels, and the data
@@ -188,19 +215,19 @@ class DataTable(BaseWidget):
         while capturing:
             key = self.Win.getch()
             
-            if key in [curses.KEY_DOWN, ord('s')]:
+            if key in [curses.KEY_DOWN, ord('s')] and self.EnableCursor:
                 if self.PosY < (self.Rows - 1):
                     self.PosY += 1
                     self.UpdatePadWindowYX()
-            elif key in [curses.KEY_UP, ord('w')]:
+            elif key in [curses.KEY_UP, ord('w')] and self.EnableCursor:
                 if self.PosY > 0:
                     self.PosY -= 1
                     self.UpdatePadWindowYX()
-            elif key in [curses.KEY_RIGHT, ord('d')]:
+            elif key in [curses.KEY_RIGHT, ord('d')] and self.EnableCursor:
                 if self.PosX < (self.Columns - 1):
                     self.PosX += 1
                     self.UpdatePadWindowYX()
-            elif key in [curses.KEY_LEFT, ord('a')]:
+            elif key in [curses.KEY_LEFT, ord('a')] and self.EnableCursor:
                 if self.PosX > 0:
                     self.PosX -= 1
                     self.UpdatePadWindowYX()

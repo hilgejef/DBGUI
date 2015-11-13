@@ -18,7 +18,8 @@ resultsobj = [["colA", "columnB", "CCCCCCCCCCCCCCCCC", "colD"],
               ["", "", "", ""],
               ["last0", "last1", "last2", "last3"],
               ]]
-datatbl = DataTable(8, 30, 10, 4, resultsobj)
+datatbl = DataTable(8, 30, 10, 4)
+datatbl.LoadResultsObject(resultsobj)
 datatbl.Active()
 
 # Clean up handled in Global file 

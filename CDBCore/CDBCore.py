@@ -10,6 +10,10 @@ import curses
 import atexit
 
 class CDBCore:
+    # Screen Constants
+    TERMINAL_LINES = 24
+    TERMINAL_CHARACTERS = 80
+
     # Contains the main curses window
     stdscr = ""
   

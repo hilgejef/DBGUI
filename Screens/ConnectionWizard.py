@@ -65,6 +65,7 @@ class ConnectionWizard(BaseScreen):
                               int(self.ActionWidgets[self.Input["Port"]].Text))
         results = con.Connect()
         if results.Success:
+            CDBCore.Connection = con
             curses.ungetch('\n') # Notify the core to move to next screen
         else:
             # TODO: Status and popup here with failure message

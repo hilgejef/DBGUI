@@ -82,4 +82,11 @@ CheckResult(result)
 for row in result.Data:
     print row
 
+result = my.QueryString("SHOW DATABASES")
+CheckResult(result)
+
+# Print out the results
+for row in result.Data[1]:
+    print row[0]
+    
 print "Success!"

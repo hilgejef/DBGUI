@@ -10,10 +10,17 @@ import curses
 import atexit
 
 class CDBCore:
-    # Screen Constants
+    # Constants for Defining Screen Locations
     TERMINAL_LINES = 24
     TERMINAL_CHARACTERS = 80
-
+    
+    MAIN_MENU_Y = 0         # Main menu display - Lines 0 - 2
+    MAIN_MENU_LINES = 3
+    MAIN_SCREEN_Y = 3       # Main screen display - Lines 3 - 20
+    MAIN_SCREEN_LINES = 18
+    STATUS_SCREEN_Y = 21    # Status screen display - Lines 21 - 24
+    STATUS_SCREEN_LINES = 4
+    
     # Contains the main curses window
     stdscr = ""
   

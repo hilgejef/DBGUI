@@ -30,8 +30,8 @@ stdscr.keypad(1)
 # Testing Label
 stdscr.bkgd(' ', curses.color_pair(3))
 stdscr.border()
-lbl = BaseLabel("Hello", 5, 20, 3, 3, True)
-lbltwo = BaseLabel("A second label!\nTEST", 5, 20, 10, 5, True)
+lbl = BaseLabel("Hello", 5, 20, 3, 3, {"boxed":True})
+lbltwo = BaseLabel("A second label!\nTEST", 5, 20, 10, 5, {"boxed":True})
 
 # lbl.BordersOn()
 # lbltwo.BordersOn()

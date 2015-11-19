@@ -3,30 +3,60 @@ import curses.panel
 
 """ Base Widget """
 class BaseWidget:
-    def __init__(self, height, width, y, x, boxed=False, center=False, text_color=1, bkgd_color=2,
-                 y_offset=0, x_offset=0):
-        self.height = height
-        self.width = width
-        self.Lines = height
-        self.Characters = width
+
+    # Default widget attributes
+    default_attributes = {
+        "boxed" : False,
+        "text_y_center" : False,
+        "text_x_center" : False,
+        "window_y_center" : False,
+        "window_x_center" : False,
+        "text_color" : 1,
+        "bkgd_color" : 2,
+        "y_offset" : 0,
+        "x_offset" : 0,
+        "text_mode" : curses.A_NORMAL
+    }
+
+    def __init__(self, height, width, y, x, attr=None):
+        if attr == None:
+            self.Init(height, width, y, x, BaseWidget.default_attributes)
+        else:
+            merged_attributes = BaseWidget.default_attributes.copy()
+            merged_attributes.update(attr)
+            self.Init(height, width, y, x, merged_attributes)
+
+    def __len__(self):
+        return self.Width
+
+    def Init(self, height, width, y, x, attr):
+        # Standard initializations
+        self.Height = height
+        self.Width = width
         self.Y = y
         self.X = x
         self.Win = curses.newwin(height, width, y, x)
         self.Pnl = curses.panel.new_panel(self.Win)
-        self.Text = ""
-        self.Boxed = boxed
-        self.Centered = center
-        self.TextMode = curses.A_NORMAL
-        self.TextColor = curses.color_pair(text_color)
-        self.BkgdColor = curses.color_pair(bkgd_color)
-        self.YOffset = y_offset
-        self.XOffset = x_offset
 
-    def __len__(self):
-        if self.Boxed:
-            return len(self.Text) + 2
-        else:
-            return len(self.Text)
+        # Text to override
+        self.Text = ""
+
+        # Attribute initializations
+        self.TextMode = attr["text_mode"]
+        self.Boxed = attr["boxed"]
+        self.TextYCenter = attr["text_y_center"]
+        self.TextXCenter = attr["text_x_center"]
+        self.WindowYCenter = attr["window_y_center"]
+        self.WindowXCenter = attr["window_x_center"]
+        self.TextColor = curses.color_pair(attr["text_color"])
+        self.BkgdColor = curses.color_pair(attr["bkgd_color"])
+        self.YOffset = attr["y_offset"]
+        self.XOffset = attr["x_offset"]
+
+        # Legacy support
+        self.Lines = height
+        self.Characters = width
+
     
     def Refresh(self):
         try:
@@ -96,13 +126,20 @@ class BaseWidget:
 
         self.Win.bkgd(' ', self.BkgdColor)
 
-        if self.Centered:
-            pass
-            # TODO: Add centering for text
+        if self.TextYCenter:
+            num_lines = self.Text.count('\n')
+            YOffset = (self.Height - num_lines) / 2
+        else:
+            YOffset = self.YOffset
 
+        if self.TextXCenter:
+            for line, substr in enumerate(self.Text.split('\n')):
+                XOffset = (self.Width - len(substr)) / 2 
+                self.Win.addstr(YOffset + line, XOffset, 
+                                substr, self.TextMode | self.TextColor)
         else:
             for line, substr in enumerate(self.Text.split('\n')):
-                self.Win.addstr(self.YOffset + line, self.XOffset, 
+                self.Win.addstr(YOffset + line, self.XOffset, 
                                 substr, self.TextMode | self.TextColor)
             
         self.Refresh()

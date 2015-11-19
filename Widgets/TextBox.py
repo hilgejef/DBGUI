@@ -9,7 +9,6 @@ class TextBox(BaseWidget):
         self.Text = ""
         self.DisplayText = ' ' * (width - 1)
         self.DisplayMode = "STANDARD"
-        self.TextMode = curses.A_NORMAL
         self.UpdateDisplay()
         
     def Value(self):

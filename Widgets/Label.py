@@ -4,14 +4,12 @@ from BaseWidget import BaseWidget
 
 """ BaseLabel """
 class BaseLabel(BaseWidget):
-	def __init__(self, text, height, width, y, x, boxed=False, center=False, text_color=1, bkgd_color=2,
-                 y_offset=0, x_offset=0):
-		BaseWidget.__init__(self, height, width, y, x, boxed, center, text_color, bkgd_color,
-			                y_offset, x_offset)
+	def __init__(self, text, height, width, y, x, attr=None):
+		BaseWidget.__init__(self, height, width, y, x, attr)
 		self.Text = text
 		self.UpdateDisplay()
 
 """ Label """
 class Label(BaseLabel):
-    def __init__(self, text, y, x):
-        BaseLabel.__init__(self, text, 1, len(text) + 1, y, x)
+    def __init__(self, text, y, x, attr=None):
+        BaseLabel.__init__(self, text, 1, len(text) + 1, y, x, attr)

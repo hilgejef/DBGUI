@@ -1,5 +1,6 @@
 class BaseScreen:
-    def __init__(self):
+    def __init__(self, screen_type=""):
+        self.Type = screen_type
         self.ActionWidgets = []
         self.PassiveWidgets = []
         self.CurrentWidget = 0
@@ -8,6 +9,12 @@ class BaseScreen:
     # Initializes the screen on construction (virtual)
     def Init(self):
         pass
+
+    def __eq__(self, other):
+        try:
+            return self.Type == other.Type
+        except:
+            return False
 
     # Calls UpdateDisplay() on all widgets
     def Update(self):
@@ -45,6 +52,25 @@ class BaseScreen:
             w.ToBottom()
         for w in self.ActionWidgets:
             w.ToBottom()
+
+    def Highlight(self):
+        for w in self.PassiveWidgets:
+            w.Highlight()
+        for w in self.ActionWidgets:
+            w.Highlight()
+
+    def UnHighlight(self):
+        for w in self.PassiveWidgets:
+            w.UnHighlight()
+        for w in self.ActionWidgets:
+            w.UnHighlight()
+
+    def MakeActive(self):
+        if self.ActionWidgets:
+            self.ActionWidgets[self.CurrentWidget].Highlight()
+            self.ActionWidgets[self.CurrentWidget].Active()
+        else:
+            self.PassiveWidgets[0].Highlight()
     
     # Advance to the next active widget
     def NextWidget(self):

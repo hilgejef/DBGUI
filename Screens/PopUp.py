@@ -1,8 +1,8 @@
 import curses
 import curses.panel
 from BaseScreen import BaseScreen
-from Label import Label
-from Button import Button
+from Label import BaseLabel
+from Button import BaseButton
 
 # Base Class for PopUp
 # PopUps are composed of 1 Label and 2/3 Button widgets
@@ -20,9 +20,9 @@ class PopUp(BaseScreen):
 """ PopUpOkCancel """
 class PopUpOkCancel(PopUp):
     def __init__(self, text, okMethod, cancelMethod):
-        label = Label(text, 1, 1)
-        okButton = Button("OK", okMethod, 10, 7)
-        cancelButton = Button("Cancel", cancelMethod, 10, 17)
+        label = BaseLabel(text, 3, 20, 5, 5, {"boxed":True, "x_offset" : 1, "y_offset" : 1})
+        okButton = BaseButton("OK", okMethod, 3, 4, 10, 5, {"boxed":True, "x_offset" : 1, "y_offset" : 1})
+        cancelButton = BaseButton("Cancel", cancelMethod, 3, 7, 10, 11, {"boxed":True, "x_offset" : 1, "y_offset" : 1})
         PopUp.__init__(self, [label], [okButton, cancelButton])
 
 # PopUpYesNoCancel = 1 Label and 3 Buttons
@@ -30,9 +30,9 @@ class PopUpOkCancel(PopUp):
 """ PopUpYesNoCancel """
 class PopUpYesNoCancel(PopUp):
     def __init__(self, text, yesMethod, noMethod, cancelMethod):
-        label = Label(text, 1, 1)
-        yesButton = Button("Yes", yesMethod, 10, 2)
-        noButton = Button("No", noMethod, 10, 12)
-        cancelButton = Button("Cancel", cancelMethod, 10, 22)
+        label = BaseLabel(text, 3, 20, 5, 5, {"boxed":True, "x_offset" : 1, "y_offset" : 1})
+        yesButton = BaseButton("Yes", yesMethod, 3, 5, 10, 5, {"boxed":True, "x_offset" : 1, "y_offset" : 1})
+        yesButton = BaseButton("No", noMethod, 3, 4, 10, 11, {"boxed":True, "x_offset" : 1, "y_offset" : 1})
+        cancelButton = BaseButton("Cancel", cancelMethod, 3, 7, 10, 15, {"boxed":True, "x_offset" : 1, "y_offset" : 1})
         PopUp.__init__(self, [label], [yesButton, noButton, cancelButton])    
         

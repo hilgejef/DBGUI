@@ -5,10 +5,8 @@ from BaseWidget import BaseWidget
 """ Base CheckBox """
 class BaseCheckBox(BaseWidget):
     def __init__(self, checked_text, unchecked_text,
-                 height, width, y, x, boxed=False, center=False, text_color=1, bkgd_color=2,
-                 y_offset=0, x_offset=0):
-        BaseWidget.__init__(self, height, width, y, x, boxed, center, text_color, bkgd_color, 
-                            y_offset, x_offset)
+                 height, width, y, x, attr=None):
+        BaseWidget.__init__(self, height, width, y, x, attr)
         self.CheckedText = "< " + checked_text + " >"
         self.UncheckedText = "< " + unchecked_text + " >"
         self.Text = self.UncheckedText

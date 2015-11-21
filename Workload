@@ -5,7 +5,6 @@ Bugs:
   
 Rich
   - Backspace does not work in TextBox under Debian environment
-  - MySQLConnection parsing algorithm
   - Connection Wizard
   - PostgreSQLConnection object
   
@@ -21,6 +20,7 @@ Jeff
 
   
 Completed:
+  - MySQLConnection parsing algorithm
   - Created ResultsStatus object and integrated with MySQLConnection.
   - MySQLConnection object
   - BaseConnection finished (to be updated during MySQL and PostgreSQL object creation)

@@ -1,7 +1,7 @@
 ###############################################################################
 # Author:		Rich Gagliano
 # Date Created:		11/2/2015
-# Date Modified:	11/5/2015
+# Date Modified:	11/8/2015
 # File Name:		MySQLConnection.py
 #
 # Overview:
@@ -20,10 +20,7 @@ class MySQLConnection(BaseConnection):
     
     # MySQLConnection destructor
     def __del__(self):
-        try:
-            self.Connection.close()
-        except Exception as ex:
-            print "Could not close database connection:\n" + str(ex) #TODO: Status notification
+        self.Disconnect()
     
     # Opens a connection to the DB server.
     def Connect(self):
@@ -51,7 +48,14 @@ class MySQLConnection(BaseConnection):
             else:
                 result.Message += str(ex)
             return result
-             
+    
+    # Disconnects from the MySQL database
+    def Disconnect(self):
+        try:
+            self.Connection.close()
+        except Exception as ex:
+            print "Could not close database connection:\n" + str(ex) #TODO: Status notification
+    
     # Internal query function to handle both buffered and string queries
     # (I wanted to keep string and buffered queries separate as a mental 
     #  check to ensure we are using the appropriate one in our application.
@@ -63,9 +67,8 @@ class MySQLConnection(BaseConnection):
                 cursor.execute(query)
             else:
                 cursor.execute(query, values)
-            self.Connection.commit()
-            cursor.close()
             data = self.ParseResults(cursor) 
+            cursor.close()
             return ResultStatus(True, None, data)
         except Exception as ex:
             return ResultStatus(False, "Could not execute query:\n" + str(ex))
@@ -80,7 +83,30 @@ class MySQLConnection(BaseConnection):
     
     # Parses the results of a query into a format that can be used by the 
     # DataTable widget.
-    def ParseResults(self, results):
-        # TODO: Develop parsing algorithm
-        return None
-        
+    # NOTE: Current structure uses a list in the following format
+    #		list[0]: list of headers
+    #		list[1]: list of list of data rows
+    #
+    #	    This was chosen for performance.  If we decide to parse into Labels
+    #	    here, this will change to a loop.  Problem is identifying coordinates
+    #	    of each Label.  I would think the DataTable widget should handle this,
+    #	    so I am just returning the data here to be utilized later.
+    def ParseResults(self, cursor):
+        try:
+            cells = []
+            
+            # Append the headers
+            headers = []
+            for header in cursor.description:
+                headers.append(header[0])
+            cells.append(headers)
+            
+            # Append the data rows
+            cells.append(cursor.fetchall())
+                        
+            # Return the results
+            return cells
+        except:
+            # Error parsing data, this sould indicate that this was not a
+            # SELECT query.  Return None
+            return None

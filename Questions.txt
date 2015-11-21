@@ -1,19 +1,12 @@
 Jeff -- 
 
-1. CDBCore uses static methods while requesting access to class variables such as stdscr, ConnectionString, etc?
-   More importantly, shouldn't CDBCore use standard class patterns (__init__, instance methods) considering
-   that CDBCore must contain variable data (such as different History or CurrentScreens, etc)?
-   -- I switched CDBCore to standard class style, but saved the previous one as CDBCore.bak in case
-   I shouldn't have.
-2. Any idea why I have to instantiate CDBCore by calling CDBCore.CDBCore() even after importing it via
-     "from CDBCore import CDBCore"? The instance is triple nested (CDBCore.CDBCore.CDBcore).
-   EDIT: I get it, it's Package.Module.Class -- but why is it only like this for the CDBCore directory
-     and not any others?
-3. Home Screen basic layout -- Maybe 1 label with name of Program, then multiple buttons. Maybe: 
-	Label: Welcome Message
-	Button: Connection Wizard 
-	Button: Main Menu
-	Button: Instructions/Help
-	?
-4. I can only import CDBCore by changing that directory's __init__.py file to contain
-    "from CDBCore import CDBCore". Worried that will break compatibility with your environments.
+1. Should make changes to support bordering/coloring/text-positioning/window-sizing:
+   - Adjust Core to initialize color (curses.start_color, then init_pair colors)
+   - Adjust BaseWidget to accept new optional parameters
+   - Parameters such as: text-color, bgkd-color, text-position, bordering
+   - Adjust BaseWidget to allow strings with multiple lines
+      - Possible solution: Split strings on newlines and call addstr() on each string
+         - (Adding 1 to y position each time)  
+   - Adjust widgets to create BaseLabel/BaseButton etc.
+      - BaseLabel/BaseButton/etc. will accept height/width/color/etc. parameters
+      - Back-compatible with existing classes (e.g. Label simply calls BaseLabel with 1 height, len(text) width)

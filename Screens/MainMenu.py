@@ -7,7 +7,7 @@ def testMethod():
 
 class MainMenu(BaseScreen):
     def __init__(self):
-        BaseScreen.__init__(self, "MainMenu")
+        BaseScreen.__init__(self, screen_type="MainMenu")
 
     def Init(self):
         CWizButton = BaseButton("Connection Wizard", testMethod, 3, 

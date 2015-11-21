@@ -5,7 +5,6 @@ Bugs:
   
 Rich
   - Backspace does not work in TextBox under Debian environment
-  - Connection Wizard
   - PostgreSQLConnection object
   
 Jon
@@ -20,6 +19,8 @@ Jeff
 
   
 Completed:
+  - ViewDatabases Screen
+  - Connection Wizard
   - MySQLConnection parsing algorithm
   - Created ResultsStatus object and integrated with MySQLConnection.
   - MySQLConnection object

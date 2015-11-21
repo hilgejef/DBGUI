@@ -17,22 +17,63 @@ from Label import Label
 
 """ Data Table """
 class DataTable(BaseWidget):
-    def __init__(self, lines, characters, y, x):        # TODO:  add Results object in to be passed into init
+
+    # Constructor
+    def __init__(self, lines, characters, y, x, resultsObj=None):
         BaseWidget.__init__(self, lines, characters, y, x)
-        # position of the selector
-        self.PosY = 0
-        self.PosX = 0
         
-        # later Rows and Columns will be determined by Results Object
-        # following values are arbitrary
-        self.Rows = 15   # ARBITRARY NUMBER USED FOR TESTING
-        self.Columns = 15   # ARBITRARY NUMBER USED FOR TESTING
-        self.ColWidth = 7   # Width of each column, update as desired
-        self.RowHeight = 1  # Height of each row, update as desired
-        self.RowLabelWidth = len(str(self.Rows))
-        self.ColumnDelimiter = " | "   # Can change delimiter string as desired 
+        # position of the selector in DataTable
+        self.PosY = 0                   # row
+        self.PosX = 0                   # col
+        
+        # DataTable UI Settings independent of Results Object
+        # Can update these as we choose for each DataTable Widget
+        self.ColWidth = 7               # Width of each column, update as desired
+        self.RowHeight = 1              # Height of each row, update as desired
+        self.ColumnDelimiter = " | "    # Delimiter string between each column's data, update as desired
+        
+        # variables that govern table data
+        # these are base values to show an empty data table
+        # LoadResultsObject() will overwrite these with resultsObj data
+        self.Rows = 10
+        self.Columns = 10
+        self.RowLabelWidth = 2
+
+        # load data from resultsObj to be displayed
+        self.LoadResultsObject(resultsObj)    # must be called upon init to set graphics for widget
+        self.UpdateDisplay()
+
+        
+    # Takes ParsedResults object from MySQLConnection / PostgreSQLConnection
+    # ParseResults() method
+    #
+    # NOTE: ParseResults() structure uses a list in the following format
+    #		list[0]: list of headers
+    #		list[1]: list of list of data rows
+    #
+    def LoadResultsObject(self, resultsObj):
+    
+        if resultsObj is None:
+            self.ColLabels = [" " * self.ColWidth for i in range(self.Columns)]
+            self.DataCells = [[" " * self.ColWidth for i in range(self.Columns)] for j in range(self.Rows)]
+            self.EnableCursor = False
+        else:
+            # from Results Object it reads headers and then data 
+            self.ColLabels = resultsObj[0]
+            self.DataCells = resultsObj[1]
+            self.EnableCursor = True
+            self.PosY = 0
+            self.PosX = 0
+        
+            self.Rows = len(resultsObj[1])              # number of rows
+            self.Columns = len(resultsObj[1][0])        # number of columns
+            self.RowLabelWidth = len(str(self.Rows))    # column for displaying row labels needs to be
+                                                    # at least as wide as the number of digits
         
         # number of rows, cols needed by data table if screen size wasn't a limiting factor
+        # NOTE #1: making room for borders for DataWidget should be adjusted at
+        #          self.Win.Lines and self.Wins.Characters, not here
+        # NOTE #2: these need to be re-computed if any object instance variables change
         self.TotalY = self.Rows * self.RowHeight + 3   # extra rows for labels, border, and scroll bar
         self.TotalX = self.Columns * (self.ColWidth + len(self.ColumnDelimiter)) + self.RowLabelWidth + len(self.ColumnDelimiter)
         self.Pad = curses.newpad(self.TotalY + 1, self.TotalX + 1)
@@ -40,27 +81,28 @@ class DataTable(BaseWidget):
         # upper left position of the 3 distinct portions of the pad
         self.Pad_DisplayY = self.RowHeight + 1
         self.Pad_DisplayX = self.RowLabelWidth
-        
-        #
-        # ARBITRARY DATA FOR TESTING
-        # Data in the application will come from a Results Object
-        #
-        
-        # create labels for cells
-        self.ColLabels = [Label("tstCol" + str(j), self.Y + 0, self.X + j * (self.ColWidth + 1) + 2) for j in range(self.Columns)]
-        for lbl in self.ColLabels:
-            lbl.Hide()
-            lbl.Refresh()
-        
-        # create data cells that table will be composed of
-        # [y, x] for positioning of data cells
-        self.DataCells = [[Label("tCell" + str(i) + str(j), self.Y + i + 2, self.X + j * (self.ColWidth + 1) + 2) for i in range(self.Rows)] for j in range(self.Columns)]
-        for y in range(self.Rows):
-            for x in range(self.Columns):
-                self.DataCells[y][x].Hide()
-                self.DataCells[y][x].Refresh()
-
-        self.UpdateDisplay()
+    
+    # set delimiter between columns to a string
+    def SetDelimiter(self, delimString):
+        if len(delimString) < 1:
+            raise ValueError("Delimiter cannot be empty string")
+        else:
+            self.ColumnDelimiter = delimString;
+            
+            # update pad X value and recreate pad
+            self.TotalX = self.Columns * (self.ColWidth + len(self.ColumnDelimiter)) + self.RowLabelWidth + len(self.ColumnDelimiter)
+            self.Pad = curses.newpad(self.TotalY + 1, self.TotalX + 1)
+            self.UpdateDisplay()
+          
+    # set column width
+    def SetColumnWidth(self, cw):
+        if cw < 4:           # could go down to 1 but the user needs to see something
+            raise ValueError("Column Width cannot be less than 4")
+        else:
+            self.ColWidth = cw
+            self.TotalX = self.Columns * (self.ColWidth + len(self.ColumnDelimiter)) + self.RowLabelWidth + len(self.ColumnDelimiter)
+            self.Pad = curses.newpad(self.TotalY + 1, self.TotalX + 1)
+            self.UpdateDisplay()
         
     def UpdatePad(self):
         # self.Pad contains the entire graphical output of the DataTable
@@ -73,7 +115,9 @@ class DataTable(BaseWidget):
         text = " " * self.RowLabelWidth
         text += self.ColumnDelimiter
         for l in self.ColLabels:
-            text += l.Text[:self.ColWidth]
+            dataText = l[:self.ColWidth]          # displays on first X chars up to ColWidth
+            spaceFiller = " " * (self.ColWidth - len(dataText))
+            text += dataText + spaceFiller
             text += self.ColumnDelimiter
         self.Pad.addstr(0, 0, text)
         
@@ -86,8 +130,10 @@ class DataTable(BaseWidget):
             self.Pad.addstr(2 + y, 0, str(y))
             self.Pad.addstr(2 + y, self.RowLabelWidth, self.ColumnDelimiter, curses.A_NORMAL)
             for x in range(self.Columns):
-                text = self.DataCells[y][x].Text
-                if x == self.PosX and y == self.PosY:
+                text = self.DataCells[y][x]
+                spaceFiller = " " * (self.ColWidth - len(text))
+                text = text + spaceFiller
+                if x == self.PosX and y == self.PosY and self.EnableCursor:
                     self.Pad.addstr(2 + y, self.RowLabelWidth + len(self.ColumnDelimiter) + (x * (self.ColWidth + len(self.ColumnDelimiter))), text, curses.A_REVERSE)
                 else:
                     self.Pad.addstr(2 + y, self.RowLabelWidth + len(self.ColumnDelimiter) + (x * (self.ColWidth + len(self.ColumnDelimiter))), text, curses.A_NORMAL)
@@ -96,9 +142,9 @@ class DataTable(BaseWidget):
     def UpdatePadWindowYX(self):
         # Updates the Y, X positions of variables that determine how pad is displayed
         #
-        # Upper Left of Row Labels:  self.PadRowLabels_DisplayY, self.PadRowLabels_DisplayX
-        # Upper Left of Column Labels:  self.PadColLabels_DisplayY, self.PadColLabels_DisplayX
-        # Upper Left of Table Data:  self.PadData_DisplayY, self.PadData_DisplayX
+        # Upper Left of Row Labels:  self.Pad_DisplayY, 0
+        # Upper Left of Column Labels:  0, self.Pad_DisplayX
+        # Upper Left of Table Data:  self.Pad_DisplayY, self.Pad_DisplayX
         
         data_table_lines = self.Lines - self.RowHeight - 1
         data_table_chars = self.Characters - self.RowLabelWidth
@@ -119,12 +165,20 @@ class DataTable(BaseWidget):
         if ((self.PosX * (self.ColWidth + len(self.ColumnDelimiter))) + self.RowLabelWidth + len(self.ColumnDelimiter)) < self.Pad_DisplayX:
             self.Pad_DisplayX -= self.ColWidth + len(self.ColumnDelimiter)
         
-    
-    def UpdateDisplay(self):
-        #UpdateDisplay picks the part of the pad that the cursor is in and 
+        # TODO: fix -> not working properly
+        # make sure displayX has not moved too far right
+        if self.Pad_DisplayX > self.TotalX - data_table_chars:
+            self.Pad_DisplayX = self.TotalX - data_table_chars - len(self.ColumnDelimiter) - 1
+            
+        # make sure displayY has not moved too far down
+        # only needed if RowHeight is customizable
         
-        self.Pad.erase()
+    def UpdateDisplay(self):
+        #UpdateDisplay displays row numbers, column labels, and the data
+        #according to values set by Pad_DisplayY and Pad_DisplayX
+        
         self.UpdatePad()
+        self.UpdatePadWindowYX()
         # display row numbers
         self.Pad.refresh(
             self.Pad_DisplayY,
@@ -152,35 +206,37 @@ class DataTable(BaseWidget):
             self.Y + self.Lines - 1,
             self.X + self.Characters - 1
         )
-        #self.Pad.refresh(0, 0, self.Y, self.X, self.Y + self.Lines - 1, self.X + self.Characters - 1)
         self.Refresh()
-
         
     def Active(self):
+        self.UpdateDisplay()
         capturing = True
         
         while capturing:
             key = self.Win.getch()
             
-            if key in [curses.KEY_DOWN, ord('s')]:
+            if key in [curses.KEY_DOWN, ord('s')] and self.EnableCursor:
                 if self.PosY < (self.Rows - 1):
                     self.PosY += 1
                     self.UpdatePadWindowYX()
-            elif key in [curses.KEY_UP, ord('w')]:
+            elif key in [curses.KEY_UP, ord('w')] and self.EnableCursor:
                 if self.PosY > 0:
                     self.PosY -= 1
                     self.UpdatePadWindowYX()
-            elif key in [curses.KEY_RIGHT, ord('d')]:
+            elif key in [curses.KEY_RIGHT, ord('d')] and self.EnableCursor:
                 if self.PosX < (self.Columns - 1):
                     self.PosX += 1
                     self.UpdatePadWindowYX()
-            elif key in [curses.KEY_LEFT, ord('a')]:
+            elif key in [curses.KEY_LEFT, ord('a')] and self.EnableCursor:
                 if self.PosX > 0:
                     self.PosX -= 1
                     self.UpdatePadWindowYX()
             elif key in [ord('\t'), 9]:     # TAB
                 curses.ungetch('\t') # Notify the core that tab was pressed
                 capturing = False
+            elif key in [ord('\n'), 10]:    # ENTER
+                #TODO: When we decide what selecting a cell should do
+                pass
             
             self.UpdateDisplay()
         

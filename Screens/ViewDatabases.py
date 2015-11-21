@@ -30,7 +30,7 @@ class ViewDatabases(BaseScreen):
     def GetDatabases(self):
         try:
             # Retrieve a list of databses
-            result = my.QueryString("SHOW DATABASES")
+            result = CDBCore.Connection.QueryString("SHOW DATABASES")
             
             # Ensure there weren't any issues getting the list of databases.
             if not result.Success:
@@ -52,7 +52,7 @@ class ViewDatabases(BaseScreen):
             name = name[2:] # Clean up the bracket '[ ' in the button text
             name = name[:-2] # Clean up the bracket ' ]' in the button text
             CDBCore.Connection.Database = name
-            result = my.QueryString("USE " + name)
+            result = CDBCore.Connection.QueryString("USE " + name)
             if result.Success:
                 curses.ungetch('\n') # Notify the core to move to next screen
             else:

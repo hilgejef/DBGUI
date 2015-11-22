@@ -7,6 +7,8 @@ class BaseWidget:
     # Default widget attributes
     default_attributes = {
         "boxed" : False,
+        "vert_border" : False,
+        "horiz_border" : False,
         "text_y_center" : False,
         "text_x_center" : False,
         "window_y_center" : False,
@@ -44,6 +46,8 @@ class BaseWidget:
         # Attribute initializations
         self.TextMode = attr["text_mode"]
         self.Boxed = attr["boxed"]
+        self.VertBorder = attr["vert_border"]
+        self.HorizBorder = attr["horiz_border"]
         self.TextYCenter = attr["text_y_center"]
         self.TextXCenter = attr["text_x_center"]
         self.WindowYCenter = attr["window_y_center"]
@@ -123,6 +127,12 @@ class BaseWidget:
 
         if self.Boxed:
             self.Win.box()
+
+        elif self.VertBorder:
+            self.Win.border(" ", " ", 0, 0, " ", " ", " ", " ")
+
+        elif self.HorizBorder:
+            self.Win.border(0, 0, " ", " ", " ", " ", " ", " ")
 
         self.Win.bkgd(' ', self.BkgdColor)
 

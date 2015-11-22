@@ -72,15 +72,13 @@ class CDBCore:
         #         CDBCore.CurrentScreen.Show()
         # CTRL + T switches program context to MenuScreen and back
         elif key in [20]:
+            CDBCore.CurrentScreen.UnHighlight()
             if CDBCore.CurrentScreen.Type == "MainMenu":
-                CDBCore.CurrentScreen.UnHighlight()
                 CDBCore.CurrentScreen = CDBCore.History.pop()
-                CDBCore.CurrentScreen.MakeActive()
             else:
                 CDBCore.History.append(CDBCore.CurrentScreen)
-                CDBCore.CurrentScreen.UnHighlight()
                 CDBCore.CurrentScreen = CDBCore.MenuScreen
-                CDBCore.CurrentScreen.MakeActive()
+            CDBCore.CurrentScreen.MakeActive()
         else:
             # TODO: Popup to notify user before exitting application that an issue occured
             pass

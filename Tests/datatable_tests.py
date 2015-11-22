@@ -1,5 +1,7 @@
 import curses
 from BaseWidget import BaseWidget
+from Label import Label
+from TextBox import TextBox
 from DataTable import DataTable
 
 # These actions will be handled in the Global file
@@ -8,6 +10,10 @@ curses.start_color()
 curses.cbreak()
 curses.noecho()
 stdscr.keypad(1)
+
+# label testing
+lbl = Label("TestLabel", 2, 2)
+txtbx = TextBox(5, 30, 2, 20)
 
 # Test DataTable
 resultsobj = [["colA", "columnB", "CCCCCCCCCCCCCCCCC", "colD"],
@@ -21,7 +27,6 @@ resultsobj = [["colA", "columnB", "CCCCCCCCCCCCCCCCC", "colD"],
               ]]
 datatbl = DataTable(8, 30, 10, 4)
 datatbl.LoadResultsObject(resultsobj)
-datatbl.Active()
 
 # Clean up handled in Global file 
 curses.nocbreak()

@@ -27,6 +27,7 @@ resultsobj = [["colA", "columnB", "CCCCCCCCCCCCCCCCC", "colD"],
               ]]
 datatbl = DataTable(8, 30, 10, 4)
 datatbl.LoadResultsObject(resultsobj)
+datatbl.Active()
 
 # Clean up handled in Global file 
 curses.nocbreak()

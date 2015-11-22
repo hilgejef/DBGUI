@@ -30,20 +30,18 @@ class ViewTables(BaseScreen):
             
             # Ensure there weren't any issues getting the list of tables.
             if not result.Success:
-                raise Exception(result.Message)
+                sys.exit(result.Message)
             
             # Create a data table passing result as argument
-            offset = 1
-            for name in result.Data[1]:
-                self.ActionWidgets.append(Button(name[0], self.SetDatabase, 10 + offset, 5))
-                offset += 1
+            self.ActionWidgets.append(DataTable(10, 30, 7, 5, resultsObj=result.Data))
 
         except Exception as ex:
             # TODO: Add status update here
-            msg = "Could not retrieve list of tables.\n" + str(ex)
+            sys.exit(str(ex))
 
-    # # Sets the current table
-    # def SetTable(self):
+    # Sets the current table
+    def SetTable(self):
+        pass
     #     try:
     #         name = self.ActionWidgets[self.CurrentWidget].Text
     #         CDBCore.Connection.Database = name

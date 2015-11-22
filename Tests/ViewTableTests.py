@@ -1,3 +1,4 @@
+import sys
 from CDBCore import CDBCore
 from MySQLConnection import MySQLConnection
 from ViewTables import ViewTables
@@ -12,4 +13,5 @@ if __name__ == "__main__":
 	CDBCore.InitColor()
 	CDBCore.Connection = my
 	CDBCore.CurrentScreen = ViewTables("tmptest")
+	CDBCore.CurrentScreen.MakeActive()
 	CDBCore.Main()

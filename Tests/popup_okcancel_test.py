@@ -7,4 +7,8 @@ def testMethod():
     pass
     
 if __name__ == "__main__":
-    CDBCore.Main(debug=True)
+	CDBCore.InitCurses(debug=False)
+	CDBCore.InitColor()
+	popup = PopUpOkCancel("Test", testMethod, sys.exit)
+	CDBCore.CurrentScreen = popup
+	CDBCore.Main()

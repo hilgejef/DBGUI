@@ -4,6 +4,7 @@ from DataTable import DataTable
 
 # These actions will be handled in the Global file
 stdscr = curses.initscr()
+curses.start_color()
 curses.cbreak()
 curses.noecho()
 stdscr.keypad(1)

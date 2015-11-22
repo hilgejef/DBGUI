@@ -32,7 +32,7 @@ class PopUpYesNoCancel(PopUp):
     def __init__(self, text, yesMethod, noMethod, cancelMethod):
         label = BaseLabel(text, 3, 20, 5, 5, {"boxed":True, "x_offset" : 1, "y_offset" : 1})
         yesButton = BaseButton("Yes", yesMethod, 3, 5, 10, 5, {"boxed":True, "x_offset" : 1, "y_offset" : 1})
-        yesButton = BaseButton("No", noMethod, 3, 4, 10, 11, {"boxed":True, "x_offset" : 1, "y_offset" : 1})
-        cancelButton = BaseButton("Cancel", cancelMethod, 3, 7, 10, 15, {"boxed":True, "x_offset" : 1, "y_offset" : 1})
+        noButton = BaseButton("No", noMethod, 3, 4, 10, 11, {"boxed":True, "x_offset" : 1, "y_offset" : 1})
+        cancelButton = BaseButton("Cancel", cancelMethod, 3, 8, 10, 15, {"boxed":True, "x_offset" : 1, "y_offset" : 1})
         PopUp.__init__(self, [label], [yesButton, noButton, cancelButton])    
         

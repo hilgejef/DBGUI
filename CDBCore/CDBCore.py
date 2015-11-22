@@ -82,13 +82,26 @@ class CDBCore:
             # TODO: Popup to notify user before exitting application that an issue occured
             pass
     
-    # Main method is the entry point of the application
+    # Used to test final program flow
     @staticmethod
-    def Main(debug=False):      
+    def FinalMain(debug=False):      
         # Prepare curses for use
         CDBCore.InitCurses(debug)
         CDBCore.InitColor()
         CDBCore.InitScreens()
+        
+        # Show the home screen
+        CDBCore.CurrentScreen.Show()
+        
+        # Process any further actions from the user
+        while True:
+            CDBCore.ProcessAction()
+    
+    # Used to test singular screens
+    @staticmethod
+    def Main():      
+        # Prepare curses for use
+        #InitCurses()
         
         # Show the home screen
         CDBCore.CurrentScreen.Show()

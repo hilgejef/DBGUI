@@ -6,4 +6,4 @@ from CDBCore import CDBCore
 
 if __name__ == "__main__":
     print "Initializing and Displaying HomeScreen" # TESTING
-    CDBCore.Main(debug=True)
+    CDBCore.FinalMain(debug=True)

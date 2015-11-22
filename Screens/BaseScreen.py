@@ -53,18 +53,21 @@ class BaseScreen:
         for w in self.ActionWidgets:
             w.ToBottom()
 
+    # Highlight all widgets
     def Highlight(self):
         for w in self.PassiveWidgets:
             w.Highlight()
         for w in self.ActionWidgets:
             w.Highlight()
 
+    # Unhighlight all widgets
     def UnHighlight(self):
         for w in self.PassiveWidgets:
             w.UnHighlight()
         for w in self.ActionWidgets:
             w.UnHighlight()
 
+    # Highlight and make active the current widget
     def MakeActive(self):
         if self.ActionWidgets:
             self.ActionWidgets[self.CurrentWidget].Highlight()

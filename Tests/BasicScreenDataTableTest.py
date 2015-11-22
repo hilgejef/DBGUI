@@ -30,5 +30,6 @@ class TestScreen(BaseScreen):
     
 if __name__ == "__main__":
     CDBCore.InitCurses()
+    CDBCore.InitColor()
     CDBCore.CurrentScreen = TestScreen()
     CDBCore.Main()

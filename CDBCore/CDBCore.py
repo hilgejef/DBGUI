@@ -30,6 +30,9 @@ class CDBCore:
   
     # TODO: set to base connection string object
     ConnectionString = ""
+
+    # Overriden by Connection object in ConnectionWizard
+    Connection = ""
     
     # TODO: Set to home screen
     CurrentScreen = ""

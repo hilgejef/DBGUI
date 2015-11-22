@@ -34,8 +34,6 @@ stdscr.keypad(0)
 curses.echo()
 curses.endwin()
 
-
-
 #print "Y=" + str(datatbl.Y)
 #print "X=" + str(datatbl.X)
 #print "Rows=" + str(datatbl.Rows)

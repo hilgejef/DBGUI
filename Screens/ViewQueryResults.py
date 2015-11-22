@@ -55,6 +55,7 @@ if __name__ == "__main__":
     my = MySQLConnection(user, password)    
     my.Connect()
     CDBCore.InitCurses()
+    CDBCore.InitColor()
     CDBCore.CurrentScreen = ViewQueryResults()
     CDBCore.Connection = my
     CDBCore.Main()

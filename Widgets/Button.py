@@ -41,5 +41,7 @@ class BaseButton(BaseLabel):
 
 """ Button """
 class Button(BaseButton):
-    def __init__(self, text, method, y, x, attr=None):
+    def __init__(self, text, method, y, x, attr=None, no_brackets=False):
+        if not no_brackets:
+            text = "[ " + text + " ]"
         BaseButton.__init__(self, text, method, 1, len(text) + 1, y, x, attr)

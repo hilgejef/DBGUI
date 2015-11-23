@@ -1,7 +1,7 @@
 ###############################################################################
 # Author:		Rich Gagliano
 # Date Created:		11/21/2015
-# Date Modified:	11/21/2015
+# Date Modified:	11/23/2015
 # File Name:		CreateTable.py
 #
 # Overview:
@@ -32,8 +32,8 @@ class CreateTable(BaseScreen):
         self.PassiveWidgets.append(Label("Number of Columns:", 7, 5))
         self.ActionWidgets.append(TextBox(1, 16, 5, 20))
         self.ActionWidgets.append(TextBox(1, 16, 7, 20))
-        self.ActionWidgets.append(Button("Exit", sys.exit, 23, 5))
-        self.ActionWidgets.append(Button("Next", self.CheckValues, 23, 15))
+        self.ActionWidgets.append(Button("Exit", sys.exit, 10, 5))
+        self.ActionWidgets.append(Button("Next", self.CheckValues, 10, 15))
     
     # Checks if a table already exists under the requested name
     def CheckName(self):
@@ -85,13 +85,11 @@ class CreateTable(BaseScreen):
                 return
             
             # Move on to CreateTableColumn
-            print "calling ungetch"
             curses.ungetch('\n')
             
         except Exception as ex:
             # TODO: Add status update here, and keep the screen here
             msg = "Failed to validate db name, or column size:\n" + str(ex)
-            print msg
             self.Columns = 0
             self.Name = ""
             self.ActionWidgets[0].selected = True

@@ -35,14 +35,10 @@ class CreateTableColumns(BaseScreen):
       
         # Tracking variables for retrieving entries
         self.Fields = ["ColumnName", "ColumnType"]
-        self.Indexes = {}
-        counter = 0
         for c in range(self.Columns):
             self.PassiveWidgets.append(Label("Field" + str(c), ystart + yoffset, xlabel))
             for f in self.Fields:
-                self.Indexes[f + str(c)] = counter
                 self.ActionWidgets.append(TextBox(1, 16, ystart + yoffset, xaction))
-                counter += 1
                 xaction = 35
             yoffset += 3
             xaction = 15        

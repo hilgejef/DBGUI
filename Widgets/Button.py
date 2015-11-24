@@ -1,14 +1,15 @@
 import curses
 import curses.panel
-from Label import Label
+from Label import BaseLabel
 
-""" Button """
-class Button(Label):
-    def __init__(self, text, method, y, x):
-        text = "[ " + text + " ]"
-        Label.__init__(self, text, y, x)
+""" BaseButton """
+class BaseButton(BaseLabel):
+    def __init__(self, text, method, height, width, y, x, attr=None):
+        BaseLabel.__init__(self, text, height, width, y, x, attr)
         self.CallMethod = method
         
+    # -- IMO, should be rewritten to be handled in Core, and
+    # keys passed to widget, which will have a key handler
     def Active(self):
         selected = True
         # highlight current widget to show it is active
@@ -30,4 +31,17 @@ class Button(Label):
                 # stop highlighting current widget
                 self.UnHighlight()
                 selected = False
-                curses.ungetch('\t') # Notify the core that tab was pressed
+
+            # Temporary - deselection by any key other than Tab/Enter
+            else:
+                selected = False
+
+            curses.ungetch(key) 
+
+
+""" Button """
+class Button(BaseButton):
+    def __init__(self, text, method, y, x, attr=None, no_brackets=False):
+        if not no_brackets:
+            text = "[ " + text + " ]"
+        BaseButton.__init__(self, text, method, 1, len(text) + 1, y, x, attr)

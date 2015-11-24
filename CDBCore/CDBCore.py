@@ -6,8 +6,12 @@
 #
 #########################################################
 
+import sys
 import curses
 import atexit
+from MainMenu import MainMenu
+from HomeScreen import HomeScreen
+from PopUp import PopUpOkCancel # TESTING ONLY
 
 class CDBCore:
     # Constants for Defining Screen Locations
@@ -26,6 +30,9 @@ class CDBCore:
   
     # TODO: set to base connection string object
     ConnectionString = ""
+
+    # Overriden by Connection object in ConnectionWizard
+    Connection = ""
     
     # TODO: Set to home screen
     CurrentScreen = ""
@@ -51,22 +58,47 @@ class CDBCore:
         # TODO: Decide if this needs to be expanded for screens with
         #       multiple exit points, or if this will be handled within
         #       the screen itself
-        elif key in [curses.KEY_ENTER, ord('\n'), 10]:
-            CDBCore.History.append(CDBCore.CurrentScreen)
-            CDBCore.CurrentScreen.Hide()
-            CDBCore.CurrentScreen = CDBCore.CurrentScreen.Next()
-            CDBCore.CurrentScreen.Show()
-        # CTRL + TAB denotes go back to previous screen if there is one
-        elif key in [1]: # TODO: identify CTRL+TAB key possibilities
-            if len(CDBCore.History) > 0:
-                CDBCore.CurrentScreen.Hide()
+        # elif key in [curses.KEY_ENTER, ord('\n'), 10]:
+        #     CDBCore.History.append(CDBCore.CurrentScreen)
+        #     CDBCore.CurrentScreen.Hide()
+        #     CDBCore.CurrentScreen = CDBCore.CurrentScreen.Next()
+        #     CDBCore.CurrentScreen.Show()
+        # # CTRL + TAB denotes go back to previous screen if there is one
+        # elif key in [1]: # TODO: identify CTRL+TAB key possibilities
+        #     if len(CDBCore.History) > 0:
+        #         if CDBCore.CurrentScreen != CDBCore.MenuScreen:
+        #             CDBCore.CurrentScreen.Hide()
+        #         CDBCore.CurrentScreen = CDBCore.History.pop()
+        #         CDBCore.CurrentScreen.Show()
+        # CTRL + T switches program context to MenuScreen and back
+        elif key in [20]:
+            CDBCore.CurrentScreen.UnHighlight()
+            if CDBCore.CurrentScreen.Type == "MainMenu":
                 CDBCore.CurrentScreen = CDBCore.History.pop()
-                CDBCore.CurrentScreen.Show()
+            else:
+                CDBCore.History.append(CDBCore.CurrentScreen)
+                CDBCore.CurrentScreen = CDBCore.MenuScreen
+            CDBCore.CurrentScreen.MakeActive()
         else:
             # TODO: Popup to notify user before exitting application that an issue occured
             pass
     
-    # Main method is the entry point of the application
+    # Used to test final program flow
+    @staticmethod
+    def FinalMain(debug=False):      
+        # Prepare curses for use
+        CDBCore.InitCurses(debug)
+        CDBCore.InitColor()
+        CDBCore.InitScreens()
+        
+        # Show the home screen
+        CDBCore.CurrentScreen.Show()
+        
+        # Process any further actions from the user
+        while True:
+            CDBCore.ProcessAction()
+    
+    # Used to test singular screens
     @staticmethod
     def Main():      
         # Prepare curses for use
@@ -94,12 +126,17 @@ class CDBCore:
     
     # Initializes the curses library for use, and registers cleanup
     @staticmethod
-    def InitCurses():
+    def InitCurses(debug=False):
         # First register proper cleanup of curses
-        atexit.register(CDBCore.CleanupCurses)
+        if not debug:
+            atexit.register(CDBCore.CleanupCurses)
         
         # Next initialize curses for use
         CDBCore.stdscr = curses.initscr()
+
+        # Initialize color
+        curses.start_color()
+
         try:
             # Not all terminals support hiding the cursor
             curses.curs_set(1)
@@ -109,3 +146,24 @@ class CDBCore:
         curses.noecho()
         CDBCore.stdscr.keypad(1)
 
+    # Create color pairings and initialize screen background
+    @staticmethod
+    def InitColor():
+        # Text color/text background
+        curses.init_pair(1, curses.COLOR_WHITE, curses.COLOR_CYAN)
+
+        # Window background/window border
+        curses.init_pair(2, curses.COLOR_WHITE, curses.COLOR_BLUE)
+
+        # Screen background/screen border
+        curses.init_pair(3, curses.COLOR_BLUE, curses.COLOR_CYAN)
+
+        # Initialize main background color
+        CDBCore.stdscr.bkgd(' ', curses.color_pair(3))
+        CDBCore.stdscr.box()
+
+    # Initialize screens and objects
+    @staticmethod
+    def InitScreens():
+        CDBCore.MenuScreen = MainMenu()
+        CDBCore.CurrentScreen = HomeScreen()

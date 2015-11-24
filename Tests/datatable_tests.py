@@ -6,6 +6,7 @@ from DataTable import DataTable
 
 # These actions will be handled in the Global file
 stdscr = curses.initscr()
+curses.start_color()
 curses.cbreak()
 curses.noecho()
 stdscr.keypad(1)
@@ -26,14 +27,13 @@ resultsobj = [["colA", "columnB", "CCCCCCCCCCCCCCCCC", "colD"],
               ]]
 datatbl = DataTable(8, 30, 10, 4)
 datatbl.LoadResultsObject(resultsobj)
+datatbl.Active()
 
 # Clean up handled in Global file 
 curses.nocbreak()
 stdscr.keypad(0)
 curses.echo()
 curses.endwin()
-
-
 
 #print "Y=" + str(datatbl.Y)
 #print "X=" + str(datatbl.X)

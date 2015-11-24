@@ -9,6 +9,10 @@ class BaseLabel(BaseWidget):
 		self.Text = text
 		self.UpdateDisplay()
 
+	def ChangeText(self, text):
+		self.Text = text
+		self.UpdateDisplay()
+
 """ Label """
 class Label(BaseLabel):
     def __init__(self, text, y, x, attr=None):

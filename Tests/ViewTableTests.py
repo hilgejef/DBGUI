@@ -2,6 +2,7 @@ import sys
 from CDBCore import CDBCore
 from MySQLConnection import MySQLConnection
 from ViewTables import ViewTables
+from MainMenu import MainMenu
 
 if __name__ == "__main__":
 	user = raw_input('Enter the MySQL db user: ')
@@ -12,5 +13,6 @@ if __name__ == "__main__":
 	CDBCore.InitCurses(debug=True)
 	CDBCore.InitColor()
 	CDBCore.Connection = my
+	CDBCore.MenuScreen = MainMenu()
 	CDBCore.CurrentScreen = ViewTables("tmptest")
 	CDBCore.Main()

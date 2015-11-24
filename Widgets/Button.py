@@ -11,33 +11,17 @@ class BaseButton(BaseLabel):
     # -- IMO, should be rewritten to be handled in Core, and
     # keys passed to widget, which will have a key handler
     def Active(self):
-        selected = True
-        # highlight current widget to show it is active
         self.Highlight()
-        
-        while selected:
-            key = self.Win.getch()
+
+    def ExecInput(self, inp):
+        if inp in [curses.KEY_ENTER, ord('\n'), 10]:
+            self.CallMethod()
             
-            # capture ENTER, TAB, and BACKTAB keystrokes
-            if key in [curses.KEY_ENTER, ord('\n'), 10]:
-                # should I leave the deselecting of the widget for the screen handler object?
-                #   - I think this should be handled here so that the behavior will be consistent
-                #     accross the application. Can't think of a good reason not to do it here. - Rich
-                self.UnHighlight()
-                selected = False
-                self.CallMethod()
-            
-            elif key in [ord('\t'), 9]:
-                # stop highlighting current widget
-                self.UnHighlight()
-                selected = False
+        elif inp in [ord('\t'), 9]:
+            self.UnHighlight()
 
-            # Temporary - deselection by any key other than Tab/Enter
-            else:
-                selected = False
-
-            curses.ungetch(key) 
-
+        else:
+            pass
 
 """ Button """
 class Button(BaseButton):

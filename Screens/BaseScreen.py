@@ -76,6 +76,7 @@ class BaseScreen:
             self.PassiveWidgets[0].Highlight()
     
     # Advance to the next active widget
+    # -- What if number of widgets changes within screen? BE CAREFUL!!
     def NextWidget(self):
         self.CurrentWidget += 1
         if self.CurrentWidget >= len(self.ActionWidgets):
@@ -87,3 +88,29 @@ class BaseScreen:
     # Must return the next screen to be visited
     def Next(self):
         return None
+
+    # Base HandleInput function sends Core input to the active widget
+    # and then calls ExecBase() and ExecInput()
+    def HandleInput(self, inp, no_base=False):
+        if self.ActionWidgets:
+            self.ActionWidgets[self.CurrentWidget].HandleInput(inp)
+        else:
+            pass
+
+        if not no_base:
+            self.ExecBase(inp)
+
+        self.ExecInput(inp)
+
+    # Method to execute default actions common to all screens
+    def ExecBase(self, inp):
+        if inp in [ord('\t'), 9]:
+            self.NextWidget()
+
+        else:
+            pass
+
+    # Overload with action to take from specific input
+    def ExecInput(self, inp):
+        pass
+

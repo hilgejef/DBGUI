@@ -46,32 +46,15 @@ class CDBCore:
     # Stores the history of screens the user has visited
     History = []
     
-    # Processes any actions from the user.  These actions are
-    # passed through curses.ungetch(ch).
+    # In input branch, ProcessAction() accepts user input using
+    # getch(), and passes keys downward to Screens using an
+    # Input handler in the BaseScreen class
     @staticmethod
     def ProcessAction():
         key = CDBCore.stdscr.getch()
-        # TAB denotes move to next widget
-        if key in [ord('\t'), 9]:
-            CDBCore.CurrentScreen.NextWidget()
-        # ENTER denotes move to next screen
-        # TODO: Decide if this needs to be expanded for screens with
-        #       multiple exit points, or if this will be handled within
-        #       the screen itself
-        # elif key in [curses.KEY_ENTER, ord('\n'), 10]:
-        #     CDBCore.History.append(CDBCore.CurrentScreen)
-        #     CDBCore.CurrentScreen.Hide()
-        #     CDBCore.CurrentScreen = CDBCore.CurrentScreen.Next()
-        #     CDBCore.CurrentScreen.Show()
-        # # CTRL + TAB denotes go back to previous screen if there is one
-        # elif key in [1]: # TODO: identify CTRL+TAB key possibilities
-        #     if len(CDBCore.History) > 0:
-        #         if CDBCore.CurrentScreen != CDBCore.MenuScreen:
-        #             CDBCore.CurrentScreen.Hide()
-        #         CDBCore.CurrentScreen = CDBCore.History.pop()
-        #         CDBCore.CurrentScreen.Show()
+        
         # CTRL + T switches program context to MenuScreen and back
-        elif key in [20]:
+        if key in [20]:
             CDBCore.CurrentScreen.UnHighlight()
             if CDBCore.CurrentScreen.Type == "MainMenu":
                 CDBCore.CurrentScreen = CDBCore.History.pop()
@@ -79,9 +62,9 @@ class CDBCore:
                 CDBCore.History.append(CDBCore.CurrentScreen)
                 CDBCore.CurrentScreen = CDBCore.MenuScreen
             CDBCore.CurrentScreen.MakeActive()
-        else:
-            # TODO: Popup to notify user before exitting application that an issue occured
-            pass
+
+        # Pass key to CurrentScreen handler
+        CDBCore.CurrentScreen.HandleInput(key)
     
     # Used to test final program flow
     @staticmethod

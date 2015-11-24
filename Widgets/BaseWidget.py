@@ -164,6 +164,24 @@ class BaseWidget:
     def UnHighlight(self):
         self.TextMode = curses.A_NORMAL
         self.UpdateDisplay()
+
+    # Base input handler - accepts input and calls ExecBase() and ExecInput()
+    def HandleInput(self, inp, no_base=False):
+        if not no_base:
+            self.ExecBase(inp)
+
+        self.ExecInput(inp)
+
+    def ExecBase(self, inp):
+        if inp in [ord('\t'), 9]:
+            self.UnHighlight()
+
+        else:
+            pass
+
+    # Overloaded by specific widget
+    def ExecInput(self, inp):
+        pass
     
     # Virtual Active() function so that active can be used
     # across all widgets

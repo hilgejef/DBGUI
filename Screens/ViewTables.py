@@ -1,7 +1,7 @@
 import sys
 import curses
 from CDBCore import CDBCore
-from Label import Label
+from Label import BaseLabel
 from Button import BaseButton
 from BaseScreen import BaseScreen
 from ResultStatus import ResultStatus
@@ -24,8 +24,14 @@ class ViewTables(BaseScreen):
         self.CurrentPage = 0
         self.NumTables = 0
 
+        self.PassiveWidgets.append(BaseLabel("View Tables", 3, 13, 5, 4, 
+            attr={
+                "boxed" : True,
+                "text_x_center" : True,
+                "y_offset" : 1
+            }
+        ))
         self.GetTables()
-        self.PassiveWidgets.append(Label("Tables", 5, 5))
 
 
     # Retrieves a list of tables
@@ -53,12 +59,28 @@ class ViewTables(BaseScreen):
 
     def AddTables(self):
             self.ActionWidgets = []
+            self.PassiveWidgets = [self.PassiveWidgets[0]]
 
+            # Create a label indicating the current Results page
+            pageCount = "Page: {}".format(self.CurrentPage + 1)
+            pageLabel = (BaseLabel(pageCount, 3, len(pageCount) + 2, 5, 62, 
+                attr = {
+                    "boxed" : True,
+                    "text_x_center" : True,
+                    "y_offset" : 1
+                }
+            ))
+
+            self.PassiveWidgets.append(pageLabel)
+
+            # Initialize table indexes based on pagesize variable
             start = self.CurrentPage * _PAGESIZE_
             end = min((self.CurrentPage + 1) * _PAGESIZE_, self.NumTables )
 
+            # Create a button for each table 
+            # Button should set the CurrentTable when activated
             for offset, name in enumerate(self.Data[start:end]):
-                self.ActionWidgets.append(BaseButton(name[0], self.SetTable, 3, 40, 8 + offset * 2, 20,
+                self.ActionWidgets.append(BaseButton(name[0], self.SetTable, 3, 40, 5 + offset * 2, 20,
                     attr={
                         "vert_border" : True,
                         "text_x_center" : True,
@@ -66,8 +88,8 @@ class ViewTables(BaseScreen):
                     }
                 ))
 
-            # Back button goes back 1 page
-            backButton = BaseButton("Back", self.BackFunc(), 3, 6, 20, 12,
+            # Back button goes back 1 page of results
+            backButton = BaseButton("Back (B)", self.BackFunc(), 3, 10, 17, 20,
                 attr={
                     "boxed" : True,
                     "text_x_center" : True,
@@ -75,8 +97,11 @@ class ViewTables(BaseScreen):
                 }
             )
 
-            # Next button goes forward 1 page
-            nextButton = BaseButton("Next", self.NextFunc(), 3, 6, 20, 24,
+            self.PassiveWidgets.append(backButton)
+            self.backButton = backButton
+
+            # Next button goes forward 1 page of results
+            nextButton = BaseButton("Next (N)", self.NextFunc(), 3, 10, 17, 50,
                 attr={
                     "boxed" : True,
                     "text_x_center" : True,
@@ -84,16 +109,19 @@ class ViewTables(BaseScreen):
                 }
             )
 
-            self.ActionWidgets.append(backButton)
-            self.ActionWidgets.append(nextButton)
+            self.PassiveWidgets.append(nextButton)
+            self.nextButton = nextButton
 
+    # Function returns a function that paginates backward
     def BackFunc(self):
         def EmptyMethod():
             pass
 
         def BackMethod():
             self.CurrentPage -= 1
+            self.CurrentWidget = 0
             self.AddTables()
+            self.MakeActive()
 
         if self.CurrentPage == 0:
             return EmptyMethod
@@ -101,20 +129,33 @@ class ViewTables(BaseScreen):
         else:
             return BackMethod
 
-
+    # Function returns a function that paginates forward
     def NextFunc(self):
         def EmptyMethod():
             pass
 
         def NextMethod():
             self.CurrentPage += 1
+            self.CurrentWidget = 0
             self.AddTables()
+            self.MakeActive()
 
         if (self.CurrentPage + 1) * _PAGESIZE_ >= self.NumTables:
             return EmptyMethod
 
         else:
             return NextMethod
+
+    # ViewTables screen inputs: N for forward and B for backward
+    def ExecInput(self, inp):
+        if inp in [ord('n')]:
+            self.nextButton.CallMethod()
+
+        elif inp in [ord('b')]:
+            self.backButton.CallMethod()
+
+        else:
+            pass
 
     # Sets Connection.Table to current table/advances to QueryTable
     def SetTable(self):

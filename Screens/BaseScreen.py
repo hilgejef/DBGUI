@@ -5,7 +5,7 @@ class BaseScreen:
         self.PassiveWidgets = []
         self.CurrentWidget = 0
         self.Init()
-    
+
     # Initializes the screen on construction (virtual)
     def Init(self):
         pass
@@ -91,15 +91,13 @@ class BaseScreen:
 
     # Base HandleInput function sends Core input to the active widget
     # and then calls ExecBase() and ExecInput()
-    def HandleInput(self, inp, no_base=False):
+    def HandleInput(self, inp):
         if self.ActionWidgets:
             self.ActionWidgets[self.CurrentWidget].HandleInput(inp)
         else:
             pass
 
-        if not no_base:
-            self.ExecBase(inp)
-
+        self.ExecBase(inp)
         self.ExecInput(inp)
 
     # Method to execute default actions common to all screens

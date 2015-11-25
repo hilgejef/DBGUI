@@ -41,9 +41,13 @@ class DataTable(BaseWidget):
 
         # load data from resultsObj to be displayed
         self.LoadResultsObject(resultsObj)    # must be called upon init to set graphics for widget
+
+        # This essentially does nothing -- the data table is not updated here,
+        # until the user TABs into the widget, the class's Active method is called
+        # which is just -- get this -- self.UpdateDisplay()
+        # So the question is: Why?
         self.UpdateDisplay()
 
-        
     # Takes ParsedResults object from MySQLConnection / PostgreSQLConnection
     # ParseResults() method
     #
@@ -179,6 +183,7 @@ class DataTable(BaseWidget):
         
         self.UpdatePad()
         self.UpdatePadWindowYX()
+
         # display row numbers
         self.Pad.refresh(
             self.Pad_DisplayY,
@@ -207,36 +212,30 @@ class DataTable(BaseWidget):
             self.X + self.Characters - 1
         )
         self.Refresh()
-        
+
     def Active(self):
         self.UpdateDisplay()
-        capturing = True
-        
-        while capturing:
-            key = self.Win.getch()
-            
-            if key in [curses.KEY_DOWN, ord('s')] and self.EnableCursor:
-                if self.PosY < (self.Rows - 1):
-                    self.PosY += 1
-                    self.UpdatePadWindowYX()
-            elif key in [curses.KEY_UP, ord('w')] and self.EnableCursor:
-                if self.PosY > 0:
-                    self.PosY -= 1
-                    self.UpdatePadWindowYX()
-            elif key in [curses.KEY_RIGHT, ord('d')] and self.EnableCursor:
-                if self.PosX < (self.Columns - 1):
-                    self.PosX += 1
-                    self.UpdatePadWindowYX()
-            elif key in [curses.KEY_LEFT, ord('a')] and self.EnableCursor:
-                if self.PosX > 0:
-                    self.PosX -= 1
-                    self.UpdatePadWindowYX()
-            elif key in [ord('\t'), 9]:     # TAB
-                curses.ungetch('\t') # Notify the core that tab was pressed
-                capturing = False
-            elif key in [ord('\n'), 10]:    # ENTER
-                #TODO: When we decide what selecting a cell should do
-                pass
-            
-            self.UpdateDisplay()
+
+    def ExecInput(self, key):
+        if key in [curses.KEY_DOWN, ord('s')] and self.EnableCursor:
+            if self.PosY < (self.Rows - 1):
+                self.PosY += 1
+                self.UpdateDisplay()
+        elif key in [curses.KEY_UP, ord('w')] and self.EnableCursor:
+            if self.PosY > 0:
+                self.PosY -= 1
+                self.UpdateDisplay()
+        elif key in [curses.KEY_RIGHT, ord('d')] and self.EnableCursor:
+            if self.PosX < (self.Columns - 1):
+                self.PosX += 1
+                self.UpdateDisplay()
+        elif key in [curses.KEY_LEFT, ord('a')] and self.EnableCursor:
+            if self.PosX > 0:
+                self.PosX -= 1
+                self.UpdateDisplay()
+        elif key in [ord('\n'), 10]:    # ENTER
+            #TODO: When we decide what selecting a cell should do
+            pass
+        else:
+            pass
         

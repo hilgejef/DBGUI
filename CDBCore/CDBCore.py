@@ -86,10 +86,10 @@ class CDBCore:
     def Main():      
         # Prepare curses for use
         #InitCurses()
-        
+
         # Show the home screen
         CDBCore.CurrentScreen.Show()
-        
+
         # Process any further actions from the user
         while True:
             CDBCore.ProcessAction()

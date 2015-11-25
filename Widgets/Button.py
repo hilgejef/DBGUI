@@ -8,17 +8,12 @@ class BaseButton(BaseLabel):
         BaseLabel.__init__(self, text, height, width, y, x, attr)
         self.CallMethod = method
         
-    # -- IMO, should be rewritten to be handled in Core, and
-    # keys passed to widget, which will have a key handler
     def Active(self):
         self.Highlight()
 
     def ExecInput(self, inp):
         if inp in [curses.KEY_ENTER, ord('\n'), 10]:
             self.CallMethod()
-            
-        elif inp in [ord('\t'), 9]:
-            self.UnHighlight()
 
         else:
             pass

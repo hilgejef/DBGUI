@@ -166,12 +166,11 @@ class BaseWidget:
         self.UpdateDisplay()
 
     # Base input handler - accepts input and calls ExecBase() and ExecInput()
-    def HandleInput(self, inp, no_base=False):
-        if not no_base:
-            self.ExecBase(inp)
-
+    def HandleInput(self, inp):
+        self.ExecBase(inp)
         self.ExecInput(inp)
 
+    # Base function to implement input actions common to all widgets
     def ExecBase(self, inp):
         if inp in [ord('\t'), 9]:
             self.UnHighlight()

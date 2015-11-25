@@ -18,7 +18,7 @@ class ViewTables(BaseScreen):
         elif not CDBCore.CurrentDatabase:
             raise Exception("No database selected.")
 
-        BaseScreen.__init__(self)
+        BaseScreen.__init__(self, screen_type="ViewTables")
             
     def Init(self):
         self.CurrentPage = 0
@@ -63,13 +63,13 @@ class ViewTables(BaseScreen):
 
             # Create a label indicating the current Results page
             pageCount = "Page: {}".format(self.CurrentPage + 1)
-            pageLabel = (BaseLabel(pageCount, 3, len(pageCount) + 2, 5, 62, 
+            pageLabel = BaseLabel(pageCount, 3, len(pageCount) + 2, 5, 62, 
                 attr = {
                     "boxed" : True,
                     "text_x_center" : True,
                     "y_offset" : 1
                 }
-            ))
+            )
 
             self.PassiveWidgets.append(pageLabel)
 

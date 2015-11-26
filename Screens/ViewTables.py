@@ -13,9 +13,9 @@ _PAGESIZE_ = 5
 class ViewTables(BaseScreen):
     def __init__(self, DBName=""):
         if DBName:
-            CDBCore.CurrentDatabase = DBName
+            CDBCore.Connection.Database = DBName
 
-        elif not CDBCore.CurrentDatabase:
+        elif not CDBCore.Connection.Database:
             raise Exception("No database selected.")
 
         BaseScreen.__init__(self, screen_type="ViewTables")
@@ -38,7 +38,7 @@ class ViewTables(BaseScreen):
     def GetTables(self):
         try:
             # Retrieve a list of tables
-            result = CDBCore.Connection.QueryString("SHOW TABLES FROM " + CDBCore.CurrentDatabase)
+            result = CDBCore.Connection.QueryString("SHOW TABLES FROM " + CDBCore.Connection.Database)
             
             # Ensure there weren't any issues getting the list of tables.
             if not result.Success:

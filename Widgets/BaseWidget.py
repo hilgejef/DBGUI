@@ -17,7 +17,8 @@ class BaseWidget:
         "bkgd_color" : 2,
         "y_offset" : 0,
         "x_offset" : 0,
-        "text_mode" : curses.A_NORMAL
+        "text_mode" : curses.A_NORMAL,
+        "use_display_text" : False
     }
 
     def __init__(self, height, width, y, x, attr=None):
@@ -42,6 +43,7 @@ class BaseWidget:
 
         # Text to override
         self.Text = ""
+        self.DisplayText = ""
 
         # Attribute initializations
         self.TextMode = attr["text_mode"]
@@ -56,11 +58,17 @@ class BaseWidget:
         self.BkgdColor = curses.color_pair(attr["bkgd_color"])
         self.YOffset = attr["y_offset"]
         self.XOffset = attr["x_offset"]
+        self.UseDisplayText = attr["use_display_text"]
+
+       # Determine padding attributes
+        if self.HorizBorder or self.Boxed:
+            self.XPadding = 2
+        else:
+            self.XPadding = 0
 
         # Legacy support
         self.Lines = height
         self.Characters = width
-
     
     def Refresh(self):
         try:
@@ -142,15 +150,20 @@ class BaseWidget:
         else:
             YOffset = self.YOffset
 
-        if self.TextXCenter:
-            for line, substr in enumerate(self.Text.split('\n')):
-                XOffset = (self.Width - len(substr)) / 2 
-                self.Win.addstr(YOffset + line, XOffset, 
-                                substr, self.TextMode | self.TextColor)
+        if self.UseDisplayText:
+            text = self.DisplayText
         else:
-            for line, substr in enumerate(self.Text.split('\n')):
-                self.Win.addstr(YOffset + line, self.XOffset, 
-                                substr, self.TextMode | self.TextColor)
+            text = self.Text
+
+        if self.TextXCenter:
+            for line, substr in enumerate(text.split('\n')):
+                XOffset = (self.Width - len(substr)) / 2 
+                self.Win.addnstr(YOffset + line, XOffset, substr, 
+                                 self.Width  - XOffset - 1, self.TextMode | self.TextColor)
+        else:
+            for line, substr in enumerate(text.split('\n')):
+                self.Win.addnstr(YOffset + line, self.XOffset, substr,
+                                 self.Width - self.XOffset - 1, self.TextMode | self.TextColor)
             
         self.Refresh()
 

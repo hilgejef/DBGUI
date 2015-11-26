@@ -68,7 +68,21 @@ class MySQLConnection(BaseConnection):
             else:
                 cursor.execute(query, values)
             data = self.ParseResults(cursor) 
+
             cursor.close()
+
+            # # EDITED OUT - Converts data to string representation, determine
+            # # if int-representation is necessary or not BEFORE changing
+            # dataCopy = [[], []]
+            # for header in data[0]:
+            #     dataCopy[0].append(str(header))
+            # for row in data[1]:
+            #     rowList = []
+            #     for field in row:
+            #         rowList.append(str(field))
+            #     dataCopy[1].append(rowList)
+
+            # return ResultStatus(True, None, dataCopy)
             return ResultStatus(True, None, data)
         except Exception as ex:
             return ResultStatus(False, "Could not execute query:\n" + str(ex))

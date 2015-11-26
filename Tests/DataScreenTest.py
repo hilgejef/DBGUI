@@ -16,13 +16,18 @@ resultsObj = [["colA", "columnB", "CCCCCCCCCCCCCCCCC", "colD"],
               ["", "", "", ""],
               ["last0", "last1", "last2", "last3"]]]
 
-# CDBCore.MenuScreen = MainMenu()
-CDBCore.CurrentScreen = DataScreen(resultsObj)
+data = [['id', 'firstname', 'lastname', 'email'], [(1, u'Jeff', u'Hilger', u'hilger@test.com'), (2, u'Jon', u'Moore', u'jon@test.com'), (3, u'Richard', u'Gagliano', u'rich@test.com')]]
 
-# TEST DATA TABLE NOT APPEARING IMMEDIATELY
-# CDBCore.CurrentScreen.ActionWidgets[1].Active() # Didn't fix
-# CDBCore.CurrentScreen.ActionWidgets[1].UpdateDisplay() # Didn't fix
-# CDBCore.CurrentScreen.ActionWidgets[0].UnHighlight() # Didn't fix
-# CDBCore.CurrentScreen.NextWidget() Didn't fix
+dataCopy = data[:]
+
+for idx, header in enumerate(dataCopy[0]):
+    data[0][idx] = str(header)
+
+for ridx, row in enumerate(dataCopy[1]):
+    for fidx, field in enumerate(row):
+        data[1][ridx][fidx] = str(field)
+
+# CDBCore.MenuScreen = MainMenu()
+CDBCore.CurrentScreen = DataScreen(data)
 
 CDBCore.Main()

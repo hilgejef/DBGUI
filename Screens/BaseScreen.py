@@ -94,9 +94,7 @@ class BaseScreen:
     def HandleInput(self, inp):
         if self.ActionWidgets:
             self.ActionWidgets[self.CurrentWidget].HandleInput(inp)
-        else:
-            pass
-
+            
         self.ExecBase(inp)
         self.ExecInput(inp)
 
@@ -104,7 +102,6 @@ class BaseScreen:
     def ExecBase(self, inp):
         if inp in [ord('\t'), 9]:
             self.NextWidget()
-
         else:
             pass
 

@@ -25,6 +25,7 @@ class BaseConnection:
         self.Host = host
         self.Port = port
         self.Database = database
+        self.Table = None
         self.Connection = None
     
     # Opens a connection to the DB server. To be overloaded in children.  

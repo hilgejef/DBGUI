@@ -52,9 +52,17 @@ class CDBCore:
     @staticmethod
     def ProcessAction():
         key = CDBCore.stdscr.getch()
+
+        # Handle ALT and ESC behavior
+        if key in [27]:
+            CDBCore.stdscr.nodelay(True)
+            checkEsc = CDBCore.stsdscr.getch()
+            if checkEsc == - 1:
+                key = -1
+            CDBCore.stdscr.nodelay(False)
         
         # CTRL + T switches program context to MenuScreen and back
-        if key in [20]:
+        elif key in [20]:
             CDBCore.CurrentScreen.UnHighlight()
             if CDBCore.CurrentScreen.Type == "MainMenu":
                 CDBCore.CurrentScreen = CDBCore.History.pop()

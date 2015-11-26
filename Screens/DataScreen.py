@@ -10,7 +10,7 @@ from BaseScreen import BaseScreen
 class DataScreen(BaseScreen):
 
     default_attributes = {
-        "start_y" : 5,
+        "start_y" : 6,
         "start_x" : 15,
         "column_size" : 10, # Not below 3 if bordered
         "display_cols" : 5,
@@ -53,7 +53,18 @@ class DataScreen(BaseScreen):
         self.CursorX = 0
         self.CursorY = 0
 
-    def LoadResult(self):
+    def LoadResult(self, reset=False):
+        if reset:
+            self.TotalCols = len(self.Result[0])
+            self.TotalRows = len(self.Result[1])
+            self.DisplayCols = min(self.TotalCols, self.Attr["display_cols"])
+            self.DisplayRows = min(self.TotalRows, self.Attr["display_rows"])
+            self.DataX = 0
+            self.DataY = 0
+            self.CursorX = 0
+            self.CursorY = 0  
+            self.CurrentWidget = 0          
+
         # Empty widget containers
         self.PassiveWidgets = []
         self.ActionWidgets = []
@@ -70,14 +81,16 @@ class DataScreen(BaseScreen):
             self.FieldPadding = 1
 
         # Iterate through self.Result to create header labels
-        for xidx, x in enumerate(range(self.DataX, self.DataX + self.DisplayCols)):
+        for xidx, x in enumerate(range(self.DataX, min(self.TotalCols, self.DataX + self.DisplayCols))):
 
             # Define header attributes
             headerX = self.StartX + (self.ColSize + self.HeadPadding) * xidx
             headerY = self.StartY
             headerHeight = self.HeadPadding + 1
             headerWidth = self.ColSize
-            headerText = self.Result[0][x][:self.ColSize - self.HeadPadding]
+
+            # Ensure that text is string
+            headerText = str(self.Result[0][x])[:self.ColSize - self.HeadPadding]
 
             if self.HeadBorder:
                 attr = {
@@ -98,15 +111,15 @@ class DataScreen(BaseScreen):
             self.PassiveWidgets.append(headerLabel)
 
         # Iterate through self.Result to create field buttons
-        for xidx, x in enumerate(range(self.DataX, self.DataX + self.DisplayCols)):
-            for yidx, y in enumerate(range(self.DataY, self.DataY + self.DisplayRows)):
+        for xidx, x in enumerate(range(self.DataX, min(self.TotalCols, self.DataX + self.DisplayCols))):
+            for yidx, y in enumerate(range(self.DataY, min(self.TotalRows, self.DataY + self.DisplayRows))):
 
                 # Define field attributes
                 fieldX = self.StartX + (self.ColSize + self.HeadPadding) * xidx
                 fieldY = self.StartY + (self.HeadPadding + 1) + (self.FieldPadding + 1) * yidx
                 fieldHeight = self.FieldPadding + 1
                 fieldWidth = self.ColSize
-                fieldText = self.Result[1][y][x][:self.ColSize - self.FieldPadding]
+                fieldText = str(self.Result[1][y][x])[:self.ColSize - self.FieldPadding]
                 fieldMethod = self.DataMethod
 
                 if self.FieldBorder:
@@ -125,6 +138,10 @@ class DataScreen(BaseScreen):
 
                 # Add field button to action widgets
                 self.ActionWidgets.append(fieldButton)
+
+    def Active(self):
+        if self.ActionWidgets:
+            self.ActionWidgets[self.CurrentWidget].Highlight()
 
     # Clear exec base
     def ExecBase(self, inp):
@@ -186,9 +203,10 @@ class DataScreen(BaseScreen):
 
     # Helper function determines Current Widget/Field
     def SetCurrent(self):
-        self.ActionWidgets[self.CurrentWidget].UnHighlight()
-        self.CurrentWidget = self.CursorY + self.CursorX * self.DisplayRows
-        self.ActionWidgets[self.CurrentWidget].Highlight()
+        if self.ActionWidgets:
+            self.ActionWidgets[self.CurrentWidget].UnHighlight()
+            self.CurrentWidget = self.CursorY + self.CursorX * self.DisplayRows
+            self.ActionWidgets[self.CurrentWidget].Highlight()
 
 
 

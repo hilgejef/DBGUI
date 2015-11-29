@@ -20,7 +20,7 @@ class BaseScreen:
     def Update(self):
         for w in self.PassiveWidgets:
             w.UpdateDisplay()
-        for w in self.ActiveWidgets:
+        for w in self.ActionWidgets:
             w.UpdateDisplay()
     
     # Hides the screen by hiding all widgets

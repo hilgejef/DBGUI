@@ -31,13 +31,11 @@ class BaseButton(BaseLabel):
                 # stop highlighting current widget
                 self.UnHighlight()
                 selected = False
+                curses.ungetch(key)     # pass tab along so Screen will know to go to next widget
 
             # Temporary - deselection by any key other than Tab/Enter
-            else:
-                selected = False
-
-            curses.ungetch(key) 
-
+            #else:
+            #    selected = False
 
 """ Button """
 class Button(BaseButton):

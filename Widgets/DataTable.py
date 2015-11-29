@@ -245,4 +245,8 @@ class DataTable(BaseWidget):
                 pass
             
             self.UpdateDisplay()
-        
+            
+    # overwrite BaseWidget Show() method
+    # necessary because we do not use panels with DataTable 
+    def Show(self):
+        self.UpdateDisplay()

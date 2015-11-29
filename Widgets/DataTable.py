@@ -19,7 +19,7 @@ from Label import Label
 class DataTable(BaseWidget):
 
     # Constructor
-    def __init__(self, lines, characters, y, x, resultsObj=None):
+    def __init__(self, lines, characters, y, x, resultsObj=None, colWidth=7, rowHeight=1, delimiter=" | "):
         BaseWidget.__init__(self, lines, characters, y, x)
         
         # position of the selector in DataTable
@@ -28,9 +28,18 @@ class DataTable(BaseWidget):
         
         # DataTable UI Settings independent of Results Object
         # Can update these as we choose for each DataTable Widget
-        self.ColWidth = 7               # Width of each column, update as desired
-        self.RowHeight = 1              # Height of each row, update as desired
-        self.ColumnDelimiter = " | "    # Delimiter string between each column's data, update as desired
+        if colWidth < 4:
+            self.ColWidth = 4
+        else:
+            self.ColWidth = colWidth               # Width of each column, update as desired
+        if rowHeight < 1:
+            self.RowHeight = 1
+        else:
+            self.RowHeight = rowHeight              # Height of each row, update as desired
+        if delimiter == "":
+            self.ColumnDelimiter = " | "
+        else:
+            self.ColumnDelimiter = delimiter    # Delimiter string between each column's data, update as desired
         
         # variables that govern table data
         # these are base values to show an empty data table
@@ -78,9 +87,9 @@ class DataTable(BaseWidget):
         self.TotalX = self.Columns * (self.ColWidth + len(self.ColumnDelimiter)) + self.RowLabelWidth + len(self.ColumnDelimiter)
         self.Pad = curses.newpad(self.TotalY + 1, self.TotalX + 1)
 
-        # upper left position of the 3 distinct portions of the pad
+        # upper left position where the data starts showing in the pad
         self.Pad_DisplayY = self.RowHeight + 1
-        self.Pad_DisplayX = self.RowLabelWidth
+        self.Pad_DisplayX = self.RowLabelWidth + len(self.ColumnDelimiter)
     
     # set delimiter between columns to a string
     def SetDelimiter(self, delimString):
@@ -130,7 +139,7 @@ class DataTable(BaseWidget):
             self.Pad.addstr(2 + y, 0, str(y))
             self.Pad.addstr(2 + y, self.RowLabelWidth, self.ColumnDelimiter, curses.A_NORMAL)
             for x in range(self.Columns):
-                text = self.DataCells[y][x]
+                text = self.DataCells[y][x][:self.ColWidth]
                 spaceFiller = " " * (self.ColWidth - len(text))
                 text = text + spaceFiller
                 if x == self.PosX and y == self.PosY and self.EnableCursor:
@@ -146,11 +155,16 @@ class DataTable(BaseWidget):
         # Upper Left of Column Labels:  0, self.Pad_DisplayX
         # Upper Left of Table Data:  self.Pad_DisplayY, self.Pad_DisplayX
         
-        data_table_lines = self.Lines - self.RowHeight - 1
-        data_table_chars = self.Characters - self.RowLabelWidth
+        table_lines = self.Lines - self.RowHeight - 1
+        table_chars = self.Characters - (self.RowLabelWidth + len(self.ColumnDelimiter))
+        xPosOfPosX = self.RowLabelWidth + len(self.ColumnDelimiter) + \
+                     self.PosX * (self.ColWidth + len(self.ColumnDelimiter)) + \
+                     self.ColWidth + len(self.ColumnDelimiter)
+        smallestDisplayX = xPosOfPosX - table_chars
+        largestDisplayX = xPosOfPosX - self.ColWidth - len(self.ColumnDelimiter)
         
         # if cursor has moved lower than displayed window then move window down
-        if (self.PosY * self.RowHeight) + 3 > (self.Pad_DisplayY + data_table_lines):
+        if (self.PosY * self.RowHeight) + 3 > (self.Pad_DisplayY + table_lines):
             self.Pad_DisplayY += self.RowHeight
             
         # if cursor has moved higher than displayed window then move window up
@@ -158,20 +172,12 @@ class DataTable(BaseWidget):
             self.Pad_DisplayY -= self.RowHeight
             
         # if cursor has moved to right of displayed window so that the entire column can't be displayed then move window right
-        if (((self.PosX + 1) * (self.ColWidth + len(self.ColumnDelimiter))) + self.RowLabelWidth + len(self.ColumnDelimiter)) >= (self.Pad_DisplayX + data_table_chars):
-            self.Pad_DisplayX += self.ColWidth + len(self.ColumnDelimiter)
-        
-        # if cursor has moved to left of displayed window then move window left
-        if ((self.PosX * (self.ColWidth + len(self.ColumnDelimiter))) + self.RowLabelWidth + len(self.ColumnDelimiter)) < self.Pad_DisplayX:
-            self.Pad_DisplayX -= self.ColWidth + len(self.ColumnDelimiter)
-        
-        # TODO: fix -> not working properly
-        # make sure displayX has not moved too far right
-        if self.Pad_DisplayX > self.TotalX - data_table_chars:
-            self.Pad_DisplayX = self.TotalX - data_table_chars - len(self.ColumnDelimiter) - 1
+        if self.Pad_DisplayX < smallestDisplayX:
+            self.Pad_DisplayX = smallestDisplayX
             
-        # make sure displayY has not moved too far down
-        # only needed if RowHeight is customizable
+        # if cursor has moved to left of displayed window then move window left
+        if self.Pad_DisplayX > largestDisplayX:
+            self.Pad_DisplayX = largestDisplayX
         
     def UpdateDisplay(self):
         #UpdateDisplay displays row numbers, column labels, and the data
@@ -179,21 +185,21 @@ class DataTable(BaseWidget):
         
         self.UpdatePad()
         self.UpdatePadWindowYX()
-        # display row numbers
+        # display row numbers and first delimiter
         self.Pad.refresh(
-            self.Pad_DisplayY,
-            0,
-            self.Y + 2,
-            self.X,
-            self.Y + self.Lines - 1,
-            self.X + self.RowLabelWidth - 1
+            self.Pad_DisplayY,                                      # y value of upper left of pad
+            0,                                                      # x value of upper left of pad
+            self.Y + self.RowHeight + 1,                            # upper left Y of screen
+            self.X,                                                 # upper left X of screen
+            self.Y + self.Lines - 1,                                # lower right Y of screen
+            self.X + self.RowLabelWidth + len(self.ColumnDelimiter) - 1   # lower right X of screen
         )
         # display col labels
         self.Pad.refresh(
             0,
             self.Pad_DisplayX,
             self.Y,
-            self.X + self.RowLabelWidth,
+            self.X + self.RowLabelWidth + len(self.ColumnDelimiter),
             self.Y + self.RowHeight,
             self.X + self.Characters - 1
         )
@@ -202,7 +208,7 @@ class DataTable(BaseWidget):
             self.Pad_DisplayY,
             self.Pad_DisplayX,
             self.Y + self.RowHeight + 1,
-            self.X + self.RowLabelWidth,
+            self.X + self.RowLabelWidth + len(self.ColumnDelimiter),
             self.Y + self.Lines - 1,
             self.X + self.Characters - 1
         )

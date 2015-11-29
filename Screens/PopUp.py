@@ -1,8 +1,10 @@
 import curses
 import curses.panel
+import CDBCore
 from BaseScreen import BaseScreen
 from Label import BaseLabel
 from Button import BaseButton
+from BaseWidget import BaseWidget
 
 # Base Class for PopUp
 # PopUps are composed of 1 Label and 2/3 Button widgets
@@ -35,4 +37,19 @@ class PopUpYesNoCancel(PopUp):
         noButton = BaseButton("No", noMethod, 3, 4, 10, 11, {"boxed":True, "x_offset" : 1, "y_offset" : 1})
         cancelButton = BaseButton("Cancel", cancelMethod, 3, 8, 10, 17, {"boxed":True, "x_offset" : 1, "y_offset" : 1})
         PopUp.__init__(self, [label], [yesButton, noButton, cancelButton])    
+    
+# PopUpOk = 1 Label and 1 Buttons
+# Called with text string and 1 functions
+# Function is button method (i.e. what happens when you activate them, typically just to close screen)
+""" PopUpOkCancel """
+class PopUpOk(PopUp):
+    def __init__(self, text):
+        screenBorder = BaseWidget(12, 50, 5, 15)
+        screenBorder.Win.border('|', '|', '-', '-', '+', '+', '+', '+')
+        label = BaseLabel(text, 7, 48, 6, 16)
+        okButton = BaseButton("OK", self.ClosePopUp, 1, 4, 13, 36)
+        PopUp.__init__(self, [screenBorder, label], [okButton])
         
+    def ClosePopUp(self):
+        self.Hide()
+        CDBCore.PopUp = None

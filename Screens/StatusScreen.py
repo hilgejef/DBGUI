@@ -1,7 +1,7 @@
 ###############################################################################
 # Author:		    Jonathon Moore
 # Date Created:		11/13/2015
-# Date Modified:	11/13/2015
+# Date Modified:	11/24/2015
 # File Name:		StatusScreen.py
 #
 # Overview:         StatusScreen displays messages from the system to the user
@@ -10,14 +10,16 @@
 ###############################################################################
 
 import curses, sys
-from CDBCore import CDBCore
+import CDBCore
 from BaseWidget import BaseWidget
 from Label import Label
 from BaseScreen import BaseScreen
+from PopUp import PopUpOk
 
 class StatusScreen(BaseScreen):
+
     def __init__(self):
-        BaseScreen.__init__(self)
+        BaseScreen.__init__(self, screen_type="StatusScreen")
         
     def Init(self):
         # log for status messages, array of strings
@@ -39,7 +41,7 @@ class StatusScreen(BaseScreen):
         
         # blank widget for drawing a border around the entirety of the Status Screen
         self.PassiveWidgets.append(BaseWidget(self.ScreenHeight,
-                                              CDBCore.TERMINAL_CHARACTERS,
+                                              80,
                                               self.ScreenStartY,
                                               0))
         self.PassiveWidgets[0].Win.border('|', '|', '-', '-', '+', '+', '+', '+')
@@ -51,7 +53,7 @@ class StatusScreen(BaseScreen):
         
         # label widgets for logged system messages
         for y in range(0, self.TotalLabelsInScreen):
-            self.PassiveWidgets.append(Label(" " * (CDBCore.TERMINAL_CHARACTERS - self.logLabelX - 2),
+            self.PassiveWidgets.append(Label(" " * (80 - self.logLabelX - 2),
                                              self.logLabelY + y,
                                              self.logLabelX))
             self.PassiveWidgets[y + 2].ToTop()
@@ -76,7 +78,7 @@ class StatusScreen(BaseScreen):
         lblIdx = self.TotalLabelsInScreen + 1   # index of first PassiveWidgets to display from top to bottom
         for msgIdx in range(min(self.TotalLabelsInScreen, len(self.Log))):
             # x width available for label messages
-            charsAvailable = CDBCore.TERMINAL_CHARACTERS - self.logLabelX - 2
+            charsAvailable = 80 - self.logLabelX - 2
             lblMsg = self.Log[msgIdx + self.LogDisplayPos][:charsAvailable]
             fillerChars = charsAvailable - len(lblMsg)
             lblMsg += (" " * fillerChars)
@@ -96,7 +98,8 @@ class StatusScreen(BaseScreen):
         self.PassiveWidgets[1].ToTop()
         self.Show()
         
-    def MessageScroll(self):
+    # overwrite BaseScreen function
+    def MakeActive(self):
         self.CursorActive = True
         self.UpdateLogLabels()
         
@@ -129,8 +132,9 @@ class StatusScreen(BaseScreen):
                 self.UpdateLogLabels()
                 return
             elif key in [ord('\n'), 10]:    # ENTER
-                #TODO: When a message is selected it should call a popup screen that displays the full message
-                pass
-        
-        
-        
+                self.DisplayPopUpMessage(self.Log[self.CursorPos])
+                self.UpdateLogLabels()
+                
+    def DisplayPopUpMessage(self, msg):
+        CDBCore.PopUp = PopUpOk(msg)
+        CDBCore.PopUp.MakeActive()

@@ -11,6 +11,7 @@ import curses
 import atexit
 from MainMenu import MainMenu
 from HomeScreen import HomeScreen
+from StatusScreen import StatusScreen
 from PopUp import PopUpOkCancel # TESTING ONLY
 
 class CDBCore:
@@ -58,18 +59,18 @@ class CDBCore:
         # TODO: Decide if this needs to be expanded for screens with
         #       multiple exit points, or if this will be handled within
         #       the screen itself
-        # elif key in [curses.KEY_ENTER, ord('\n'), 10]:
-        #     CDBCore.History.append(CDBCore.CurrentScreen)
-        #     CDBCore.CurrentScreen.Hide()
-        #     CDBCore.CurrentScreen = CDBCore.CurrentScreen.Next()
-        #     CDBCore.CurrentScreen.Show()
+        elif key in [curses.KEY_ENTER, ord('\n'), 10]:
+            CDBCore.History.append(CDBCore.CurrentScreen)
+            CDBCore.CurrentScreen.Hide()
+            CDBCore.CurrentScreen = CDBCore.CurrentScreen.Next()
+            CDBCore.CurrentScreen.Show()
         # # CTRL + TAB denotes go back to previous screen if there is one
-        # elif key in [1]: # TODO: identify CTRL+TAB key possibilities
-        #     if len(CDBCore.History) > 0:
-        #         if CDBCore.CurrentScreen != CDBCore.MenuScreen:
-        #             CDBCore.CurrentScreen.Hide()
-        #         CDBCore.CurrentScreen = CDBCore.History.pop()
-        #         CDBCore.CurrentScreen.Show()
+        elif key in [1]: # TODO: identify CTRL+TAB key possibilities
+            if len(CDBCore.History) > 0:
+                if CDBCore.CurrentScreen != CDBCore.MenuScreen:
+                    CDBCore.CurrentScreen.Hide()
+                CDBCore.CurrentScreen = CDBCore.History.pop()
+                CDBCore.CurrentScreen.Show()
         # CTRL + T switches program context to MenuScreen and back
         elif key in [20]:
             CDBCore.CurrentScreen.UnHighlight()
@@ -93,7 +94,10 @@ class CDBCore:
         
         # Show the home screen
         CDBCore.CurrentScreen.Show()
-        
+        # Show the main menu
+        CDBCore.MenuScreen.Show()
+        # Show the status screen
+        CDBCore.StatusScreen.Show()
         # Process any further actions from the user
         while True:
             CDBCore.ProcessAction()
@@ -106,6 +110,10 @@ class CDBCore:
         
         # Show the home screen
         CDBCore.CurrentScreen.Show()
+        # Show the main menu
+        CDBCore.MenuScreen.Show()
+        # Show the status screen
+        CDBCore.StatusScreen.Show()
         
         # Process any further actions from the user
         while True:
@@ -167,3 +175,4 @@ class CDBCore:
     def InitScreens():
         CDBCore.MenuScreen = MainMenu()
         CDBCore.CurrentScreen = HomeScreen()
+        CDBCore.StatusScreen = StatusScreen()

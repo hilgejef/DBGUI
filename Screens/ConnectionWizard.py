@@ -39,19 +39,22 @@ class ConnectionWizard(BaseScreen):
         
         # Passive widgets
         for i in range(len(self.Items)):
-            y = (ystart * (i + 1)) + yoffset
-            self.PassiveWidgets.append(Label(self.Items[i], y, xlabel))
+            y = (ystart * (i + 1)) + CDBCore.MAIN_SCREEN_Y
+            if y >= 21:
+                y = (ystart * (i + 1 - 5)) + CDBCore.MAIN_SCREEN_Y
+                self.PassiveWidgets.append(Label(self.Items[i], y, xlabel + 40))
+            else:
+                self.PassiveWidgets.append(Label(self.Items[i], y, xlabel))
         
         # Active widgets
-        self.ActionWidgets.append(TextBox(1, 16, 3 + yoffset, xaction))
-        self.ActionWidgets.append(TextBox(1, 16, 6 + yoffset, xaction))
-        self.ActionWidgets.append(TextBox(1, 16, 9 + yoffset, xaction))
-        self.ActionWidgets.append(TextBox(1, 16, 12 + yoffset, xaction))
-        self.ActionWidgets.append(TextBox(1, 16, 15 + yoffset, xaction))
-        self.ActionWidgets.append(CheckBox('X', ' ', 18 + yoffset, xaction))
-        self.ActionWidgets.append(CheckBox('X', ' ', 21 + yoffset, xaction))
-        self.ActionWidgets.append(Button("Exit", sys.exit, 23 + yoffset, 5))
-        self.ActionWidgets.append(Button("Next", self.TestConnection, 23 + yoffset, 12))
+        self.ActionWidgets.append(TextBox(1, 16, 3 + CDBCore.MAIN_SCREEN_Y, xaction))
+        self.ActionWidgets.append(TextBox(1, 16, 6 + CDBCore.MAIN_SCREEN_Y, xaction))
+        self.ActionWidgets.append(TextBox(1, 16, 9 + CDBCore.MAIN_SCREEN_Y, xaction))
+        self.ActionWidgets.append(TextBox(1, 16, 12 + CDBCore.MAIN_SCREEN_Y, xaction))
+        self.ActionWidgets.append(TextBox(1, 16, 15 + CDBCore.MAIN_SCREEN_Y, xaction))
+        self.ActionWidgets.append(CheckBox('X', ' ', 3 + CDBCore.MAIN_SCREEN_Y, xaction + 40))
+        self.ActionWidgets.append(CheckBox('X', ' ', 6 + CDBCore.MAIN_SCREEN_Y, xaction + 40))
+        self.ActionWidgets.append(Button("Connect", self.TestConnection, CDBCore.STATUS_SCREEN_Y - 3, 63))
     
     # Test the user entered information to ensure a connection
     # can be established
@@ -66,9 +69,12 @@ class ConnectionWizard(BaseScreen):
         results = con.Connect()
         if results.Success:
             CDBCore.Connection = con
+            CDBCore.StatusScreen.AddStatusMessage("Connection established.")
             curses.ungetch('\n') # Notify the core to move to next screen
         else:
-            # TODO: Status and popup here with failure message
+            # TODO: Replace with error once multi line is supported
+            msg = "Could not connect to database."
+            CDBCore.StatusScreen.AddStatusMessage(msg)
             self.ActionWidgets[0].selected = True
             self.ActionWidgets[0].Highlight()
             self.ActionWidgets[0].Active
@@ -78,6 +84,9 @@ class ConnectionWizard(BaseScreen):
         return None
         
 if __name__ == "__main__":
-    CDBCore.InitCurses()
+    CDBCore.InitCurses(True)
+    CDBCore.InitColor()
+    CDBCore.InitScreens()
+    CDBCore.CurrentScreen.Hide()
     CDBCore.CurrentScreen = ConnectionWizard()
     CDBCore.Main()

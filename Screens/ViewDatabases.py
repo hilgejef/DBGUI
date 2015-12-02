@@ -24,8 +24,8 @@ class ViewDatabases(BaseScreen):
 
     def Init(self):
         self.GetDatabases()
-        self.PassiveWidgets.append(Label("Databases", 5, 5))
-
+        self.PassiveWidgets.append(Label("Databases", CDBCore.MAIN_SCREEN_Y + 3, 5))
+        
     # Retrieves a list of databases
     def GetDatabases(self):
         try:
@@ -37,13 +37,16 @@ class ViewDatabases(BaseScreen):
                 raise Exception(result.Message)
             
             # Create a button for each database
-            offset = 1
+            offset = CDBCore.MAIN_SCREEN_Y + 5
             for name in result.Data[1]:
-                self.ActionWidgets.append(Button(name[0], self.SetDatabase, 10 + offset, 5))
-                offset += 1
+                self.ActionWidgets.append(Button(name[0], self.SetDatabase, offset, 5))
+                offset += 2
         except Exception as ex:
-            # TODO: Add status update here
-            msg = "Could not retrieve list of databases.\n" + str(ex)
+            # TODO: Once multi line is supported, add in error message
+            msg = "Could not retrieve list of databases."
+            CDBCore.StatusScreen.AddStatusMessage(msg + str(ex))
+            print str(ex)
+            
 
     # Sets the current database
     def SetDatabase(self):
@@ -54,11 +57,14 @@ class ViewDatabases(BaseScreen):
             CDBCore.Connection.Database = name
             result = CDBCore.Connection.QueryString("USE " + name)
             if result.Success:
+                CDBCore.StatusScreen.AddStatusMessage("Set database to: " + name)
                 curses.ungetch('\n') # Notify the core to move to next screen
             else:
                 raise Exception(result.Message)
         except Exception as ex:
-            # TODO: Status and popup here with failure message
+            # TODO: Once multi line is supported, add in error message
+            msg = "Could not set the database to: " + name
+            CDBCore.StatusScreen.AddStatusMessage(msg)
             self.ActionWidgets[self.CurrentWidget].selected = True
             self.ActionWidgets[self.CurrentWidget].Highlight()
             self.ActionWidgets[self.CurrentWidget].Active
@@ -67,13 +73,18 @@ class ViewDatabases(BaseScreen):
     def Next(self):
         return None
 
-
 if __name__ == "__main__":
     user = raw_input('Enter the MySQL db user: ')
     password = raw_input('Enter the MySQL db user password: ')
     my = MySQLConnection(user, password)    
-    my.Connect()
-    CDBCore.InitCurses()
-    CDBCore.CurrentScreen = ViewDatabases()
-    CDBCore.Connection = my
-    CDBCore.Main()
+    result = my.Connect()
+    if result.Success:
+        CDBCore.InitCurses(True)
+        CDBCore.InitColor()
+        CDBCore.InitScreens()
+        CDBCore.CurrentScreen.Hide()
+        CDBCore.CurrentScreen = ViewDatabases()
+        CDBCore.Connection = MySQLConnection(user, password)
+        CDBCore.Main()
+    else:
+        print "Could not log in: " + result.Message

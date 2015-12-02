@@ -28,12 +28,11 @@ class CreateTable(BaseScreen):
         self.Columns = 0
     
     def Init(self):
-        self.PassiveWidgets.append(Label("Table Name:", 5, 5))
-        self.PassiveWidgets.append(Label("Number of Columns:", 7, 5))
-        self.ActionWidgets.append(TextBox(1, 16, 5, 20))
-        self.ActionWidgets.append(TextBox(1, 16, 7, 20))
-        self.ActionWidgets.append(Button("Exit", sys.exit, 10, 5))
-        self.ActionWidgets.append(Button("Next", self.CheckValues, 10, 15))
+        self.PassiveWidgets.append(Label("Table Name:", CDBCore.MAIN_SCREEN_Y + 3, 3))
+        self.PassiveWidgets.append(Label("Number of Columns:", CDBCore.MAIN_SCREEN_Y + 6, 3))
+        self.ActionWidgets.append(TextBox(1, 16, CDBCore.MAIN_SCREEN_Y + 3, 25))
+        self.ActionWidgets.append(TextBox(1, 16, CDBCore.MAIN_SCREEN_Y + 6, 25))
+        self.ActionWidgets.append(Button("Next", self.CheckValues, CDBCore.STATUS_SCREEN_Y - 3, 63))
     
     # Checks if a table already exists under the requested name
     def CheckName(self):
@@ -48,15 +47,16 @@ class CreateTable(BaseScreen):
             # Check for the table name
             for existing_name in result.Data[1]:
                 if existing_name == self.Name:
-                    #TODO: Log to status screen
                     msg = "Table name " + str(self.Name) + " already exists."
+                    CDBCore.StatusScreen.AddStatusMessage(msg)
                     return False
             
             # This is a new table name
             return True
         except Exception as ex:
-            #TODO: write to status
-            msg = "Could not retrieve list of tables.\n" + str(ex)
+            # TODO: Replace with error once multi line is supported
+            msg = "Could not retrieve list of tables."
+            CDBCore.StatusScreen.AddStatusMessage(msg)
             return False
     
     def CheckValues(self):
@@ -66,8 +66,9 @@ class CreateTable(BaseScreen):
             
             # For now impose limit on columns until pagination
             if self.Columns > 10 or self.Columns < 1:
-                # TODO: Add status update here, and keep the screen here
-                msg = "Arbitrary limitation of 1-10 columns not met!\n"
+                # TODO: Remove and include pagination
+                msg = "Arbitrary limitation of 1-10 columns not met!"
+                CDBCore.StatusScreen.AddStatusMessage(msg)
                 self.Columns = 0
                 self.Name = ""
                 self.ActionWidgets[0].selected = True
@@ -88,8 +89,9 @@ class CreateTable(BaseScreen):
             curses.ungetch('\n')
             
         except Exception as ex:
-            # TODO: Add status update here, and keep the screen here
-            msg = "Failed to validate db name, or column size:\n" + str(ex)
+            # TODO: Replace with error once multi line is supported
+            msg = "Failed to validate db name, or column size:"
+            CDBCore.StatusScreen.AddStatusMessage(msg)
             self.Columns = 0
             self.Name = ""
             self.ActionWidgets[0].selected = True
@@ -110,7 +112,10 @@ if __name__ == "__main__":
     my = MySQLConnection(user, password, host, int(port), database)    
     result = my.Connect()
     if result.Success:
-        CDBCore.InitCurses()
+        CDBCore.InitCurses(True)
+        CDBCore.InitColor()
+        CDBCore.InitScreens()
+        CDBCore.CurrentScreen.Hide()
         CDBCore.CurrentScreen = CreateTable()
         CDBCore.Connection = my
         CDBCore.Main()    

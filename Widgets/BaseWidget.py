@@ -9,6 +9,8 @@ class BaseWidget:
         "boxed" : False,
         "vert_border" : False,
         "horiz_border" : False,
+        "nocorner_border" : False,
+        "bottom_border" : False,
         "text_y_center" : False,
         "text_x_center" : False,
         "window_y_center" : False,
@@ -48,6 +50,8 @@ class BaseWidget:
         self.Boxed = attr["boxed"]
         self.VertBorder = attr["vert_border"]
         self.HorizBorder = attr["horiz_border"]
+        self.NoCornerBorder = attr["nocorner_border"]
+        self.BottomBorder = attr["bottom_border"]
         self.TextYCenter = attr["text_y_center"]
         self.TextXCenter = attr["text_x_center"]
         self.WindowYCenter = attr["window_y_center"]
@@ -133,6 +137,12 @@ class BaseWidget:
 
         elif self.HorizBorder:
             self.Win.border(0, 0, " ", " ", " ", " ", " ", " ")
+
+        elif self.NoCornerBorder:
+            self.Win.border(0, 0, 0, 0, " ", " ", " ", " ")
+
+        elif self.BottomBorder:
+            self.Win.border(" ", " ", " ", 0, " ", " ", " ", " ")
 
         self.Win.bkgd(' ', self.BkgdColor)
 

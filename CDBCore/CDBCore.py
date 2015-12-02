@@ -59,11 +59,11 @@ class CDBCore:
         # TODO: Decide if this needs to be expanded for screens with
         #       multiple exit points, or if this will be handled within
         #       the screen itself
-        elif key in [curses.KEY_ENTER, ord('\n'), 10]:
-            CDBCore.History.append(CDBCore.CurrentScreen)
-            CDBCore.CurrentScreen.Hide()
-            CDBCore.CurrentScreen = CDBCore.CurrentScreen.Next()
-            CDBCore.CurrentScreen.Show()
+        # elif key in [curses.KEY_ENTER, ord('\n'), 10]:
+        #     CDBCore.History.append(CDBCore.CurrentScreen)
+        #     CDBCore.CurrentScreen.Hide()
+        #     CDBCore.CurrentScreen = CDBCore.CurrentScreen.Next()
+        #     CDBCore.CurrentScreen.Show()
         # # CTRL + TAB denotes go back to previous screen if there is one
         elif key in [1]: # TODO: identify CTRL+TAB key possibilities
             if len(CDBCore.History) > 0:

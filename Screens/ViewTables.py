@@ -1,7 +1,7 @@
 import sys
 import curses
 from CDBCore import CDBCore
-from Label import Label
+from Label import BaseLabel
 from Button import BaseButton
 from BaseScreen import BaseScreen
 from ResultStatus import ResultStatus
@@ -13,9 +13,9 @@ _PAGESIZE_ = 5
 class ViewTables(BaseScreen):
     def __init__(self, DBName=""):
         if DBName:
-            CDBCore.CurrentDatabase = DBName
+            CDBCore.Connection.Database = DBName
 
-        elif not CDBCore.CurrentDatabase:
+        elif not CDBCore.Connection.Database:
             raise Exception("No database selected.")
 
         BaseScreen.__init__(self)
@@ -25,14 +25,19 @@ class ViewTables(BaseScreen):
         self.NumTables = 0
 
         self.GetTables()
-        self.PassiveWidgets.append(Label("Tables", 5, 5))
+        self.PassiveWidgets.append(BaseLabel("View Tables", 2, len("View Tables") + 2, 5, 20, attr=
+            {
+             'bottom_border' : True, 
+             'x_offset' : 1 
+            }
+        ))
 
 
     # Retrieves a list of tables
     def GetTables(self):
         try:
             # Retrieve a list of tables
-            result = CDBCore.Connection.QueryString("SHOW TABLES FROM " + CDBCore.CurrentDatabase)
+            result = CDBCore.Connection.QueryString("SHOW TABLES FROM " + CDBCore.Connection.Database)
             
             # Ensure there weren't any issues getting the list of tables.
             if not result.Success:
@@ -67,7 +72,7 @@ class ViewTables(BaseScreen):
                 ))
 
             # Back button goes back 1 page
-            backButton = BaseButton("Back", self.BackFunc(), 3, 6, 20, 12,
+            backButton = BaseButton("Back", self.BackFunc(), 3, 6, 16, 10,
                 attr={
                     "boxed" : True,
                     "text_x_center" : True,
@@ -76,7 +81,7 @@ class ViewTables(BaseScreen):
             )
 
             # Next button goes forward 1 page
-            nextButton = BaseButton("Next", self.NextFunc(), 3, 6, 20, 24,
+            nextButton = BaseButton("Next", self.NextFunc(), 3, 6, 16, 64,
                 attr={
                     "boxed" : True,
                     "text_x_center" : True,

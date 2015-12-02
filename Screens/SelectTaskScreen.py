@@ -11,12 +11,17 @@
 
 import sys
 import curses
+from MySQLConnection import MySQLConnection
 from CDBCore import CDBCore
+from BaseScreen import BaseScreen
+from Button import Button
+from Label import Label
 
 class SelectTask(BaseScreen):
     def __init__(self, query=None, data=None):
         BaseScreen.__init__(self)
-
+        
+    def Init(self):
         #Action Widgets[]:      0 - TextBox for entering query string
         #                       1 - Button to submit Text query
         #                       2 - DataTable for displaying results
@@ -24,61 +29,61 @@ class SelectTask(BaseScreen):
             "1. View Tables",
             self.GoToViewTable,
             CDBCore.MAIN_SCREEN_Y + 5,
-            30,
+            20,
             None,
             True
-        )
+        ))
         self.ActionWidgets.append(Button(
             "2. Alter Existing Tables",
             self.GoToAlterTable,
             CDBCore.MAIN_SCREEN_Y + 6,
-            30,
+            20,
             None,
             True
-        )
+        ))
         self.ActionWidgets.append(Button(
             "3. Create a Table in Existing Database",
             self.GoToCreateTable,
             CDBCore.MAIN_SCREEN_Y + 7,
-            30,
+            20,
             None,
             True
-        )
+        ))
         self.ActionWidgets.append(Button(
             "4. Query Database",
             self.GoToQueryDatabase,
             CDBCore.MAIN_SCREEN_Y + 8,
-            30,
+            20,
             None,
             True
-        )
+        ))
         self.ActionWidgets.append(Button(
             "5. Edit Table Data",
             self.GoToEditTableResults,
             CDBCore.MAIN_SCREEN_Y + 9,
-            30,
+            20,
             None,
             True
-        )
+        ))
         self.ActionWidgets.append(Button(
             "6. Connect to a New Database",
             self.GoToConnectToNewDatabase,
             CDBCore.MAIN_SCREEN_Y + 10,
-            30,
+            20,
             None,
             True
-        )
+        ))
         self.ActionWidgets.append(Button(
             "7. Create a New Database",
             self.GoToCreateNewDatabase,
-            CDBCore.MAIN_SCREEN_Y + 7,
-            30,
+            CDBCore.MAIN_SCREEN_Y + 11,
+            20,
             None,
             True
-        )
+        ))
         
         #Passive Widgets[]:     0 - Label to Select Screen
-        self.PassiveWidgets.append(Label("Navigate to a Task:", CDBCore.MAIN_SCREEN_Y + 2, 30))
+        self.PassiveWidgets.append(Label("Select a Task:", CDBCore.MAIN_SCREEN_Y + 2, 30))
         
         self.Show()
         
@@ -111,6 +116,8 @@ if __name__ == "__main__":
     CDBCore.InitCurses()
     CDBCore.InitScreens()
     #CDBCore.InitColor()
-    CDBCore.ChangeCurrentScreen(SelectTask())
+    CDBCore.History.append(CDBCore.CurrentScreen)
+    CDBCore.CurrentScreen.Hide()
+    CDBCore.CurrentScreen = SelectTask()
     CDBCore.Connection = my
     CDBCore.Main()

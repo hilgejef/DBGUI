@@ -152,15 +152,24 @@ class BaseWidget:
         else:
             YOffset = self.YOffset
 
+        # Ensure that text attribute is never larger than what can be written to the window!    
         if self.TextXCenter:
             for line, substr in enumerate(self.Text.split('\n')):
-                XOffset = (self.Width - len(substr)) / 2 
+                if len(substr) >= self.Width:
+                    XOffset = 0
+                else:
+                    XOffset = (self.Width - len(substr)) / 2 
+                
+                text = substr[:self.Width - XOffset - 1]
+
                 self.Win.addstr(YOffset + line, XOffset, 
-                                substr, self.TextMode | self.TextColor)
+                                text, self.TextMode | self.TextColor)
         else:
             for line, substr in enumerate(self.Text.split('\n')):
+                text = substr[:self.Width - self.XOffset - 1]
+
                 self.Win.addstr(YOffset + line, self.XOffset, 
-                                substr, self.TextMode | self.TextColor)
+                                text, self.TextMode | self.TextColor)
             
         self.Refresh()
 

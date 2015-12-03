@@ -3,6 +3,7 @@ import curses.panel
 from Label import BaseLabel
 from Button import BaseButton
 from BaseScreen import BaseScreen
+from CDBCore import CDBCore
 
 # Data Screen is an intermediary between Widget and Screen
 # that allows a collection of Widgets to emulate a data table Widget
@@ -10,7 +11,7 @@ from BaseScreen import BaseScreen
 class DataScreen(BaseScreen):
 
     default_attributes = {
-        "start_y" : 8,
+        "start_y" : 9,
         "start_x" : 15,
         "column_size" : 10, # Not below 3 if bordered
         "display_cols" : 5,
@@ -90,7 +91,7 @@ class DataScreen(BaseScreen):
             headerWidth = self.ColSize
 
             # Ensure that text is string
-            headerText = str(self.Result[0][x])[:self.ColSize - self.HeadPadding]
+            headerText = str(self.Result[0][x])
 
             if self.HeadBorder:
                 attr = {
@@ -119,7 +120,7 @@ class DataScreen(BaseScreen):
                 fieldY = self.StartY + (self.HeadPadding) + (self.FieldPadding) * yidx
                 fieldHeight = self.FieldPadding + 1
                 fieldWidth = self.ColSize
-                fieldText = str(self.Result[1][y][x])[:self.ColSize - self.FieldPadding]
+                fieldText = str(self.Result[1][y][x])
                 fieldMethod = self.DataMethod
 
                 if self.FieldBorder:
@@ -208,6 +209,7 @@ class DataScreen(BaseScreen):
                 if self.ActionWidgets:
                     self.ActionWidgets[self.CurrentWidget].CallMethod()
 
+    # EmptyMethod to optionally pass to DataScreen
     def EmptyMethod(self):
         pass
 

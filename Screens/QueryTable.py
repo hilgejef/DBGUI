@@ -9,33 +9,37 @@ from ResultStatus import ResultStatus
 from MySQLConnection import MySQLConnection
 from TextBox import TextBox
 from DataScreen import DataScreen
+from EditField import EditField
 
 class QueryTable(BaseScreen):
-    def __init__(self, dbName=""):
+    def __init__(self, dbName="", table=""):
         if not CDBCore.Connection:
             raise Exception("No Connection object specified.")
 
         if dbName:
-            CDBCore.Connection.CurrentDatabase = dbName
+            CDBCore.Connection.Database = dbName
             CDBCore.Connection.QueryString("USE " + dbName)
 
-        if not CDBCore.Connection.CurrentDatabase:
+        if not CDBCore.Connection.Database:
             raise Exception("No database specified.")
+
+        self.Table = table
 
         BaseScreen.__init__(self, screen_type="QueryTable")
 
     def Init(self):
         self.DBName = CDBCore.Connection.Database
 
-        # DBlabel = BaseLabel("Database: " + self.DBName, 4, 1, 3, , 
-        #                 attr={"boxed": True, "y_offset" : 1, "x_offset": 1, "text_y_center": False, "text_x_center" : False})
-        # TableLabel = BaseLabel("Table: " + self.TableName, 7, 1, 3, len("Database : " + self.DBName), 
-        #                 attr={"boxed": True, "y_offset" : 1, "x_offset": 1, "text_y_center": False, "text_x_center" : False})
-        # self.PassiveWidgets.append(DBlabel, TableLabel)
+        selectLabel = Label("SELECT", 5, 4)
+        selectBox = TextBox(1, 50, 5, 12)
 
-        queryLabel = Label("Query:", 5, 4)
-        queryBox = TextBox(1, 50, 5, 12)
-        queryButton = BaseButton("Submit", self.QueryMethod, 3, 8, 4, 64, attr=
+        fromLabel = Label("FROM", 6, 4)
+        fromBox = TextBox(1, 50, 6, 12)
+
+        whereLabel = Label("WHERE", 7, 4)
+        whereBox = TextBox(1, 50, 7, 12)
+
+        queryButton = BaseButton("Submit", self.QueryMethod, 3, 8, 5, 64, attr=
             {
                 'boxed' : True,
                 'x_offset' : 1,
@@ -43,38 +47,63 @@ class QueryTable(BaseScreen):
             }
         )
 
-        self.PassiveWidgets.append(queryLabel)
-        self.ActionWidgets.append(queryBox)
-        self.ActionWidgets.append(queryButton)
+        self.PassiveWidgets += [selectLabel, fromLabel, whereLabel]
+        self.ActionWidgets += [selectBox, fromBox, whereBox, queryButton]
+
+        self.SelectBox = selectBox
+        self.FromBox = fromBox
+        self.WhereBox = whereBox
+
+        self.QueryButton = queryButton
+        self.DataScreen = None
 
     def QueryMethod(self):
-        result = CDBCore.Connection.QueryString(self.ActionWidgets[0].Text)
+        selectText = self.SelectBox.Text
+        fromText = self.FromBox.Text
+        whereText = self.WhereBox.Text
+
+        if not selectText or not fromText:
+            pass
+
+        if not whereText:
+            queryString = "SELECT {} FROM {}".format(selectText, fromText)
+        else:
+            queryString = "SELECT {} FROM {} WHERE {}".format(selectText, fromText, whereText)
+
+        CDBCore.Connection.Table = fromText
+        result = CDBCore.Connection.QueryString(queryString)
 
         if result.Success:
-            if len(self.ActionWidgets) == 2:
-                self.ActionWidgets.append(DataScreen(result.Data))
+            if not self.DataScreen:
+                self.ActionWidgets.append(DataScreen(result.Data, dataMethod=self.DataMethod))
+                self.DataScreen = self.ActionWidgets[-1]
             else:
-                self.ActionWidgets[2].Result = result.Data
-                self.ActionWidgets[2].LoadResult(reset=True)
+                self.DataScreen.Result = result.Data
+                self.DataScreen.LoadResult(reset=True)
 
         else:
             raise Exception("Query failed.")
 
-    def ExecInput(self, inp):
-        if self.CurrentWidget == 0:
-            if inp in [curses.KEY_ENTER, ord('\n'), 10]:
-                result = CDBCore.Connection.QueryString(self.ActionWidgets[0].Text)
+    def GenerateFields(self):
+        resultsObj = self.DataScreen.Result
+        fields = {}
 
-                if result.Success:
-                    # sys.exit(type(result.Data[1][0][0])) # FOR TESTING PURPOSES
-                    # sys.exit(result.Data) # FOR TESTING PURPOSES
-                    if len(self.ActionWidgets) == 1:
-                        self.ActionWidgets.append(DataScreen(result.Data))
-                    else:
-                        self.ActionWidgets[1].Result = result.Data
-                        self.ActionWidgets[1].LoadResult(reset=True)
+        for row in resultsObj[1]:
+            for idx, field in enumerate(row):
+                header = resultsObj[0][idx]
+                fields[header] = field
 
-                # TESTING PURPOSES ONLY
-                else:
-                    sys.exit(result.Message)
+        return fields
+
+
+    def DataMethod(self):
+        dataX = self.DataScreen.DataX
+        cursorX = self.DataScreen.CursorX
+
+        col = self.DataScreen.Result[0][dataX + cursorX]
+        fields = self.GenerateFields()
+
+        CDBCore.CurrentScreen.Hide()
+        CDBCore.CurrentScreen = EditField(allFields=fields, colToUpdate=col)
+        CDBCore.CurrentScreen.Show()
 

@@ -17,15 +17,15 @@ from Button import Button
 from BaseScreen import BaseScreen
 from ResultStatus import ResultStatus
 from MySQLConnection import MySQLConnection
+from DataTable import DataTable
 
 class ViewDatabases(BaseScreen):
     def __init__(self):
         BaseScreen.__init__(self)
 
     def Init(self):
-        self.GetDatabases()
-        self.PassiveWidgets.append(Label("Databases", CDBCore.MAIN_SCREEN_Y + 3, 5))
-        
+        self.dbs = self.GetDatabases()
+    
     # Retrieves a list of databases
     def GetDatabases(self):
         try:
@@ -37,10 +37,9 @@ class ViewDatabases(BaseScreen):
                 raise Exception(result.Message)
             
             # Create a button for each database
-            offset = CDBCore.MAIN_SCREEN_Y + 5
-            for name in result.Data[1]:
-                self.ActionWidgets.append(Button(name[0], self.SetDatabase, offset, 5))
-                offset += 2
+            self.ActionWidgets.append(DataTable(CDBCore.MAIN_SCREEN_LINES - 6, 70, CDBCore.MAIN_SCREEN_Y + 2, 3, result.Data, 50))
+            self.ActionWidgets.append(Button("Connect", self.SetDatabase, CDBCore.STATUS_SCREEN_Y - 3, 25))
+            
         except Exception as ex:
             # TODO: Once multi line is supported, add in error message
             msg = "Could not retrieve list of databases."
@@ -51,12 +50,10 @@ class ViewDatabases(BaseScreen):
     # Sets the current database
     def SetDatabase(self):
         try:
-            name = self.ActionWidgets[self.CurrentWidget].Text
-            name = name[2:] # Clean up the bracket '[ ' in the button text
-            name = name[:-2] # Clean up the bracket ' ]' in the button text
-            CDBCore.Connection.Database = name
+            name = self.ActionWidgets[0].Text            
             result = CDBCore.Connection.QueryString("USE " + name)
             if result.Success:
+                CDBCore.Connection.Database = name
                 CDBCore.StatusScreen.AddStatusMessage("Set database to: " + name)
                 curses.ungetch('\n') # Notify the core to move to next screen
             else:
@@ -82,9 +79,9 @@ if __name__ == "__main__":
         CDBCore.InitCurses(True)
         CDBCore.InitColor()
         CDBCore.InitScreens()
+        CDBCore.Connection = my
         CDBCore.CurrentScreen.Hide()
         CDBCore.CurrentScreen = ViewDatabases()
-        CDBCore.Connection = MySQLConnection(user, password)
         CDBCore.Main()
     else:
         print "Could not log in: " + result.Message

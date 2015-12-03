@@ -22,9 +22,6 @@ class DataTable(BaseWidget):
     def __init__(self, lines, characters, y, x, resultsObj=None, colWidth=7, rowHeight=1, delimiter=" | "):
         BaseWidget.__init__(self, lines, characters, y, x)
         
-        # Stores the value of the current selection
-        self.Selection = ""
-        
         # position of the selector in DataTable
         self.PosY = 0                   # row
         self.PosX = 0                   # col

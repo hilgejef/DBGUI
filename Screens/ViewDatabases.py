@@ -25,7 +25,6 @@ class ViewDatabases(BaseScreen):
 
     def Init(self):
         self.dbs = self.GetDatabases()
-        #self.PassiveWidgets.append(Label("Databases", CDBCore.MAIN_SCREEN_Y + 3, 5))
     
     # Retrieves a list of databases
     def GetDatabases(self):

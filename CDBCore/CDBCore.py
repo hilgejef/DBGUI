@@ -84,6 +84,12 @@ class CDBCore:
             # TODO: Popup to notify user before exitting application that an issue occured
             pass
     
+    # Used to change to a new CurrentScreen
+    def ChangeCurrentScreen(screen):
+        CDBCore.History.append(CDBCore.CurrentScreen)
+        CDBCore.CurrentScreen.Hide()
+        CDBCore.CurrentScreen = screen
+    
     # Used to test final program flow
     @staticmethod
     def FinalMain(debug=False):      

@@ -64,7 +64,7 @@ class DataScreen(BaseScreen):
             self.DataY = 0
             self.CursorX = 0
             self.CursorY = 0  
-            self.CurrentWidget = 0          
+            self.CurrentWidget = 0      
 
         # Empty widget containers
         self.PassiveWidgets = []

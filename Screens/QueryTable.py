@@ -88,10 +88,12 @@ class QueryTable(BaseScreen):
         resultsObj = self.DataScreen.Result
         fields = {}
 
-        for row in resultsObj[1]:
-            for idx, field in enumerate(row):
-                header = resultsObj[0][idx]
-                fields[header] = field
+        dataY = self.DataScreen.DataY
+        cursorY = self.DataScreen.CursorY
+
+        for idx, field in enumerate(resultsObj[1][dataY + cursorY]):
+            header = resultsObj[0][idx]
+            fields[header] = field
 
         return fields
 
@@ -103,7 +105,6 @@ class QueryTable(BaseScreen):
         col = self.DataScreen.Result[0][dataX + cursorX]
         fields = self.GenerateFields()
 
-        CDBCore.CurrentScreen.Hide()
+        CDBCore.CurrentScreen.Clear()
         CDBCore.CurrentScreen = EditField(allFields=fields, colToUpdate=col)
         CDBCore.CurrentScreen.Show()
-

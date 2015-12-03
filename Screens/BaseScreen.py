@@ -82,6 +82,13 @@ class BaseScreen:
             self.CurrentWidget = 0
         if self.ActionWidgets:
             self.ActionWidgets[self.CurrentWidget].Active()
+
+    # Clears all widgets
+    def Clear(self):
+        for w in self.PassiveWidgets:
+            w.Clear()
+        for w in self.ActionWidgets:
+            w.Clear()
     
     # Virtual method to be overloaded
     # Must return the next screen to be visited

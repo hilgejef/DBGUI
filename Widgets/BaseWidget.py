@@ -183,6 +183,12 @@ class BaseWidget:
     def UnHighlight(self):
         self.TextMode = curses.A_NORMAL
         self.UpdateDisplay()
+
+    # Clear widget screen space, set color to screen bkgd
+    def Clear(self):
+        self.Win.clear()
+        self.Win.bkgd(' ', curses.color_pair(3))
+        self.Refresh()
     
     # Virtual Active() function so that active can be used
     # across all widgets

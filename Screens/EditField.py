@@ -16,7 +16,7 @@ from DataScreen import DataScreen
 class EditField(BaseScreen):
     def __init__(self, allFields, colToUpdate, table=None):
         self.AllFields = allFields
-        self.colToUpdate = colToUpdate
+        self.ColToUpdate = colToUpdate
 
         if not table and not CDBCore.Connection.Table:
             raise Exception("No table specified")
@@ -29,33 +29,34 @@ class EditField(BaseScreen):
     def Init(self):
         currentDb = CDBCore.Connection.Database
         currentTbl = CDBCore.Connection.Table
-        currentCol = self.colToUpdate
+        currentCol = self.ColToUpdate
 
         fieldLabel = Label("Field Value: ", 5, 5)
 
         fieldBox = TextBox(1, 40, 5, len("Field Value: ") + 5)
 
         fieldButton = BaseButton("Submit", self.UpdateMethod, 3, len("Submit") + 2, 4, 
-                                 45 + len("Field Value") + 1, attr={
+                                 45 + len("Field Value") + 3, attr={
                                     "boxed" : True,
                                     "y_offset" : 1,
                                     "x_offset" : 1
                                  }) 
 
-        dbLabel = BaseLabel("Database: " + currentDb, 2, len("Database: " + currentDb) + 2, 8, 5,
-            attr={
-                "bottom_border" : True,
-                "x_offset" : 1
-            }
-        )
-        tableLabel = BaseLabel("Table: " + currentTbl, 2, len("Table: " + currentTbl) + 2, 11, 5,
+        dbLabel = BaseLabel("Database: " + currentDb, 2, min(len("Database: " + currentDb) + 2, 20), 9, 5,
             attr={
                 "bottom_border" : True,
                 "x_offset" : 1
             }
         )
 
-        colLabel = BaseLabel("Column: " + currentCol, 2, len("Column: " + currentCol) + 2, 14, 5,
+        tableLabel = BaseLabel("Table: " + currentTbl, 2, min(len("Table: " + currentTbl) + 2, 20), 9, 30,
+            attr={
+                "bottom_border" : True,
+                "x_offset" : 1
+            }
+        )
+
+        colLabel = BaseLabel("Column: " + currentCol, 2, min(len("Column: " + currentCol) + 2, 20), 9, 55,
             attr={
                 "bottom_border" : True,
                 "x_offset" : 1
@@ -64,8 +65,12 @@ class EditField(BaseScreen):
 
         result = CDBCore.Connection.QueryString(self.MakeSelectString())
 
-        whereFields = DataScreen(result.Data, attr={"start_y" : 17, "start_x" : 19})
+        whereFields = DataScreen(result.Data, attr={"start_y" : 12, "start_x" : 5})
         self.WhereFields = whereFields
+
+        self.FieldBox = fieldBox
+        self.FieldBox.Text = self.AllFields[self.ColToUpdate]
+        self.FieldBox.UpdateDisplay()
 
         self.PassiveWidgets += [fieldLabel, dbLabel, tableLabel, colLabel]
         self.ActionWidgets += [fieldBox, fieldButton, whereFields]
@@ -85,8 +90,13 @@ class EditField(BaseScreen):
         return selectString
 
     def MakeUpdateString(self, newFieldValue):
-        updateString = "UPDATE {} SET {} = {} WHERE ".format(CDBCore.Connection.Table, 
-                                                             self.colToUpdate, newFieldValue)
+        if newFieldValue.isdigit():
+            updateString = "UPDATE {} SET {} = {} WHERE ".format(CDBCore.Connection.Table, 
+                                                                 self.ColToUpdate, newFieldValue)
+        else:
+            updateString = "UPDATE {} SET {} = '{}' WHERE ".format(CDBCore.Connection.Table, 
+                                                                 self.ColToUpdate, newFieldValue)
+
         colStrings = []
 
         for col in self.AllFields:
@@ -100,13 +110,20 @@ class EditField(BaseScreen):
         return updateString
         
     def UpdateMethod(self):
-        updateValue = self.ActionWidgets[0].Text
+        updateValue = self.FieldBox.Text
         updateQuery = self.MakeUpdateString(updateValue)
 
         result = CDBCore.Connection.QueryString(updateQuery)
 
         if result.Success:
-            self.whereFields.loadResult(result.Data)
+            self.AllFields[self.ColToUpdate] = updateValue
+
+            newWhereField = CDBCore.Connection.QueryString(self.MakeSelectString())
+            self.WhereFields.Result = newWhereField.Data
+            self.WhereFields.LoadResult(reset=True)
+
+        else:
+            raise Exception("Update query failed.")
 
 
 

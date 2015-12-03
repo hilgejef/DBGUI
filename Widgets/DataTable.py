@@ -22,6 +22,9 @@ class DataTable(BaseWidget):
     def __init__(self, lines, characters, y, x, resultsObj=None, colWidth=7, rowHeight=1, delimiter=" | "):
         BaseWidget.__init__(self, lines, characters, y, x)
         
+        # Stores the value of the current selection
+        self.Selection = ""
+        
         # position of the selector in DataTable
         self.PosY = 0                   # row
         self.PosX = 0                   # col
@@ -144,6 +147,7 @@ class DataTable(BaseWidget):
                 text = text + spaceFiller
                 if x == self.PosX and y == self.PosY and self.EnableCursor:
                     self.Pad.addstr(2 + y, self.RowLabelWidth + len(self.ColumnDelimiter) + (x * (self.ColWidth + len(self.ColumnDelimiter))), text, curses.A_REVERSE)
+                    self.Text = text
                 else:
                     self.Pad.addstr(2 + y, self.RowLabelWidth + len(self.ColumnDelimiter) + (x * (self.ColWidth + len(self.ColumnDelimiter))), text, curses.A_NORMAL)
                 self.Pad.addstr(2 + y, self.RowLabelWidth + len(self.ColumnDelimiter) + (x * (self.ColWidth + len(self.ColumnDelimiter))) + self.ColWidth, self.ColumnDelimiter, curses.A_NORMAL)

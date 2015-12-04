@@ -11,6 +11,7 @@ class BaseCheckBox(BaseWidget):
         self.UncheckedText = "< " + unchecked_text + " >"
         self.Text = self.UncheckedText
         self.Checked = False
+        self.UpdateDisplay()
   
     def Value(self):
         return self.Checked
@@ -40,8 +41,7 @@ class BaseCheckBox(BaseWidget):
                 # stop highlighting current widget
                 self.UnHighlight()
                 selected = False
-                # TODO: give notification to screen object that TAB was pressed (for selecting next widget)
-                #       potentially can use curses.ungetch(key) here
+                curses.ungetch(key)
 
 """ Check Box """
 class CheckBox(BaseCheckBox):

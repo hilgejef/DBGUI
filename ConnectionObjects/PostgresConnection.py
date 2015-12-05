@@ -116,3 +116,6 @@ class PostgresConnection(BaseConnection):
     
     def GetDatabases(self):
         return self.QueryString("""SELECT pg_database.datname as "Database" FROM pg_database""")
+    
+    def GetTables(self):
+        return self.QueryString("""SELECT tablename FROM pg_catalog.pg_tables""")

@@ -128,3 +128,6 @@ class MySQLConnection(BaseConnection):
     
     def GetDatabases(self):
         return self.QueryString("SHOW DATABASES")
+    
+    def GetTables(self):
+        return self.QueryString("SHOW TABLES")

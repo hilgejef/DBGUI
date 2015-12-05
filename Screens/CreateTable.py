@@ -19,6 +19,7 @@ from BaseScreen import BaseScreen
 from CheckBox import CheckBox
 from ResultStatus import ResultStatus
 from MySQLConnection import MySQLConnection
+from PostgresConnection import PostgresConnection
 from CreateTableColumns import CreateTableColumns
 
 class CreateTable(BaseScreen):
@@ -38,7 +39,7 @@ class CreateTable(BaseScreen):
     def CheckName(self):
         try:
             # Retrieve listing of tables
-            result = CDBCore.Connection.QueryString("SHOW TABLES")
+            result = CDBCore.Connection.GetTables()
             
             # Ensure that the query was successful
             if not result.Success:
@@ -46,7 +47,7 @@ class CreateTable(BaseScreen):
             
             # Check for the table name
             for existing_name in result.Data[1]:
-                if existing_name == self.Name:
+                if existing_name[0].lower() == self.Name.lower():
                     msg = "Table name " + str(self.Name) + " already exists."
                     CDBCore.StatusScreen.AddStatusMessage(msg)
                     return False
@@ -104,20 +105,23 @@ class CreateTable(BaseScreen):
         return CreateTableColumns(self.Name, self.Columns)
 
 if __name__ == "__main__":
-    user = raw_input('Enter the MySQL db user: ')
-    password = raw_input('Enter the MySQL db user password: ')
-    host = raw_input('Enter the MySQL db host: ')
-    port = raw_input('Enter the MySQL db port: ')
-    database = raw_input('Enter the MySQL db database: ')
-    my = MySQLConnection(user, password, host, int(port), database)    
+    db = raw_input('Database type (p for Postgres, m for MySQL: ')
+    user = raw_input('Enter the db user: ')
+    password = raw_input('Enter the db user password: ')
+    database = raw_input('Enter the db database: ')
+    my = None
+    if db == "m":
+        my = MySQLConnection(user, password, "127.0.0.1", 3306, database)
+    else:
+        my = PostgresConnection(user, password, database)
     result = my.Connect()
     if result.Success:
         CDBCore.InitCurses(True)
         CDBCore.InitColor()
         CDBCore.InitScreens()
+        CDBCore.Connection = my
         CDBCore.CurrentScreen.Hide()
         CDBCore.CurrentScreen = CreateTable()
-        CDBCore.Connection = my
-        CDBCore.Main()    
+        CDBCore.Main()
     else:
         print "Could not log in: " + result.Message

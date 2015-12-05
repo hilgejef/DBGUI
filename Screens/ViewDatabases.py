@@ -17,6 +17,7 @@ from Button import Button
 from BaseScreen import BaseScreen
 from ResultStatus import ResultStatus
 from MySQLConnection import MySQLConnection
+from PostgresConnection import PostgresConnection
 from DataTable import DataTable
 
 class ViewDatabases(BaseScreen):
@@ -30,7 +31,7 @@ class ViewDatabases(BaseScreen):
     def GetDatabases(self):
         try:
             # Retrieve a list of databses
-            result = CDBCore.Connection.QueryString("SHOW DATABASES")
+            result = CDBCore.Connection.GetDatabases()
             
             # Ensure there weren't any issues getting the list of databases.
             if not result.Success:
@@ -51,7 +52,7 @@ class ViewDatabases(BaseScreen):
     def SetDatabase(self):
         try:
             name = self.ActionWidgets[0].Text            
-            result = CDBCore.Connection.QueryString("USE " + name)
+            result = CDBCore.Connection.SetDatabase(name)
             if result.Success:
                 CDBCore.Connection.Database = name
                 CDBCore.StatusScreen.AddStatusMessage("Set database to: " + name)
@@ -71,9 +72,14 @@ class ViewDatabases(BaseScreen):
         return None
 
 if __name__ == "__main__":
-    user = raw_input('Enter the MySQL db user: ')
-    password = raw_input('Enter the MySQL db user password: ')
-    my = MySQLConnection(user, password)    
+    db = raw_input('Database type (p for Postgres, m for MySQL: ')
+    user = raw_input('Enter the db user: ')
+    password = raw_input('Enter the db user password: ')   
+    my = None
+    if db == "m":
+        my = MySQLConnection(user, password)
+    else:
+        my = PostgresConnection(user, password)    
     result = my.Connect()
     if result.Success:
         CDBCore.InitCurses(True)

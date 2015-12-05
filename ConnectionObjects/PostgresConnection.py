@@ -1,24 +1,24 @@
 ###############################################################################
 # Author:		Rich Gagliano
-# Date Created:		11/2/2015
-# Date Modified:	11/8/2015
-# File Name:		MySQLConnection.py
+# Date Created:		12/3/2015
+# Date Modified:	12/3/2015
+# File Name:		PostgresConnection.py
 #
 # Overview:
-#	Provides a connection object for MySQL databases.
+#	Provides a connection object for PostgresSQL databases.
 #
 ###############################################################################
 
-import mysql.connector
+import psycopg2
 from ResultStatus import ResultStatus
 from BaseConnection import BaseConnection
 
-class MySQLConnection(BaseConnection):
-    # MySQLConnection constructor
-    def __init__(self, user, password, host = "127.0.0.1", port = 3306, database = None):
+class PostgresConnection(BaseConnection):
+    # PostgresConnection constructor
+    def __init__(self, user, password, database = None, host = "127.0.0.1", port = 5432):
         BaseConnection.__init__(self,user, password, host, port, database)
     
-    # MySQLConnection destructor
+    # PostgresConnection destructor
     def __del__(self):
         self.Disconnect()
     
@@ -26,30 +26,19 @@ class MySQLConnection(BaseConnection):
     def Connect(self):
         try:
             # If no database has been specified, omit from connection string
-            if self.Database == None:
-                self.Connection = mysql.connector.connect(user=self.User,
-                                                          password=self.Password,
-                                                          host=self.Host,
-                                                          port=self.Port)
+            conn_string = ""
+            if self.Database == None:                
+                conn_string = "host='" + self.Host + "' user='" + self.User + "' password='" + self.Password + "' port=" + str(self.Port)
             else:
-                self.Connection = mysql.connector.connect(user=self.User,
-                                                          password=self.Password,
-                                                          host=self.Host,
-                                                          port=self.Port,
-                                                          database=self.Database)
+                conn_string = "host='" + self.Host + "' dbname='" + self.Database + "' user='" + self.User + "' password='" + self.Password + "' port=" + str(self.Port)
+            self.Connection = psycopg2.connect(conn_string)
             return ResultStatus()
-        except mysql.connector.Error as ex:
+        except Exception as ex:
             result = ResultStatus(False, "Could not connect to database: ")
-            
-            if ex.errno == 1044:
-                result.Message += "Invalid username or password."
-            elif ex.errno == 1049:
-                result.Message += "Database does not exist."
-            else:
-                result.Message += str(ex)
+            result.Message += str(ex)
             return result
     
-    # Disconnects from the MySQL database
+    # Disconnects from the database
     def Disconnect(self):
         try:
             self.Connection.close()
@@ -68,6 +57,7 @@ class MySQLConnection(BaseConnection):
                 cursor.execute(query)
             else:
                 cursor.execute(query, values)
+            self.Connection.commit()
             data = self.ParseResults(cursor) 
             cursor.close()
             return ResultStatus(True, None, data)
@@ -111,20 +101,18 @@ class MySQLConnection(BaseConnection):
             # Error parsing data, this sould indicate that this was not a
             # SELECT query.  Return None
             return None
-    
+            
     # Sets the connection to use a new database
     def SetDatabase(self, database):
         try:
-            result = self.QueryString("USE " + database)
-            if result.Success:
-                self.Database = database
-                return ResultStatus()
-            else:
-                return result
+            self.Disconnect()
+            self.Database = database
+            self.Connect()
+            return ResultStatus()
         except Exception as ex:
             result = ResultStatus(False, "Could not connect to database: ")
             result.Message += str(ex)
             return result
     
     def GetDatabases(self):
-        return self.QueryString("SHOW DATABASES")
+        return self.QueryString("""SELECT pg_database.datname as "Database" FROM pg_database""")

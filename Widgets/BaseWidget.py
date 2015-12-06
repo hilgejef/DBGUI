@@ -15,6 +15,7 @@ class BaseWidget:
         "text_x_center" : False,
         "window_y_center" : False,
         "window_x_center" : False,
+        "setsyx" : None,
         "text_color" : 1,
         "bkgd_color" : 2,
         "y_offset" : 0,
@@ -44,6 +45,7 @@ class BaseWidget:
 
         # Text to override
         self.Text = ""
+        self.DisplayText = ""
 
         # Attribute initializations
         self.TextMode = attr["text_mode"]
@@ -60,6 +62,7 @@ class BaseWidget:
         self.BkgdColor = curses.color_pair(attr["bkgd_color"])
         self.YOffset = attr["y_offset"]
         self.XOffset = attr["x_offset"]
+        self.SetSyx = attr["setsyx"]
 
         # Legacy support
         self.Lines = height
@@ -126,7 +129,7 @@ class BaseWidget:
             print "Could not move panel to bottom of the stack."
     
     # Updates the display with the current text mode
-    def UpdateDisplay(self):
+    def UpdateDisplay(self, useDisplay=False):
         self.Win.erase()
 
         if self.Boxed:
@@ -153,8 +156,13 @@ class BaseWidget:
             YOffset = self.YOffset
 
         # Ensure that text attribute is never larger than what can be written to the window!    
+        if useDisplay:
+            text = self.DisplayText
+        else:
+            text = self.Text
+
         if self.TextXCenter:
-            for line, substr in enumerate(self.Text.split('\n')):
+            for line, substr in enumerate(text.split('\n')):
                 if len(substr) >= self.Width:
                     XOffset = 0
                 else:
@@ -162,14 +170,17 @@ class BaseWidget:
                 
                 text = substr[:self.Width - XOffset - 1]
 
-                self.Win.addstr(YOffset + line, XOffset, 
-                                text, self.TextMode | self.TextColor)
+                self.Win.addnstr(YOffset + line, XOffset, 
+                                substr, self.Width - XOffset - 1, self.TextMode | self.TextColor)
         else:
-            for line, substr in enumerate(self.Text.split('\n')):
+            for line, substr in enumerate(text.split('\n')):
                 text = substr[:self.Width - self.XOffset - 1]
 
-                self.Win.addstr(YOffset + line, self.XOffset, 
-                                text, self.TextMode | self.TextColor)
+                self.Win.addnstr(YOffset + line, self.XOffset, 
+                                text, self.Width - self.XOffset - 1, self.TextMode | self.TextColor)
+
+        if self.SetSyx:
+            curses.setsyx(self.SetSyx[0], self.SetSyx[1])
             
         self.Refresh()
 

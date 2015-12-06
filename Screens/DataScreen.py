@@ -2,6 +2,7 @@ import curses
 import curses.panel
 from Label import BaseLabel
 from Button import BaseButton
+from TextBox import ModTextBox
 from BaseScreen import BaseScreen
 from CDBCore import CDBCore
 
@@ -20,7 +21,7 @@ class DataScreen(BaseScreen):
         "field_border" : True
     }
 
-    def __init__(self, resultsObj, dataMethod=None, attr=None):
+    def __init__(self, resultsObj, dataMethod=None, attr=None, majorScreen="QueryTable"):
         if dataMethod:
             self.DataMethod = dataMethod
         else:
@@ -35,9 +36,15 @@ class DataScreen(BaseScreen):
 
         self.Result = resultsObj
 
+        self.MajorScreen = majorScreen
+
         BaseScreen.__init__(self, screen_type="DataScreen")
 
-        self.LoadResult()
+        if self.MajorScreen == "QueryTable" or self.MajorScreen == "ViewTables":
+            self.LoadResult()
+
+        elif self.MajorScreen == "AlterTable":
+            self.LoadAlterTable()
 
     def Init(self):
         self.StartX = self.Attr["start_x"]
@@ -140,14 +147,155 @@ class DataScreen(BaseScreen):
                 # Add field button to action widgets
                 self.ActionWidgets.append(fieldButton)
 
+    def LoadAlterTable(self, reset=False):
+        if reset:
+            self.TotalCols = len(self.Result[0])
+            self.TotalRows = len(self.Result[1])
+            self.DisplayCols = min(self.TotalCols, self.Attr["display_cols"])
+            self.DisplayRows = min(self.TotalRows, self.Attr["display_rows"])
+            self.DataX = 0
+            self.DataY = 0
+            self.CursorX = 0
+            self.CursorY = 0  
+            self.CurrentWidget = 0      
+
+        # Empty widget containers
+        self.PassiveWidgets = []
+        self.ActionWidgets = []
+
+        # Define padding variables based on border attributes
+        if self.HeadBorder:
+            self.HeadPadding = 2
+        else:
+            self.HeadPadding = 1
+
+        if self.FieldBorder:
+            self.FieldPadding = 2
+        else:
+            self.FieldPadding = 1
+
+        # Iterate through self.Result to create header labels
+        for xidx, x in enumerate(range(self.DataX, min(self.TotalCols, self.DataX + self.DisplayCols))):
+
+            # Define header attributes
+            headerX = self.StartX + (self.ColSize) * xidx
+            headerY = self.StartY
+            headerHeight = self.HeadPadding + 1
+            headerWidth = self.ColSize
+
+            # Ensure that text is string
+            headerText = str(self.Result[0][x])
+
+            if self.HeadBorder:
+                attr = {
+                    "nocorner_border" : True,
+                    "y_offset" : 1,
+                    "x_offset" : 1,
+                    "text_x_center" : True
+                }
+            else:
+                attr = {
+                    "text_x_center" : True
+                }
+
+            # Create label based on defined attributes
+            headerLabel = BaseLabel(headerText, headerHeight, headerWidth, headerY, headerX, attr)
+
+            # Add header label to passive widgets
+            self.PassiveWidgets.append(headerLabel)
+
+        self.AlterWidgets = []
+        # Iterate through self.Result to create field text boxes
+        for xidx, x in enumerate(range(self.DataX, min(self.TotalCols, self.DataX + self.DisplayCols))):
+
+            for yidx, y in enumerate(range(self.DataY, min(self.TotalRows, self.DataY + self.DisplayRows))):
+
+                self.AlterWidgets.append([])
+
+                # Define field attributes
+                fieldX = self.StartX + (self.ColSize) * xidx
+                fieldY = self.StartY + (self.HeadPadding) + (self.FieldPadding) * yidx
+                fieldHeight = self.FieldPadding + 1
+                fieldWidth = self.ColSize
+                fieldText = str(self.Result[1][y][x])
+
+                if self.FieldBorder:
+                    attr = {
+                        "nocorner_border" : True,
+                        "y_offset" : 1,
+                        "x_offset" : 1,
+                    }
+                else:
+                    attr = {
+
+                    }
+
+                if x == 0:
+                    fieldButton = BaseButton(fieldText, self.EmptyMethod, fieldHeight,
+                                             fieldWidth, fieldY, fieldX, attr)
+                    fieldButton.UpdateDisplay()
+                    self.ActionWidgets.append(fieldButton)
+
+                    self.AlterWidgets[yidx].append(fieldButton)
+
+                if x == 1:
+                    # Create textbox based on defined attributes
+                    fieldTextBox = ModTextBox(fieldHeight, fieldWidth, fieldY, fieldX, attr)
+                    fieldTextBox.Text = fieldText
+                    fieldTextBox.UpdateDisplay()
+
+                    # Add field textbox to action widgets
+                    self.ActionWidgets.append(fieldTextBox)
+
+                    self.AlterWidgets[yidx].append(fieldTextBox)
+
+                # Load Alter Method
+                if x == 2:
+                    alterButton = BaseButton(fieldText, self.DataMethod[0], fieldHeight,
+                                             fieldWidth, fieldY, fieldX, attr)
+                    alterButton.UpdateDisplay()
+                    alterButton.Row = y
+                    self.ActionWidgets.append(alterButton)
+
+                    self.AlterWidgets[yidx].append(alterButton)
+
+                # Load Drop Method
+                elif x == 3:
+                    dropButton = BaseButton(fieldText, self.DataMethod[1], fieldHeight,
+                                            fieldWidth, fieldY, fieldX, attr)
+                    alterButton.UpdateDisplay()
+                    dropButton.Row = y
+                    self.ActionWidgets.append(dropButton)
+
+                    self.AlterWidgets[yidx].append(dropButton)
+
+
+
+            # self.AlterWidgets.append(AlterRow)
+
+    # def DropMethod(self):
+    #     rowNum = self.ActionWidgets[self.CurrentWidget].Row
+    #     row = self.AlterWidgets[rowNum]
+
+    #     colName = row[0]
+
+    #     q = "ALTER TABLE {} DROP COLUMN {}".format(self.Table, colName)
+    #     result = CDBCore.Connection.QueryString(q)
+
+    #     if result.Success:
+    #         q = ""
+    #         self.
+    #     else:
+    #         CDBCore.StatusScreen.AddStatusMessage("Drop Col failed")
+
     # Load with WASD/arrow-key movement
     def Active(self):
         if not self.ActionWidgets:
-            pass
+            capturing = False
 
-        self.ActionWidgets[self.CurrentWidget].Highlight()
-
-        capturing = True
+        else:
+            self.ActionWidgets[self.CurrentWidget].Highlight()
+            capturing = True
 
         while capturing:
             key = self.ActionWidgets[self.CurrentWidget].Win.getch()
@@ -201,13 +349,17 @@ class DataScreen(BaseScreen):
 
             # tab
             elif key in [ord('\t'), 9]:  
-                curses.ungetch('\t')
+                curses.ungetch("\t")
                 capturing = False
 
-            # enter - switch to editing field
             elif key in [curses.KEY_ENTER, ord('\n'), 10]:
                 if self.ActionWidgets:
-                    self.ActionWidgets[self.CurrentWidget].CallMethod()
+                    if self.ActionWidgets[self.CurrentWidget].Type == "TextBox":
+                        self.ActionWidgets[self.CurrentWidget].Active()
+                    elif self.ActionWidgets[self.CurrentWidget].Type == "Button":
+                        self.ActionWidgets[self.CurrentWidget].CallMethod()
+
+                capturing = False
 
     # EmptyMethod to optionally pass to DataScreen
     def EmptyMethod(self):

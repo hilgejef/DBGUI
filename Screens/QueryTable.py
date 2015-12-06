@@ -105,6 +105,7 @@ class QueryTable(BaseScreen):
         col = self.DataScreen.Result[0][dataX + cursorX]
         fields = self.GenerateFields()
 
+        CDBCore.History.append(CDBCore.CurrentScreen)
         CDBCore.CurrentScreen.Clear()
         CDBCore.CurrentScreen = EditField(allFields=fields, colToUpdate=col)
         CDBCore.CurrentScreen.Show()

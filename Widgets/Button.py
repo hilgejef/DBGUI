@@ -7,6 +7,7 @@ class BaseButton(BaseLabel):
     def __init__(self, text, method, height, width, y, x, attr=None):
         BaseLabel.__init__(self, text, height, width, y, x, attr)
         self.CallMethod = method
+        self.Type = "Button"
         
     # -- IMO, should be rewritten to be handled in Core, and
     # keys passed to widget, which will have a key handler

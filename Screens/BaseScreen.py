@@ -31,13 +31,14 @@ class BaseScreen:
             w.Hide()
     
     # Shows the screen by displaying all widgets
-    def Show(self):
+    def Show(self, active=True):
         for w in self.PassiveWidgets:
             w.Show()
         for w in self.ActionWidgets:
             w.Show()
-        if self.ActionWidgets:   #test if there are any action widgets in screen
-            self.ActionWidgets[self.CurrentWidget].Active()
+        if active:
+            if self.ActionWidgets:   #test if there are any action widgets in screen
+                self.ActionWidgets[self.CurrentWidget].Active()
     
     # Moves all of the screen's widgets to the top
     def ToTop(self):

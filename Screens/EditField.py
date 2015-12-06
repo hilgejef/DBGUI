@@ -122,8 +122,11 @@ class EditField(BaseScreen):
             self.WhereFields.Result = newWhereField.Data
             self.WhereFields.LoadResult(reset=True)
 
+            msg = "Field changed to value: " + updateValue
+            CDBCore.StatusScreen.AddStatusMessage(msg)
+
         else:
-            raise Exception("Update query failed.")
+            CDBCore.StatusScreen.AddStatusMessage("Failed to edit value.")
 
 
 

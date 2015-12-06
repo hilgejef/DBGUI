@@ -13,5 +13,6 @@ if __name__ == "__main__":
 	CDBCore.InitColor()
 	CDBCore.InitScreens()
 	CDBCore.Connection = my
+	CDBCore.CurrentScreen.Hide()
 	CDBCore.CurrentScreen = ViewTables("tmptest")
 	CDBCore.Main()

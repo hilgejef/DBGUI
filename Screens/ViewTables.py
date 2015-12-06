@@ -1,14 +1,16 @@
 import sys
 import curses
 from CDBCore import CDBCore
+from Label import Label
 from Label import BaseLabel
 from Button import BaseButton
 from BaseScreen import BaseScreen
 from ResultStatus import ResultStatus
 from MySQLConnection import MySQLConnection
-from DataTable import DataTable
+from DataScreen import DataScreen
+from AlterTable import AlterTable
 
-_PAGESIZE_ = 5
+# _PAGESIZE_ = 5
 
 class ViewTables(BaseScreen):
     def __init__(self, DBName=""):
@@ -25,13 +27,10 @@ class ViewTables(BaseScreen):
         self.NumTables = 0
 
         self.GetTables()
-        self.PassiveWidgets.append(BaseLabel("View Tables", 2, len("View Tables") + 2, 5, 20, attr=
-            {
-             'bottom_border' : True, 
-             'x_offset' : 1 
-            }
-        ))
+        self.PassiveWidgets.append(Label("Viewing Tables", 5, 15))
 
+        if self.ActionWidgets:
+            self.ActionWidgets[0].Active()
 
     # Retrieves a list of tables
     def GetTables(self):
@@ -50,76 +49,97 @@ class ViewTables(BaseScreen):
             self.NumTables = len(self.Data)
             
             # Create a column of Buttons for each table
-            self.AddTables()
+            dataScreen = DataScreen(result.Data, dataMethod=self.SendToAlter, majorScreen="ViewTables", 
+                attr={
+                    "start_y" : 7,
+                    "column_size" : 50,
+                    "display_rows" : 5
+                    }
+            )
+
+            self.DataScreen = dataScreen
+            self.ActionWidgets.append(dataScreen)
 
         except Exception as ex:
             # TODO: Add status update here
             sys.exit(str(ex)) # FOR TESTING
 
-    def AddTables(self):
-            self.ActionWidgets = []
+    # Buttons will send to Alter Table on Enter Press
+    def SendToAlter(self):
+        table = self.DataScreen.ActionWidgets[self.DataScreen.CurrentWidget].Text
 
-            start = self.CurrentPage * _PAGESIZE_
-            end = min((self.CurrentPage + 1) * _PAGESIZE_, self.NumTables )
+        alterScreen = AlterTable(table, dbName=CDBCore.Connection.Database)
 
-            for offset, name in enumerate(self.Data[start:end]):
-                self.ActionWidgets.append(BaseButton(name[0], self.SetTable, 3, 40, 8 + offset * 2, 20,
-                    attr={
-                        "vert_border" : True,
-                        "text_x_center" : True,
-                        "y_offset" : 1
-                    }
-                ))
+        CDBCore.History.append(CDBCore.CurrentScreen)
+        CDBCore.CurrentScreen.Clear()
+        CDBCore.CurrentScreen.Hide()
+        CDBCore.CurrentScreen = alterScreen
+        CDBCore.CurrentScreen.Show(active=False)
 
-            # Back button goes back 1 page
-            backButton = BaseButton("Back", self.BackFunc(), 3, 6, 16, 10,
-                attr={
-                    "boxed" : True,
-                    "text_x_center" : True,
-                    "y_offset" : 1
-                }
-            )
+    # def AddTables(self):
+    #         self.ActionWidgets = []
 
-            # Next button goes forward 1 page
-            nextButton = BaseButton("Next", self.NextFunc(), 3, 6, 16, 64,
-                attr={
-                    "boxed" : True,
-                    "text_x_center" : True,
-                    "y_offset" : 1
-                }
-            )
+    #         start = self.CurrentPage * _PAGESIZE_
+    #         end = min((self.CurrentPage + 1) * _PAGESIZE_, self.NumTables )
 
-            self.ActionWidgets.append(backButton)
-            self.ActionWidgets.append(nextButton)
+    #         for offset, name in enumerate(self.Data[start:end]):
+    #             self.ActionWidgets.append(BaseButton(name[0], self.SetTable, 3, 40, 8 + offset * 2, 20,
+    #                 attr={
+    #                     "vert_border" : True,
+    #                     "text_x_center" : True,
+    #                     "y_offset" : 1
+    #                 }
+    #             ))
 
-    def BackFunc(self):
-        def EmptyMethod():
-            pass
+    #         # Back button goes back 1 page
+    #         backButton = BaseButton("Back", self.BackFunc(), 3, 6, 16, 10,
+    #             attr={
+    #                 "boxed" : True,
+    #                 "text_x_center" : True,
+    #                 "y_offset" : 1
+    #             }
+    #         )
 
-        def BackMethod():
-            self.CurrentPage -= 1
-            self.AddTables()
+    #         # Next button goes forward 1 page
+    #         nextButton = BaseButton("Next", self.NextFunc(), 3, 6, 16, 64,
+    #             attr={
+    #                 "boxed" : True,
+    #                 "text_x_center" : True,
+    #                 "y_offset" : 1
+    #             }
+    #         )
 
-        if self.CurrentPage == 0:
-            return EmptyMethod
+    #         self.ActionWidgets.append(backButton)
+    #         self.ActionWidgets.append(nextButton)
 
-        else:
-            return BackMethod
+    # def BackFunc(self):
+    #     def EmptyMethod():
+    #         pass
+
+    #     def BackMethod():
+    #         self.CurrentPage -= 1
+    #         self.AddTables()
+
+    #     if self.CurrentPage == 0:
+    #         return EmptyMethod
+
+    #     else:
+    #         return BackMethod
 
 
-    def NextFunc(self):
-        def EmptyMethod():
-            pass
+    # def NextFunc(self):
+    #     def EmptyMethod():
+    #         pass
 
-        def NextMethod():
-            self.CurrentPage += 1
-            self.AddTables()
+    #     def NextMethod():
+    #         self.CurrentPage += 1
+    #         self.AddTables()
 
-        if (self.CurrentPage + 1) * _PAGESIZE_ >= self.NumTables:
-            return EmptyMethod
+    #     if (self.CurrentPage + 1) * _PAGESIZE_ >= self.NumTables:
+    #         return EmptyMethod
 
-        else:
-            return NextMethod
+    #     else:
+    #         return NextMethod
 
     # Sets Connection.Table to current table/advances to QueryTable
     def SetTable(self):

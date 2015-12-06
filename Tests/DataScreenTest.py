@@ -2,24 +2,29 @@ import curses
 from CDBCore import CDBCore
 from MainMenu import MainMenu
 from DataScreen import DataScreen
+from MySQLConnection import MySQLConnection
 
-CDBCore.InitCurses(debug=True)
-CDBCore.InitColor()
+db = raw_input('Database type (p for Postgres, m for MySQL: ')
+user = raw_input('Enter the db user: ')
+password = raw_input('Enter the db user password: ')
+database = raw_input('Enter the db database: ')
+my = None
+if db == "m":
+    my = MySQLConnection(user, password, "127.0.0.1", 3306, database)
+else:
+    my = PostgresConnection(user, password, database)
+result = my.Connect()
+if result.Success:
+    CDBCore.InitCurses(True)
+    CDBCore.InitColor()
+    CDBCore.InitScreens()
+    CDBCore.Connection = my
 
-# Test DataTable
-resultsObj = [["colA", "columnB", "CCCCCCCCCCCCCCCCC", "colD"],
-             [["data00", "data01", "data02", "data03"],
-              ["datahereis toolong", "more data here", "row2data3", "data13"],
-              ["20", "21", "22", "23"],
-              ["aa", "ab", "ac", "ad"],
-              ["once upon a time there was ", "test test test", "datadatadata", "allofthis is f"],
-              ["", "", "", ""],
-              ["last0", "last1", "last2", "last3"]]]
+    result = CDBCore.Connection.QueryString("DESCRIBE test1;")
 
-data = [['id', 'firstname', 'lastname', 'email'], [(1, u'Jeff', u'Hilger', u'hilger@test.com'), (2, u'Jon', u'Moore', u'jon@test.com'), (3, u'Richard', u'Gagliano', u'rich@test.com')]]
-
-# CDBCore.MenuScreen = MainMenu()
-CDBCore.CurrentScreen = DataScreen(resultsObj)
-CDBCore.CurrentScreen.Active()
-
-CDBCore.Main()
+    CDBCore.CurrentScreen.Hide()
+    CDBCore.CurrentScreen = DataScreen(result.Data, majorScreen="ViewTables")
+    CDBCore.CurrentScreen.MakeActive()
+    CDBCore.Main()
+else:
+    print "Could not log in: " + result.Message

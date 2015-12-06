@@ -16,6 +16,13 @@ from CDBCore import CDBCore
 from BaseScreen import BaseScreen
 from Button import Button
 from Label import Label
+from ViewTables import ViewTables
+from ViewDatabases import ViewDatabases
+#from EditField import EditField
+from CreateTable import CreateTable
+from QueryTable import QueryTable
+from CreateDatabase import CreateDatabase
+from ConnectionWizard import ConnectionWizard
 
 class SelectTask(BaseScreen):
     def __init__(self, query=None, data=None):
@@ -26,23 +33,39 @@ class SelectTask(BaseScreen):
         #                       1 - Button to submit Text query
         #                       2 - DataTable for displaying results
         self.ActionWidgets.append(Button(
-            "1. View Tables",
-            self.GoToViewTable,
+            ">> Use a New Connection",
+            self.GoToNewConnection,
             CDBCore.MAIN_SCREEN_Y + 5,
             20,
             None,
             True
         ))
         self.ActionWidgets.append(Button(
-            "2. Alter Existing Tables",
-            self.GoToAlterTable,
+            ">> Choose a Database",
+            self.GoToViewDatabases,
             CDBCore.MAIN_SCREEN_Y + 6,
             20,
             None,
             True
         ))
+        #self.ActionWidgets.append(Button(
+        #    "1. View Table",
+        #    self.GoToViewTable,
+        #    CDBCore.MAIN_SCREEN_Y + 5,
+        #    20,
+        #    None,
+        #    True
+        #))
+        #self.ActionWidgets.append(Button(
+        #    "2. Alter Existing Tables",
+        #    self.GoToAlterTable,
+        #    CDBCore.MAIN_SCREEN_Y + 6,
+        #    20,
+        #    None,
+        #    True
+        #))
         self.ActionWidgets.append(Button(
-            "3. Create a Table in Existing Database",
+            ">> Create a New Table",
             self.GoToCreateTable,
             CDBCore.MAIN_SCREEN_Y + 7,
             20,
@@ -50,33 +73,35 @@ class SelectTask(BaseScreen):
             True
         ))
         self.ActionWidgets.append(Button(
-            "4. Query Database",
-            self.GoToQueryDatabase,
+            ">> Create a New Database",
+            self.GoToCreateNewDatabase,
             CDBCore.MAIN_SCREEN_Y + 8,
             20,
             None,
             True
         ))
         self.ActionWidgets.append(Button(
-            "5. Edit Table Data",
-            self.GoToEditTableResults,
+            ">> Query Database",
+            self.GoToQueryDatabase,
             CDBCore.MAIN_SCREEN_Y + 9,
             20,
             None,
             True
         ))
         self.ActionWidgets.append(Button(
-            "6. Connect to a New Database",
-            self.GoToConnectToNewDatabase,
+            ">> Edit Table Data",
+            self.GoToEditTableResults,
             CDBCore.MAIN_SCREEN_Y + 10,
             20,
             None,
             True
         ))
+        
+        # EXIT BUTTON GOES LAST
         self.ActionWidgets.append(Button(
-            "7. Create a New Database",
-            self.GoToCreateNewDatabase,
-            CDBCore.MAIN_SCREEN_Y + 11,
+            "Exit Program",
+            self.GoToCoreShutdown,
+            CDBCore.MAIN_SCREEN_Y + 12,
             20,
             None,
             True
@@ -84,40 +109,71 @@ class SelectTask(BaseScreen):
         
         #Passive Widgets[]:     0 - Label to Select Screen
         self.PassiveWidgets.append(Label("Select a Task:", CDBCore.MAIN_SCREEN_Y + 2, 30))
+        CDBCore.StatusScreen.AddStatusMessage("Use Tab to change and Enter to select")
         
         self.Show()
         
+    def GoToNewConnection(self):
+        CDBCore.History.append(CDBCore.CurrentScreen)
+        CDBCore.CurrentScreen.Hide()
+        CDBCore.CurrentScreen = ConnectionWizard()
+        #nextscreen = ConnectionWizard()
+        #CDBCore.ChangeCurrentScreen(nextscreen)
+        
+    def GoToViewDatabases(self):
+        CDBCore.History.append(CDBCore.CurrentScreen)
+        CDBCore.CurrentScreen.Hide()
+        CDBCore.CurrentScreen = ViewDatabases()
+        #nextscreen = ViewDatabases()
+        #CDBCore.ChangeCurrentScreen(nextscreen)
+        
     def GoToViewTable(self):
-        pass
+        CDBCore.History.append(CDBCore.CurrentScreen)
+        CDBCore.CurrentScreen.Hide()
+        CDBCore.CurrentScreen = ViewTable()
+        #nextscreen = ViewTables()
+        #CDBCore.ChangeCurrentScreen(nextscreen)
             
     def GoToAlterTable(self):
+        #TODO: Connect when screen is done
         pass
+        #nextscreen = EditField()
+        #CDBCore.ChangeCurrentScreen(nextscreen)
         
     def GoToCreateTable(self):
-        pass
+        CDBCore.History.append(CDBCore.CurrentScreen)
+        CDBCore.CurrentScreen.Hide()
+        CDBCore.CurrentScreen = CreateTable()
+        #nextscreen = CreateTable()
+        #CDBCore.ChangeCurrentScreen(nextscreen)
         
     def GoToQueryDatabase(self):
-        pass
+        CDBCore.History.append(CDBCore.CurrentScreen)
+        CDBCore.CurrentScreen.Hide()
+        CDBCore.CurrentScreen = CreateTable()
+        #nextscreen = QueryTable()
+        #CDBCore.ChangeCurrentScreen(nextscreen)
         
     def GoToEditTableResults(self):
-        pass
-        
-    def GoToConnectToNewDatabase(self):
+        #TODO - screen not yet made
         pass
         
     def GoToCreateNewDatabase(self):
+        CDBCore.History.append(CDBCore.CurrentScreen)
+        CDBCore.CurrentScreen.Hide()
+        CDBCore.CurrentScreen = CreateTable()
+        #nextscreen = CreateDatabase()
+        #CDBCore.ChangeCurrentScreen(nextscreen)
+        
+    def GoToCoreShutdown(self):
         pass
+        #TODO: how do we exit the program?
 
 if __name__ == "__main__":
-    user = raw_input('Enter the MySQL db user: ')
-    password = raw_input('Enter the MySQL db user password: ')
-    my = MySQLConnection(user, password)    
-    my.Connect()
     CDBCore.InitCurses()
     CDBCore.InitScreens()
     #CDBCore.InitColor()
     CDBCore.History.append(CDBCore.CurrentScreen)
     CDBCore.CurrentScreen.Hide()
     CDBCore.CurrentScreen = SelectTask()
-    CDBCore.Connection = my
     CDBCore.Main()

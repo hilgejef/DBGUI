@@ -20,6 +20,7 @@ from CheckBox import CheckBox
 from ResultStatus import ResultStatus
 from MySQLConnection import MySQLConnection
 from PostgresConnection import PostgresConnection
+from SelectTaskScreen import SelectTaskScreen
 
 class ConnectionWizard(BaseScreen):
     def __init__(self):
@@ -120,9 +121,9 @@ class ConnectionWizard(BaseScreen):
             self.ResetScreen(msg)
             return
     
-    # TODO: Return the next screen
+    # Go back to the selection screen
     def Next(self):
-        return None
+        return SelectTaskScreen()
         
 if __name__ == "__main__":
     CDBCore.InitCurses(True)

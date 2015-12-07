@@ -67,9 +67,9 @@ class ViewDatabases(BaseScreen):
             self.ActionWidgets[self.CurrentWidget].Highlight()
             self.ActionWidgets[self.CurrentWidget].Active
 
-    # TODO: Return the next screen
+    # Go back to the selection screen
     def Next(self):
-        return None
+        return SelectTaskScreen()
 
 if __name__ == "__main__":
     db = raw_input('Database type (p for Postgres, m for MySQL: ')

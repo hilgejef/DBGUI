@@ -104,9 +104,9 @@ class CreateTableColumns(BaseScreen):
             self.ActionWidgets[0].Active()
             return
         
-    # Move on to next screen
+    # Go back to the selection screen
     def Next(self):
-        return None
+        return SelectTaskScreen()
         
 if __name__ == "__main__":
     user = raw_input('Enter the MySQL db user: ')

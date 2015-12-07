@@ -42,9 +42,9 @@ class CreateDatabase(BaseScreen):
             msg = "Could not create database: " + name
             CDBCore.StatusScreen.AddStatusMessage(msg)
         
-    # TODO: Return the next screen
+    # Go back to the selection screen
     def Next(self):
-        return None
+        return SelectTaskScreen()
         
 if __name__ == "__main__":
     user = raw_input('Enter the MySQL db user: ')

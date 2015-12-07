@@ -61,7 +61,8 @@ class TextBox(BaseWidget):
                 capturing = False
             
             # go to menu (SHIFT-M or F1)
-            elif key in [curses.KEY_F1, 77]:
+            # or go to status screen (SHIFT-M or F8)
+            elif key in [curses.KEY_F1, 77, curses.KEY_F8, 76]:
                 capturing = False
                 curses.ungetch(key)
             

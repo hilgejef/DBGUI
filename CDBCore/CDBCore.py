@@ -81,6 +81,16 @@ class CDBCore:
                 CDBCore.History.append(CDBCore.CurrentScreen)
                 CDBCore.CurrentScreen = CDBCore.MenuScreen
             CDBCore.CurrentScreen.MakeActive()
+        # Access Status Screen Message Log -  SHIFT-L or F8
+        elif key in [curses.KEY_F8, 76]:
+            CDBCore.CurrentScreen.UnHighlight()
+            CDBCore.CurrentScreen.Update()
+            if CDBCore.CurrentScreen.Type == "StatusScreen":
+                CDBCore.CurrentScreen = CDBCore.History.pop()
+            else:
+                CDBCore.History.append(CDBCore.CurrentScreen)
+                CDBCore.CurrentScreen = CDBCore.StatusScreen
+            CDBCore.CurrentScreen.MakeActive()
         else:
             # TODO: Popup to notify user before exitting application that an issue occured
             pass

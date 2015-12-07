@@ -1,7 +1,7 @@
 ###############################################################################
 # Author:		    Jonathon Moore
 # Date Created:		11/13/2015
-# Date Modified:	11/24/2015
+# Date Modified:	12/07/2015
 # File Name:		StatusScreen.py
 #
 # Overview:         StatusScreen displays messages from the system to the user
@@ -48,7 +48,8 @@ class StatusScreen(BaseScreen):
         self.PassiveWidgets[0].ToBottom()
         
         # label widget for persistent messages
-        self.PassiveWidgets.append(Label("Ctrl-T for Main Menu", genLabelY, genLabelX))
+        self.PassiveWidgets.append(Label("Shift-M for Main Menu", genLabelY, genLabelX))
+        self.PassiveWidgets.append(Label("Shift-L for Message Log", genLabelY + 1, genLabelX))
         self.PassiveWidgets[1].ToTop()
         
         # label widgets for logged system messages
@@ -75,7 +76,7 @@ class StatusScreen(BaseScreen):
         if not self.Log:
             return
         
-        lblIdx = self.TotalLabelsInScreen + 1   # index of first PassiveWidgets to display from top to bottom
+        lblIdx = self.TotalLabelsInScreen + 2   # index of first PassiveWidgets to display from top to bottom
         for msgIdx in range(min(self.TotalLabelsInScreen, len(self.Log))):
             # x width available for label messages
             charsAvailable = 80 - self.logLabelX - 2
@@ -84,7 +85,7 @@ class StatusScreen(BaseScreen):
             lblMsg += (" " * fillerChars)
             # clear and redraw the label
             self.PassiveWidgets[lblIdx].Win.erase()
-            self.PassiveWidgets[lblIdx] = Label(lblMsg, self.logLabelY + lblIdx - 2, self.logLabelX)
+            self.PassiveWidgets[lblIdx] = Label(lblMsg, self.logLabelY + lblIdx - 3, self.logLabelX)
             # HIGHLIGHT TEXT if the label is the current cursor position, and messages are being scrolled
             if self.CursorActive and self.CursorPos == msgIdx + self.LogDisplayPos:
                 self.PassiveWidgets[lblIdx].Highlight()
@@ -125,16 +126,22 @@ class StatusScreen(BaseScreen):
                     if self.LogDisplayPos < self.CursorPos - self.TotalLabelsInScreen + 1:
                         self.LogDisplayPos += 1
                 self.UpdateLogLabels()
-            elif key in [ord('\t'), 9]:     # TAB
+            elif key in [curses.KEY_F8, 76]:     # SHIFT-L or F8 all exit message log
                 # exit for screen
                 self.CursorPos = 0
                 self.CursorActive = False
                 self.UpdateLogLabels()
-                return
+                curses.ungetch(76);
             elif key in [ord('\n'), 10]:    # ENTER
                 self.DisplayPopUpMessage(self.Log[self.CursorPos])
                 self.UpdateLogLabels()
                 
+                
     def DisplayPopUpMessage(self, msg):
         CDBCore.PopUp = PopUpOk(msg)
         CDBCore.PopUp.MakeActive()
+        
+
+    # Overwrite Unhighlight
+    def UnHighlight(self):
+        self.UpdateLogLabels()

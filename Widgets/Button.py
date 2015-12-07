@@ -4,10 +4,11 @@ from Label import BaseLabel
 
 """ BaseButton """
 class BaseButton(BaseLabel):
-    def __init__(self, text, method, height, width, y, x, attr=None):
+    def __init__(self, text, method, height, width, y, x, attr=None, disableScreenSwitch=False):
         BaseLabel.__init__(self, text, height, width, y, x, attr)
         self.CallMethod = method
         self.Type = "Button"
+        self.DisableScreenSwitch = disableScreenSwitch
         
     # -- IMO, should be rewritten to be handled in Core, and
     # keys passed to widget, which will have a key handler
@@ -35,7 +36,8 @@ class BaseButton(BaseLabel):
                 curses.ungetch(key)     # pass tab along so Screen will know to go to next widget
 
             # go to menu (SHIFT-M or F1)
-            elif key in [curses.KEY_F1, 77]:
+            # or go to status screen (SHIFT-M or F8)
+            elif key in [curses.KEY_F1, 77, curses.KEY_F8, 76] and not self.DisableScreenSwitch:
                 selected = False
                 curses.ungetch(key)
             # Temporary - deselection by any key other than Tab/Enter

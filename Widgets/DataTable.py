@@ -244,6 +244,11 @@ class DataTable(BaseWidget):
             elif key in [ord('\n'), 10]:    # ENTER
                 #TODO: When we decide what selecting a cell should do
                 pass
+            # go to menu (SHIFT-M or F1)
+            elif key in [curses.KEY_F1, 77]:
+                capturing = False
+                curses.ungetch(key)
+            
             
             self.UpdateDisplay()
             

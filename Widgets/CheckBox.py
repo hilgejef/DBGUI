@@ -42,6 +42,11 @@ class BaseCheckBox(BaseWidget):
                 self.UnHighlight()
                 selected = False
                 curses.ungetch(key)
+                
+            # go to menu (SHIFT-M or F1)
+            elif key in [curses.KEY_F1, 77]:
+                selected = False
+                curses.ungetch(key)
 
 """ Check Box """
 class CheckBox(BaseCheckBox):

@@ -60,6 +60,11 @@ class TextBox(BaseWidget):
                 curses.ungetch('\t') # Notify the core that tab was pressed
                 capturing = False
             
+            # go to menu (SHIFT-M or F1)
+            elif key in [curses.KEY_F1, 77]:
+                capturing = False
+                curses.ungetch(key)
+            
         
     def CaptureText(self):
         # Special keys handled by CaptureText()

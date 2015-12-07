@@ -34,6 +34,10 @@ class BaseButton(BaseLabel):
                 selected = False
                 curses.ungetch(key)     # pass tab along so Screen will know to go to next widget
 
+            # go to menu (SHIFT-M or F1)
+            elif key in [curses.KEY_F1, 77]:
+                selected = False
+                curses.ungetch(key)
             # Temporary - deselection by any key other than Tab/Enter
             #else:
             #    selected = False

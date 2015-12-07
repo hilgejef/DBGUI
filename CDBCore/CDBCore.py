@@ -71,9 +71,10 @@ class CDBCore:
                     CDBCore.CurrentScreen.Hide()
                 CDBCore.CurrentScreen = CDBCore.History.pop()
                 CDBCore.CurrentScreen.Show()
-        # CTRL + T switches program context to MenuScreen and back
-        elif key in [20]:
+        # Access Main Menu -  SHIFT-M or F1
+        elif key in [curses.KEY_F1, 77]:
             CDBCore.CurrentScreen.UnHighlight()
+            CDBCore.CurrentScreen.Update()
             if CDBCore.CurrentScreen.Type == "MainMenu":
                 CDBCore.CurrentScreen = CDBCore.History.pop()
             else:

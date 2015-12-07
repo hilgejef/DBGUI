@@ -19,7 +19,7 @@ from BaseScreen import BaseScreen
 from CheckBox import CheckBox
 from ResultStatus import ResultStatus
 from MySQLConnection import MySQLConnection
-from SelectTaskScreen import SelectTaskScreen
+import SelectTaskScreen
 
 class CreateTableColumns(BaseScreen):
     def __init__(self, name, columns):
@@ -107,7 +107,7 @@ class CreateTableColumns(BaseScreen):
         
     # Go back to the selection screen
     def Next(self):
-        return SelectTaskScreen()
+        return SelectTaskScreen.SelectTaskScreen()
         
 if __name__ == "__main__":
     user = raw_input('Enter the MySQL db user: ')

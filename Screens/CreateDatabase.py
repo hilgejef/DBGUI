@@ -18,7 +18,7 @@ from TextBox import TextBox
 from BaseScreen import BaseScreen
 from ResultStatus import ResultStatus
 from MySQLConnection import MySQLConnection
-from SelectTaskScreen import SelectTaskScreen
+import SelectTaskScreen
 
 class CreateDatabase(BaseScreen):
     def __init__(self):
@@ -45,7 +45,7 @@ class CreateDatabase(BaseScreen):
         
     # Go back to the selection screen
     def Next(self):
-        return SelectTaskScreen()
+        return SelectTaskScreen.SelectTaskScreen()
         
 if __name__ == "__main__":
     user = raw_input('Enter the MySQL db user: ')

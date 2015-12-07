@@ -85,10 +85,12 @@ class CDBCore:
             pass
     
     # Used to change to a new CurrentScreen
+    @staticmethod
     def ChangeCurrentScreen(screen):
         CDBCore.History.append(CDBCore.CurrentScreen)
         CDBCore.CurrentScreen.Hide()
         CDBCore.CurrentScreen = screen
+        CDBCore.CurrentScreen.Show()
     
     # Used to test final program flow
     @staticmethod

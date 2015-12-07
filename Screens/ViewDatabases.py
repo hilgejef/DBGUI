@@ -19,7 +19,7 @@ from ResultStatus import ResultStatus
 from MySQLConnection import MySQLConnection
 from PostgresConnection import PostgresConnection
 from DataTable import DataTable
-from SelectTaskScreen import SelectTaskScreen
+import SelectTaskScreen
 
 class ViewDatabases(BaseScreen):
     def __init__(self):
@@ -70,7 +70,7 @@ class ViewDatabases(BaseScreen):
 
     # Go back to the selection screen
     def Next(self):
-        return SelectTaskScreen()
+        return SelectTaskScreen.SelectTaskScreen()
 
 if __name__ == "__main__":
     db = raw_input('Database type (p for Postgres, m for MySQL: ')

@@ -19,6 +19,7 @@ from ResultStatus import ResultStatus
 from MySQLConnection import MySQLConnection
 from PostgresConnection import PostgresConnection
 from DataTable import DataTable
+from SelectTaskScreen import SelectTaskScreen
 
 class ViewDatabases(BaseScreen):
     def __init__(self):

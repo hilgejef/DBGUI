@@ -19,6 +19,7 @@ from BaseScreen import BaseScreen
 from CheckBox import CheckBox
 from ResultStatus import ResultStatus
 from MySQLConnection import MySQLConnection
+from SelectTaskScreen import SelectTaskScreen
 
 class CreateTableColumns(BaseScreen):
     def __init__(self, name, columns):

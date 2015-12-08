@@ -26,7 +26,7 @@ from CreateDatabase import CreateDatabase
 from ConnectionWizard import ConnectionWizard
 from PopUp import PopUpOk
 
-class SelectTask(BaseScreen):
+class SelectTaskScreen(BaseScreen):
     def __init__(self, query=None, data=None):
         BaseScreen.__init__(self)
         
@@ -135,6 +135,6 @@ if __name__ == "__main__":
     #CDBCore.InitColor()
     CDBCore.History.append(CDBCore.CurrentScreen)
     CDBCore.CurrentScreen.Hide()
-    CDBCore.CurrentScreen = SelectTask()
+    CDBCore.CurrentScreen = SelectTaskScreen()
     CDBCore.Connection = my
     CDBCore.Main()

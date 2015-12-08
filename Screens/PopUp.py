@@ -47,7 +47,7 @@ class PopUpOk(PopUp):
         screenBorder = BaseWidget(12, 50, 5, 15)
         screenBorder.Win.border('|', '|', '-', '-', '+', '+', '+', '+')
         label = BaseLabel(text, 7, 48, 6, 16)
-        okButton = BaseButton("OK", self.ClosePopUp, 1, 4, 13, 36, None, True)
+        okButton = BaseButton("OK", self.ClosePopUp, 1, 4, 13, 36, {"disable_screen_switch":True})
         PopUp.__init__(self, [screenBorder, label], [okButton])
         
     def ClosePopUp(self):

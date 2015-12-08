@@ -101,14 +101,20 @@ class SelectTask(BaseScreen):
         
     def SetNextScreen(self):
         # if connection is set or user is going to ConnectionWizard screen
-        if CDBCore.Connection or self.CurrentWidget == 0:
-            self.NextScreen = self.Screens[self.CurrentWidget]
-            curses.ungetch('\n')
-        else:
+        if not CDBCore.Connection and self.CurrentWidget > 0:
             msg = "Error: No Connection Detected.\nSelect Connection Wizard to connect to a\ndatabase."
             CDBCore.StatusScreen.AddStatusMessage(msg)
             CDBCore.PopUp = PopUpOk(msg)
             CDBCore.PopUp.MakeActive()
+        # if a connection is established but a database is not set
+        elif not CDBCore.Connection.Database and self.CurrentWidget == 4:
+            msg = "Error: No Database Detected.\nSelect or Create a Database first."
+            CDBCore.StatusScreen.AddStatusMessage(msg)
+            CDBCore.PopUp = PopUpOk(msg)
+            CDBCore.PopUp.MakeActive()
+        else:
+            self.NextScreen = self.Screens[self.CurrentWidget]
+            curses.ungetch('\n')
             
             
         
@@ -120,15 +126,15 @@ class SelectTask(BaseScreen):
         sys.exit(0)
 
 if __name__ == "__main__":
-    #user = raw_input('Enter the MySQL db user: ')
-    #password = raw_input('Enter the MySQL db user password: ')
-    #my = MySQLConnection(user, password)    
-    #my.Connect()
+    user = raw_input('Enter the MySQL db user: ')
+    password = raw_input('Enter the MySQL db user password: ')
+    my = MySQLConnection(user, password)    
+    my.Connect()
     CDBCore.InitCurses()
     CDBCore.InitScreens()
     #CDBCore.InitColor()
     CDBCore.History.append(CDBCore.CurrentScreen)
     CDBCore.CurrentScreen.Hide()
     CDBCore.CurrentScreen = SelectTask()
-    #CDBCore.Connection = my
+    CDBCore.Connection = my
     CDBCore.Main()

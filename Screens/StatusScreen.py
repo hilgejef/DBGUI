@@ -94,10 +94,10 @@ class StatusScreen(BaseScreen):
             lblIdx -= 1
         self.Show()
         
-    def UpdatePersistentMessage(self, msgString):
+    def UpdatePersistentMessage(self, msgString, n=1):
         # updates the persistent message screen
-        self.PassiveWidgets[1] = Label(msgString[:self.logLabelX - 4], self.logLabelY, self.logLabelX)
-        self.PassiveWidgets[1].ToTop()
+        self.PassiveWidgets[n] = Label(msgString[:self.logLabelX - 4], self.logLabelY, self.logLabelX)
+        self.PassiveWidgets[n].ToTop()
         self.Show()
         
     # overwrite BaseScreen function
@@ -132,17 +132,17 @@ class StatusScreen(BaseScreen):
                 self.CursorPos = 0
                 self.CursorActive = False
                 self.UpdateLogLabels()
-                curses.ungetch(76);
+                curses.ungetch(key);
             elif key in [ord('\n'), 10]:    # ENTER
                 self.DisplayPopUpMessage(self.Log[self.CursorPos])
                 self.UpdateLogLabels()
                 
                 
     def DisplayPopUpMessage(self, msg):
-        CDBCore.PopUp = PopUpOk(msg)
-        CDBCore.PopUp.MakeActive()
+        CDBCore.CDBCore.PopUp = PopUpOk(msg)
+        CDBCore.CDBCore.PopUp.MakeActive()
         
 
-    # Overwrite Unhighlight
+    # Overwrite Unhighlight to work with log labels
     def UnHighlight(self):
         self.UpdateLogLabels()

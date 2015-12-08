@@ -84,7 +84,6 @@ class CDBCore:
         # Access Status Screen Message Log -  SHIFT-L or F8
         elif key in [curses.KEY_F8, 76]:
             CDBCore.CurrentScreen.UnHighlight()
-            CDBCore.CurrentScreen.Update()
             if CDBCore.CurrentScreen.Type == "StatusScreen":
                 CDBCore.CurrentScreen = CDBCore.History.pop()
             else:

@@ -62,6 +62,7 @@ class StatusScreen(BaseScreen):
         
     def AddStatusMessage(self, msgString):
         # put new message at beginning of list
+        
         self.Log.insert(0, msgString)
         self.UpdateLogLabels()
         
@@ -80,7 +81,7 @@ class StatusScreen(BaseScreen):
         for msgIdx in range(min(self.TotalLabelsInScreen, len(self.Log))):
             # x width available for label messages
             charsAvailable = 80 - self.logLabelX - 2
-            lblMsg = self.Log[msgIdx + self.LogDisplayPos][:charsAvailable]
+            lblMsg = self.Log[msgIdx + self.LogDisplayPos][:charsAvailable].replace('\n', ' ')
             fillerChars = charsAvailable - len(lblMsg)
             lblMsg += (" " * fillerChars)
             # clear and redraw the label

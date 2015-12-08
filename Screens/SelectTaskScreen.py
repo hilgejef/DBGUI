@@ -24,6 +24,7 @@ from QueryTable import QueryTable
 from QueryDatabase import QueryDatabase
 from CreateDatabase import CreateDatabase
 from ConnectionWizard import ConnectionWizard
+from PopUp import PopUpOk
 
 class SelectTask(BaseScreen):
     def __init__(self, query=None, data=None):
@@ -99,8 +100,17 @@ class SelectTask(BaseScreen):
         self.Show()
         
     def SetNextScreen(self):
-        self.NextScreen = self.Screens[self.CurrentWidget]
-        curses.ungetch('\n')
+        # if connection is set or user is going to ConnectionWizard screen
+        if CDBCore.Connection or self.CurrentWidget == 0:
+            self.NextScreen = self.Screens[self.CurrentWidget]
+            curses.ungetch('\n')
+        else:
+            msg = "Error: No Connection Detected.\nSelect Connection Wizard to connect to a\ndatabase."
+            CDBCore.StatusScreen.AddStatusMessage(msg)
+            CDBCore.PopUp = PopUpOk(msg)
+            CDBCore.PopUp.MakeActive()
+            
+            
         
     # overwriting virtual method indicating where the next screen should go
     def Next(self):
@@ -110,15 +120,15 @@ class SelectTask(BaseScreen):
         sys.exit(0)
 
 if __name__ == "__main__":
-    user = raw_input('Enter the MySQL db user: ')
-    password = raw_input('Enter the MySQL db user password: ')
-    my = MySQLConnection(user, password)    
-    my.Connect()
+    #user = raw_input('Enter the MySQL db user: ')
+    #password = raw_input('Enter the MySQL db user password: ')
+    #my = MySQLConnection(user, password)    
+    #my.Connect()
     CDBCore.InitCurses()
     CDBCore.InitScreens()
     #CDBCore.InitColor()
     CDBCore.History.append(CDBCore.CurrentScreen)
     CDBCore.CurrentScreen.Hide()
     CDBCore.CurrentScreen = SelectTask()
-    CDBCore.Connection = my
+    #CDBCore.Connection = my
     CDBCore.Main()

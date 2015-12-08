@@ -62,7 +62,7 @@ class TextBox(BaseWidget):
             
             # go to menu (SHIFT-M or F1)
             # or go to status screen (SHIFT-M or F8)
-            elif key in [curses.KEY_F1, 77, curses.KEY_F8, 76]:
+            elif key in [curses.KEY_F1, 77, curses.KEY_F8, 76] and not self.DisableScreenSwitch:
                 capturing = False
                 curses.ungetch(key)
             

@@ -36,7 +36,7 @@ class ViewTables(BaseScreen):
     def GetTables(self):
         try:
             # Retrieve a list of tables
-            result = CDBCore.Connection.QueryString("SHOW TABLES FROM " + CDBCore.Connection.Database)
+            result = CDBCore.Connection.GetTables()
             
             # Ensure there weren't any issues getting the list of tables.
             if not result.Success:

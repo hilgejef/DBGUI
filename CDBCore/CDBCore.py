@@ -60,8 +60,13 @@ class CDBCore:
         #       multiple exit points, or if this will be handled within
         #       the screen itself
         elif key in [curses.KEY_ENTER, ord('\n'), 10]:
-            CDBCore.History.append(CDBCore.CurrentScreen)
-            CDBCore.CurrentScreen.Hide()
+            if CDBCore.CurrentScreen.Type == "MainMenu":
+                tmpScreen = CDBCore.History[-1]
+                tmpScreen.Hide()
+                tmpScreen = None
+            else:
+                CDBCore.History.append(CDBCore.CurrentScreen)
+                CDBCore.CurrentScreen.Hide()
             CDBCore.CurrentScreen = CDBCore.CurrentScreen.Next()
             CDBCore.CurrentScreen.Show()
         # # CTRL + TAB denotes go back to previous screen if there is one

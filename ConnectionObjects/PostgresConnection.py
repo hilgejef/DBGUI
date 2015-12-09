@@ -16,7 +16,7 @@ from BaseConnection import BaseConnection
 class PostgresConnection(BaseConnection):
     # PostgresConnection constructor
     def __init__(self, user, password, database = None, host = "127.0.0.1", port = 5432):
-        BaseConnection.__init__(self,user, password, host, port, database)
+        BaseConnection.__init__(self,user, password, host, port, database, "PostgreSQL")
     
     # PostgresConnection destructor
     def __del__(self):

@@ -18,7 +18,7 @@ class QueryDatabase(BaseScreen):
 
         if dbName:
             CDBCore.CDBCore.Connection.Database = dbName
-            CDBCore.CDBCore.Connection.QueryString("USE {}".format(dbName))
+            CDBCore.CDBCore.Connection.QueryString("USE {}".format(CDBCore.CDBCore.Connection.Database))
 
         if not CDBCore.CDBCore.Connection.Database:
             raise Exception("No database specified.")

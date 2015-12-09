@@ -11,7 +11,7 @@
 
 import sys
 import curses
-from CDBCore import CDBCore
+import CDBCore
 from Label import Label
 from Button import Button
 from BaseScreen import BaseScreen
@@ -32,20 +32,20 @@ class ViewDatabases(BaseScreen):
     def GetDatabases(self):
         try:
             # Retrieve a list of databses
-            result = CDBCore.Connection.GetDatabases()
+            result = CDBCore.CDBCore.Connection.GetDatabases()
             
             # Ensure there weren't any issues getting the list of databases.
             if not result.Success:
                 raise Exception(result.Message)
             
             # Create a button for each database
-            self.ActionWidgets.append(DataTable(CDBCore.MAIN_SCREEN_LINES - 6, 70, CDBCore.MAIN_SCREEN_Y + 2, 3, result.Data, 50))
-            self.ActionWidgets.append(Button("Connect", self.SetDatabase, CDBCore.STATUS_SCREEN_Y - 3, 25))
+            self.ActionWidgets.append(DataTable(CDBCore.CDBCore.MAIN_SCREEN_LINES - 6, 70, CDBCore.CDBCore.MAIN_SCREEN_Y + 2, 3, result.Data, 50))
+            self.ActionWidgets.append(Button("Connect", self.SetDatabase, CDBCore.CDBCore.STATUS_SCREEN_Y - 3, 25))
             
         except Exception as ex:
             # TODO: Once multi line is supported, add in error message
             msg = "Could not retrieve list of databases."
-            CDBCore.StatusScreen.AddStatusMessage(msg + str(ex))
+            CDBCore.CDBCore.StatusScreen.AddStatusMessage(msg + str(ex))
             print str(ex)
             
 
@@ -53,17 +53,17 @@ class ViewDatabases(BaseScreen):
     def SetDatabase(self):
         try:
             name = self.ActionWidgets[0].Text            
-            result = CDBCore.Connection.SetDatabase(name)
+            result = CDBCore.CDBCore.Connection.SetDatabase(name)
             if result.Success:
-                CDBCore.Connection.Database = name
-                CDBCore.StatusScreen.AddStatusMessage("Set database to: " + name)
+                CDBCore.CDBCore.Connection.Database = name
+                CDBCore.CDBCore.StatusScreen.AddStatusMessage("Set database to: " + name)
                 curses.ungetch('\n') # Notify the core to move to next screen
             else:
                 raise Exception(result.Message)
         except Exception as ex:
             # TODO: Once multi line is supported, add in error message
             msg = "Could not set the database to: " + name
-            CDBCore.StatusScreen.AddStatusMessage(msg)
+            CDBCore.CDBCore.StatusScreen.AddStatusMessage(msg)
             self.ActionWidgets[self.CurrentWidget].selected = True
             self.ActionWidgets[self.CurrentWidget].Highlight()
             self.ActionWidgets[self.CurrentWidget].Active
@@ -83,12 +83,12 @@ if __name__ == "__main__":
         my = PostgresConnection(user, password)    
     result = my.Connect()
     if result.Success:
-        CDBCore.InitCurses(True)
-        CDBCore.InitColor()
-        CDBCore.InitScreens()
-        CDBCore.Connection = my
-        CDBCore.CurrentScreen.Hide()
-        CDBCore.CurrentScreen = ViewDatabases()
-        CDBCore.Main()
+        CDBCore.CDBCore.InitCurses(True)
+        CDBCore.CDBCore.InitColor()
+        CDBCore.CDBCore.InitScreens()
+        CDBCore.CDBCore.Connection = my
+        CDBCore.CDBCore.CurrentScreen.Hide()
+        CDBCore.CDBCore.CurrentScreen = ViewDatabases()
+        CDBCore.CDBCore.Main()
     else:
         print "Could not log in: " + result.Message

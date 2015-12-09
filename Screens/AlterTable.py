@@ -1,6 +1,6 @@
 import sys
 import curses
-from CDBCore import CDBCore
+import CDBCore
 from Label import Label
 from Label import BaseLabel
 from Button import BaseButton
@@ -14,14 +14,14 @@ from EditField import EditField
 """ Alter Table """
 class AlterTable(BaseScreen):
     def __init__(self, table, dbName=""):
-        if not CDBCore.Connection:
+        if not CDBCore.CDBCore.Connection:
             raise Exception("No Connection object specified.")
 
         if dbName:
-            CDBCore.Connection.Database = dbName
-            CDBCore.Connection.QueryString("USE " + dbName)
+            CDBCore.CDBCore.Connection.Database = dbName
+            CDBCore.CDBCore.Connection.QueryString("USE " + dbName)
 
-        if not CDBCore.Connection.Database:
+        if not CDBCore.CDBCore.Connection.Database:
             raise Exception("No database specified.")
 
         self.Table = table
@@ -29,7 +29,7 @@ class AlterTable(BaseScreen):
         BaseScreen.__init__(self, screen_type="QueryTable")
 
     def Init(self):
-        result = CDBCore.Connection.QueryString("DESCRIBE {};".format(self.Table))
+        result = CDBCore.CDBCore.Connection.QueryString("DESCRIBE {};".format(self.Table))
 
         if not result.Success:
             raise Exception(self.Table)
@@ -116,19 +116,19 @@ class AlterTable(BaseScreen):
 
         q = "ALTER TABLE {} ADD {} {};".format(self.Table, colName, colType)
 
-        result = CDBCore.Connection.QueryString(q)
+        result = CDBCore.CDBCore.Connection.QueryString(q)
 
         if result.Success:
-            CDBCore.StatusScreen.AddStatusMessage("Add Col success")
+            CDBCore.CDBCore.StatusScreen.AddStatusMessage("Add Col success")
 
             q = "DESCRIBE {};".format(self.Table)
-            result = CDBCore.Connection.QueryString(q)
+            result = CDBCore.CDBCore.Connection.QueryString(q)
             resultData = self.ModifyResult(result.Data) 
 
             self.AlterScreen.Result = resultData
             self.AlterScreen.LoadAlterTable(reset=True)
         else:
-            CDBCore.StatusScreen.AddStatusMessage("Add Col failed")
+            CDBCore.CDBCore.StatusScreen.AddStatusMessage("Add Col failed")
 
 
     def AlterMethod(self):
@@ -139,19 +139,19 @@ class AlterTable(BaseScreen):
         colType = row[1].Text
 
         q = "ALTER TABLE {} MODIFY COLUMN {} {};".format(self.Table, colName, colType)
-        result = CDBCore.Connection.QueryString(q)
+        result = CDBCore.CDBCore.Connection.QueryString(q)
 
         if result.Success:
-            CDBCore.StatusScreen.AddStatusMessage("Modify Col success")
+            CDBCore.CDBCore.StatusScreen.AddStatusMessage("Modify Col success")
 
             q = "DESCRIBE {};".format(self.Table)
-            result = CDBCore.Connection.QueryString(q)
+            result = CDBCore.CDBCore.Connection.QueryString(q)
             resultData = self.ModifyResult(result.Data) 
 
             self.AlterScreen.Result = resultData
             self.AlterScreen.LoadAlterTable(reset=True)
         else:
-            CDBCore.StatusScreen.AddStatusMessage("Modify Col failed")
+            CDBCore.CDBCore.StatusScreen.AddStatusMessage("Modify Col failed")
 
     def DropColMethod(self):
         rowNum = self.AlterScreen.ActionWidgets[self.AlterScreen.CurrentWidget].Row
@@ -161,34 +161,34 @@ class AlterTable(BaseScreen):
 
         q = "ALTER TABLE {} DROP COLUMN {};".format(self.Table, colName)
 
-        result = CDBCore.Connection.QueryString(q)
+        result = CDBCore.CDBCore.Connection.QueryString(q)
 
         if result.Success:
-            CDBCore.StatusScreen.AddStatusMessage("Drop Col success")
+            CDBCore.CDBCore.StatusScreen.AddStatusMessage("Drop Col success")
 
             q = "DESCRIBE {};".format(self.Table)
-            result = CDBCore.Connection.QueryString(q)
+            result = CDBCore.CDBCore.Connection.QueryString(q)
             resultData = self.ModifyResult(result.Data) 
 
             self.AlterScreen.Result = resultData
             self.AlterScreen.LoadAlterTable(reset=True)
         else:
-            CDBCore.StatusScreen.AddStatusMessage("Drop Col failed")
+            CDBCore.CDBCore.StatusScreen.AddStatusMessage("Drop Col failed")
 
     def DropTblMethod(self):
         q = "DROP TABLE {};".format(self.Table)
 
-        result = CDBCore.Connection.QueryString(q)
+        result = CDBCore.CDBCore.Connection.QueryString(q)
 
         if result.Success:
-            CDBCore.StatusScreen.AddStatusMessage("Drop Table success")
+            CDBCore.CDBCore.StatusScreen.AddStatusMessage("Drop Table success")
 
             resultData = (["Field", "Type", "", ""], [])
 
             self.AlterScreen.Result = resultData
             self.AlterScreen.LoadAlterTable(reset=True)
         else:
-            CDBCore.StatusScreen.AddStatusMessage("Drop Table failed")
+            CDBCore.CDBCore.StatusScreen.AddStatusMessage("Drop Table failed")
 
 
     # def GenerateFields(self):

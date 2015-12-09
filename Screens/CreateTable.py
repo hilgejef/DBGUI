@@ -11,7 +11,7 @@
 
 import sys
 import curses
-from CDBCore import CDBCore
+import CDBCore
 from Label import Label
 from TextBox import TextBox
 from Button import Button
@@ -29,17 +29,17 @@ class CreateTable(BaseScreen):
         self.Columns = 0
     
     def Init(self):
-        self.PassiveWidgets.append(Label("Table Name:", CDBCore.MAIN_SCREEN_Y + 3, 3))
-        self.PassiveWidgets.append(Label("Number of Columns:", CDBCore.MAIN_SCREEN_Y + 6, 3))
-        self.ActionWidgets.append(TextBox(1, 16, CDBCore.MAIN_SCREEN_Y + 3, 25))
-        self.ActionWidgets.append(TextBox(1, 16, CDBCore.MAIN_SCREEN_Y + 6, 25))
-        self.ActionWidgets.append(Button("Next", self.CheckValues, CDBCore.STATUS_SCREEN_Y - 3, 63))
+        self.PassiveWidgets.append(Label("Table Name:", CDBCore.CDBCore.MAIN_SCREEN_Y + 3, 3))
+        self.PassiveWidgets.append(Label("Number of Columns:", CDBCore.CDBCore.MAIN_SCREEN_Y + 6, 3))
+        self.ActionWidgets.append(TextBox(1, 16, CDBCore.CDBCore.MAIN_SCREEN_Y + 3, 25))
+        self.ActionWidgets.append(TextBox(1, 16, CDBCore.CDBCore.MAIN_SCREEN_Y + 6, 25))
+        self.ActionWidgets.append(Button("Next", self.CheckValues, CDBCore.CDBCore.STATUS_SCREEN_Y - 3, 63))
     
     # Checks if a table already exists under the requested name
     def CheckName(self):
         try:
             # Retrieve listing of tables
-            result = CDBCore.Connection.GetTables()
+            result = CDBCore.CDBCore.Connection.GetTables()
             
             # Ensure that the query was successful
             if not result.Success:
@@ -49,7 +49,7 @@ class CreateTable(BaseScreen):
             for existing_name in result.Data[1]:
                 if existing_name[0].lower() == self.Name.lower():
                     msg = "Table name " + str(self.Name) + " already exists."
-                    CDBCore.StatusScreen.AddStatusMessage(msg)
+                    CDBCore.CDBCore.StatusScreen.AddStatusMessage(msg)
                     return False
             
             # This is a new table name
@@ -57,7 +57,7 @@ class CreateTable(BaseScreen):
         except Exception as ex:
             # TODO: Replace with error once multi line is supported
             msg = "Could not retrieve list of tables."
-            CDBCore.StatusScreen.AddStatusMessage(msg)
+            CDBCore.CDBCore.StatusScreen.AddStatusMessage(msg)
             return False
     
     def CheckValues(self):
@@ -69,7 +69,7 @@ class CreateTable(BaseScreen):
             if self.Columns > 10 or self.Columns < 1:
                 # TODO: Remove and include pagination
                 msg = "Arbitrary limitation of 1-10 columns not met!"
-                CDBCore.StatusScreen.AddStatusMessage(msg)
+                CDBCore.CDBCore.StatusScreen.AddStatusMessage(msg)
                 self.Columns = 0
                 self.Name = ""
                 self.ActionWidgets[0].selected = True
@@ -92,7 +92,7 @@ class CreateTable(BaseScreen):
         except Exception as ex:
             # TODO: Replace with error once multi line is supported
             msg = "Failed to validate db name, or column size:"
-            CDBCore.StatusScreen.AddStatusMessage(msg)
+            CDBCore.CDBCore.StatusScreen.AddStatusMessage(msg)
             self.Columns = 0
             self.Name = ""
             self.ActionWidgets[0].selected = True
@@ -116,12 +116,12 @@ if __name__ == "__main__":
         my = PostgresConnection(user, password, database)
     result = my.Connect()
     if result.Success:
-        CDBCore.InitCurses(True)
-        CDBCore.InitColor()
-        CDBCore.InitScreens()
-        CDBCore.Connection = my
-        CDBCore.CurrentScreen.Hide()
-        CDBCore.CurrentScreen = CreateTable()
-        CDBCore.Main()
+        CDBCore.CDBCore.InitCurses(True)
+        CDBCore.CDBCore.InitColor()
+        CDBCore.CDBCore.InitScreens()
+        CDBCore.CDBCore.Connection = my
+        CDBCore.CDBCore.CurrentScreen.Hide()
+        CDBCore.CDBCore.CurrentScreen = CreateTable()
+        CDBCore.CDBCore.Main()
     else:
         print "Could not log in: " + result.Message

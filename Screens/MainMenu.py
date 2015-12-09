@@ -21,3 +21,6 @@ class MainMenu(BaseScreen):
 
     def GoToTaskScreen(self):
         curses.ungetch('\n')
+        
+    def Next(self):
+        return self.NextScreen()

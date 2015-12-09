@@ -4,7 +4,7 @@ from Label import BaseLabel
 from Button import BaseButton
 from TextBox import ModTextBox
 from BaseScreen import BaseScreen
-from CDBCore import CDBCore
+#import CDBCore
 
 # Data Screen is an intermediary between Widget and Screen
 # that allows a collection of Widgets to emulate a data table Widget

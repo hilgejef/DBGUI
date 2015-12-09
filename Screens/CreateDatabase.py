@@ -11,7 +11,7 @@
 
 import sys
 import curses
-from CDBCore import CDBCore
+import CDBCore
 from Label import Label
 from Button import Button
 from TextBox import TextBox
@@ -25,23 +25,23 @@ class CreateDatabase(BaseScreen):
         BaseScreen.__init__(self)
 
     def Init(self):
-        self.PassiveWidgets.append(Label("Database Name:", CDBCore.MAIN_SCREEN_Y + 3, 3))
-        self.ActionWidgets.append(TextBox(1, 16, CDBCore.MAIN_SCREEN_Y + 3, 25))
-        self.ActionWidgets.append(Button("Create", self.Create, CDBCore.STATUS_SCREEN_Y - 3, 63))
+        self.PassiveWidgets.append(Label("Database Name:", CDBCore.CDBCore.MAIN_SCREEN_Y + 3, 3))
+        self.ActionWidgets.append(TextBox(1, 16, CDBCore.CDBCore.MAIN_SCREEN_Y + 3, 25))
+        self.ActionWidgets.append(Button("Create", self.Create, CDBCore.CDBCore.STATUS_SCREEN_Y - 3, 63))
 
     def Create(self):
         try:
             name = self.ActionWidgets[0].Text
-            result = CDBCore.Connection.QueryString("CREATE DATABASE " + name)
+            result = CDBCore.CDBCore.Connection.QueryString("CREATE DATABASE " + name)
             if result.Success:
-                CDBCore.StatusScreen.AddStatusMessage("Successfully created database: "+ name)
+                CDBCore.CDBCore.StatusScreen.AddStatusMessage("Successfully created database: "+ name)
                 curses.ungetch('\n') # Notify the core to move to next screen
             else:
                 raise Exception(result.Message)
         except Exception as ex:
             # TODO: Replace with error once multi line is supported
             msg = "Could not create database: " + name
-            CDBCore.StatusScreen.AddStatusMessage(msg)
+            CDBCore.CDBCore.StatusScreen.AddStatusMessage(msg)
         
     # Go back to the selection screen
     def Next(self):
@@ -52,10 +52,10 @@ if __name__ == "__main__":
     password = raw_input('Enter the MySQL db user password: ')
     my = MySQLConnection(user, password)    
     my.Connect()
-    CDBCore.InitCurses(True)
-    CDBCore.InitColor()
-    CDBCore.InitScreens()
-    CDBCore.CurrentScreen.Hide()
-    CDBCore.CurrentScreen = CreateDatabase()
-    CDBCore.Connection = my
-    CDBCore.Main()
+    CDBCore.CDBCore.InitCurses(True)
+    CDBCore.CDBCore.InitColor()
+    CDBCore.CDBCore.InitScreens()
+    CDBCore.CDBCore.CurrentScreen.Hide()
+    CDBCore.CDBCore.CurrentScreen = CreateDatabase()
+    CDBCore.CDBCore.Connection = my
+    CDBCore.CDBCore.Main()

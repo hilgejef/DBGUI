@@ -1,6 +1,6 @@
 import sys
 import curses
-from CDBCore import CDBCore
+import CDBCore
 from Label import Label
 from Label import BaseLabel
 from Button import BaseButton
@@ -18,17 +18,17 @@ class EditField(BaseScreen):
         self.AllFields = allFields
         self.ColToUpdate = colToUpdate
 
-        if not table and not CDBCore.Connection.Table:
+        if not table and not CDBCore.CDBCore.Connection.Table:
             raise Exception("No table specified")
 
         elif table:
-            CDBCore.Connection.Table = table
+            CDBCore.CDBCore.Connection.Table = table
 
         BaseScreen.__init__(self, screen_type="EditField")
 
     def Init(self):
-        currentDb = CDBCore.Connection.Database
-        currentTbl = CDBCore.Connection.Table
+        currentDb = CDBCore.CDBCore.Connection.Database
+        currentTbl = CDBCore.CDBCore.Connection.Table
         currentCol = self.ColToUpdate
 
         fieldLabel = Label("Field Value: ", 5, 5)
@@ -63,7 +63,7 @@ class EditField(BaseScreen):
             }
         )
 
-        result = CDBCore.Connection.QueryString(self.MakeSelectString())
+        result = CDBCore.CDBCore.Connection.QueryString(self.MakeSelectString())
 
         whereFields = DataScreen(result.Data, attr={"start_y" : 12, "start_x" : 5})
         self.WhereFields = whereFields
@@ -76,7 +76,7 @@ class EditField(BaseScreen):
         self.ActionWidgets += [fieldBox, fieldButton, whereFields]
 
     def MakeSelectString(self):
-        selectString = "SELECT * FROM {} WHERE ".format(CDBCore.Connection.Table)
+        selectString = "SELECT * FROM {} WHERE ".format(CDBCore.CDBCore.Connection.Table)
         colStrings = []
 
         for col in self.AllFields:
@@ -91,10 +91,10 @@ class EditField(BaseScreen):
 
     def MakeUpdateString(self, newFieldValue):
         if newFieldValue.isdigit():
-            updateString = "UPDATE {} SET {} = {} WHERE ".format(CDBCore.Connection.Table, 
+            updateString = "UPDATE {} SET {} = {} WHERE ".format(CDBCore.CDBCore.Connection.Table, 
                                                                  self.ColToUpdate, newFieldValue)
         else:
-            updateString = "UPDATE {} SET {} = '{}' WHERE ".format(CDBCore.Connection.Table, 
+            updateString = "UPDATE {} SET {} = '{}' WHERE ".format(CDBCore.CDBCore.Connection.Table, 
                                                                  self.ColToUpdate, newFieldValue)
 
         colStrings = []
@@ -113,20 +113,20 @@ class EditField(BaseScreen):
         updateValue = self.FieldBox.Text
         updateQuery = self.MakeUpdateString(updateValue)
 
-        result = CDBCore.Connection.QueryString(updateQuery)
+        result = CDBCore.CDBCore.Connection.QueryString(updateQuery)
 
         if result.Success:
             self.AllFields[self.ColToUpdate] = updateValue
 
-            newWhereField = CDBCore.Connection.QueryString(self.MakeSelectString())
+            newWhereField = CDBCore.CDBCore.Connection.QueryString(self.MakeSelectString())
             self.WhereFields.Result = newWhereField.Data
             self.WhereFields.LoadResult(reset=True)
 
             msg = "Field changed to value: " + updateValue
-            CDBCore.StatusScreen.AddStatusMessage(msg)
+            CDBCore.CDBCore.StatusScreen.AddStatusMessage(msg)
 
         else:
-            CDBCore.StatusScreen.AddStatusMessage("Failed to edit value.")
+            CDBCore.CDBCore.StatusScreen.AddStatusMessage("Failed to edit value.")
 
 
 

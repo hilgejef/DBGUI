@@ -1,6 +1,6 @@
 import sys
 import curses
-from CDBCore import CDBCore
+import CDBCore
 from Label import Label
 from Label import BaseLabel
 from Button import BaseButton
@@ -13,14 +13,14 @@ from EditField import EditField
 
 class QueryTable(BaseScreen):
     def __init__(self, dbName="", table=""):
-        if not CDBCore.Connection:
+        if not CDBCore.CDBCore.Connection:
             raise Exception("No Connection object specified.")
 
         if dbName:
-            CDBCore.Connection.Database = dbName
-            CDBCore.Connection.QueryString("USE " + dbName)
+            CDBCore.CDBCore.Connection.Database = dbName
+            CDBCore.CDBCore.Connection.QueryString("USE " + dbName)
 
-        if not CDBCore.Connection.Database:
+        if not CDBCore.CDBCore.Connection.Database:
             raise Exception("No database specified.")
 
         self.Table = table
@@ -28,7 +28,7 @@ class QueryTable(BaseScreen):
         BaseScreen.__init__(self, screen_type="QueryTable")
 
     def Init(self):
-        self.DBName = CDBCore.Connection.Database
+        self.DBName = CDBCore.CDBCore.Connection.Database
 
         selectLabel = Label("SELECT", 5, 4)
         selectBox = TextBox(1, 50, 5, 12)
@@ -70,8 +70,8 @@ class QueryTable(BaseScreen):
         else:
             queryString = "SELECT {} FROM {} WHERE {}".format(selectText, fromText, whereText)
 
-        CDBCore.Connection.Table = fromText
-        result = CDBCore.Connection.QueryString(queryString)
+        CDBCore.CDBCore.Connection.Table = fromText
+        result = CDBCore.CDBCore.Connection.QueryString(queryString)
 
         if result.Success:
             if not self.DataScreen:
@@ -105,7 +105,7 @@ class QueryTable(BaseScreen):
         col = self.DataScreen.Result[0][dataX + cursorX]
         fields = self.GenerateFields()
 
-        CDBCore.History.append(CDBCore.CurrentScreen)
-        CDBCore.CurrentScreen.Clear()
-        CDBCore.CurrentScreen = EditField(allFields=fields, colToUpdate=col)
-        CDBCore.CurrentScreen.Show()
+        CDBCore.CDBCore.History.append(CDBCore.CDBCore.CurrentScreen)
+        CDBCore.CDBCore.CurrentScreen.Clear()
+        CDBCore.CDBCore.CurrentScreen = EditField(allFields=fields, colToUpdate=col)
+        CDBCore.CDBCore.CurrentScreen.Show()

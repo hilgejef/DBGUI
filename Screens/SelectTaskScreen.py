@@ -11,12 +11,11 @@
 
 import sys
 import curses
-from MySQLConnection import MySQLConnection
-from CDBCore import CDBCore
-from BaseScreen import BaseScreen
-from Button import Button
-from Label import Label
-from ViewTables import ViewTables
+import MySQLConnection
+import CDBCore
+import BaseScreen
+import Button
+import Label
 import ViewDatabases
 #from EditField import EditField
 from CreateTable import CreateTable
@@ -26,9 +25,9 @@ from CreateDatabase import CreateDatabase
 from ConnectionWizard import ConnectionWizard
 from PopUp import PopUpOk
 
-class SelectTaskScreen(BaseScreen):
+class SelectTaskScreen(BaseScreen.BaseScreen):
     def __init__(self, query=None, data=None):
-        BaseScreen.__init__(self)
+        BaseScreen.BaseScreen.__init__(self)
         
     def Init(self):
         # next screen
@@ -42,39 +41,39 @@ class SelectTaskScreen(BaseScreen):
         ]
         
         #Action Widgets[]:      0..X:  select window screen
-        self.ActionWidgets.append(Button(
+        self.ActionWidgets.append(Button.Button(
             ">> Use a New Connection",
             self.SetNextScreen,
-            CDBCore.MAIN_SCREEN_Y + 5,
+            CDBCore.CDBCore.MAIN_SCREEN_Y + 5,
             20,
             None,
             True
         ))
-        self.ActionWidgets.append(Button(
+        self.ActionWidgets.append(Button.Button(
             ">> Choose a Database",
             self.SetNextScreen,
-            CDBCore.MAIN_SCREEN_Y + 6,
+            CDBCore.CDBCore.MAIN_SCREEN_Y + 6,
             20,
             None,
             True
         ))
-        self.ActionWidgets.append(Button(
+        self.ActionWidgets.append(Button.Button(
             ">> Create a New Table",
             self.SetNextScreen,
-            CDBCore.MAIN_SCREEN_Y + 7,
+            CDBCore.CDBCore.MAIN_SCREEN_Y + 7,
             20,
             None,
             True
         ))
-        self.ActionWidgets.append(Button(
+        self.ActionWidgets.append(Button.Button(
             ">> Create a New Database",
             self.SetNextScreen,
-            CDBCore.MAIN_SCREEN_Y + 8,
+            CDBCore.CDBCore.MAIN_SCREEN_Y + 8,
             20,
             None,
             True
         ))
-        self.ActionWidgets.append(Button(
+        self.ActionWidgets.append(Button.Button(
             ">> Query Database",
             self.SetNextScreen,
             CDBCore.MAIN_SCREEN_Y + 9,
@@ -84,34 +83,34 @@ class SelectTaskScreen(BaseScreen):
         ))
         
         # EXIT BUTTON GOES LAST
-        self.ActionWidgets.append(Button(
+        self.ActionWidgets.append(Button.Button(
             "Exit Program",
             self.GoToCoreShutdown,
-            CDBCore.MAIN_SCREEN_Y + 12,
+            CDBCore.CDBCore.MAIN_SCREEN_Y + 12,
             20,
             None,
             True
         ))
         
         #Passive Widgets[]:     0 - Label to Select Screen
-        self.PassiveWidgets.append(Label("Select a Task:", CDBCore.MAIN_SCREEN_Y + 2, 30))
+        self.PassiveWidgets.append(Label.Label("Select a Task:", CDBCore.MAIN_SCREEN_Y + 2, 30))
         CDBCore.StatusScreen.AddStatusMessage("Use Tab to change and Enter to select")
         
         self.Show()
         
     def SetNextScreen(self):
         # if connection is set or user is going to ConnectionWizard screen
-        if not CDBCore.Connection and self.CurrentWidget > 0:
+        if not CDBCore.CDBCore.Connection and self.CurrentWidget > 0:
             msg = "Error: No Connection Detected.\nSelect Connection Wizard to connect to a\ndatabase."
-            CDBCore.StatusScreen.AddStatusMessage(msg)
-            CDBCore.PopUp = PopUpOk(msg)
-            CDBCore.PopUp.MakeActive()
+            CDBCore.CDBCore.StatusScreen.AddStatusMessage(msg)
+            CDBCore.CDBCore.PopUp = PopUpOk(msg)
+            CDBCore.CDBCore.PopUp.MakeActive()
         # if a connection is established but a database is not set
-        elif not CDBCore.Connection.Database and self.CurrentWidget == 4:
+        elif not CDBCore.CDBCore.Connection.Database and self.CurrentWidget == 4:
             msg = "Error: No Database Detected.\nSelect or Create a Database first."
-            CDBCore.StatusScreen.AddStatusMessage(msg)
-            CDBCore.PopUp = PopUpOk(msg)
-            CDBCore.PopUp.MakeActive()
+            CDBCore.CDBCore.StatusScreen.AddStatusMessage(msg)
+            CDBCore.CDBCore.PopUp = PopUpOk(msg)
+            CDBCore.CDBCore.PopUp.MakeActive()
         else:
             self.NextScreen = self.Screens[self.CurrentWidget]
             curses.ungetch('\n')
@@ -128,13 +127,13 @@ class SelectTaskScreen(BaseScreen):
 if __name__ == "__main__":
     user = raw_input('Enter the MySQL db user: ')
     password = raw_input('Enter the MySQL db user password: ')
-    my = MySQLConnection(user, password)    
+    my = MySQLConnection.MySQLConnection(user, password)    
     my.Connect()
-    CDBCore.InitCurses()
-    CDBCore.InitScreens()
+    CDBCore.CDBCore.InitCurses()
+    CDBCore.CDBCore.InitScreens()
     #CDBCore.InitColor()
-    CDBCore.History.append(CDBCore.CurrentScreen)
-    CDBCore.CurrentScreen.Hide()
-    CDBCore.CurrentScreen = SelectTaskScreen()
-    CDBCore.Connection = my
-    CDBCore.Main()
+    CDBCore.CDBCore.History.append(CDBCore.CurrentScreen)
+    CDBCore.CDBCore.CurrentScreen.Hide()
+    CDBCore.CDBCore.CurrentScreen = SelectTaskScreen()
+    CDBCore.CDBCore.Connection = my
+    CDBCore.CDBCore.Main()

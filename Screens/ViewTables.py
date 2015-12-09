@@ -1,6 +1,6 @@
 import sys
 import curses
-from CDBCore import CDBCore
+import CDBCore
 from Label import Label
 from Label import BaseLabel
 from Button import BaseButton
@@ -15,9 +15,9 @@ from AlterTable import AlterTable
 class ViewTables(BaseScreen):
     def __init__(self, DBName=""):
         if DBName:
-            CDBCore.Connection.Database = DBName
+            CDBCore.CDBCore.Connection.Database = DBName
 
-        elif not CDBCore.Connection.Database:
+        elif not CDBCore.CDBCore.Connection.Database:
             raise Exception("No database selected.")
 
         BaseScreen.__init__(self)
@@ -36,7 +36,7 @@ class ViewTables(BaseScreen):
     def GetTables(self):
         try:
             # Retrieve a list of tables
-            result = CDBCore.Connection.GetTables()
+            result = CDBCore.CDBCore.Connection.GetTables()
             
             # Ensure there weren't any issues getting the list of tables.
             if not result.Success:
@@ -68,13 +68,13 @@ class ViewTables(BaseScreen):
     def SendToAlter(self):
         table = self.DataScreen.ActionWidgets[self.DataScreen.CurrentWidget].Text
 
-        alterScreen = AlterTable(table, dbName=CDBCore.Connection.Database)
+        alterScreen = AlterTable(table, dbName=CDBCore.CDBCore.Connection.Database)
 
-        CDBCore.History.append(CDBCore.CurrentScreen)
-        CDBCore.CurrentScreen.Clear()
-        CDBCore.CurrentScreen.Hide()
-        CDBCore.CurrentScreen = alterScreen
-        CDBCore.CurrentScreen.Show(active=False)
+        CDBCore.CDBCore.History.append(CDBCore.CDBCore.CurrentScreen)
+        CDBCore.CDBCore.CurrentScreen.Clear()
+        CDBCore.CDBCore.CurrentScreen.Hide()
+        CDBCore.CDBCore.CurrentScreen = alterScreen
+        CDBCore.CDBCore.CurrentScreen.Show(active=False)
 
     # def AddTables(self):
     #         self.ActionWidgets = []

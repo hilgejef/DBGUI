@@ -9,10 +9,10 @@
 import sys
 import curses
 import atexit
-from MainMenu import MainMenu
-from HomeScreen import HomeScreen
-from StatusScreen import StatusScreen
-from PopUp import PopUpOkCancel # TESTING ONLY
+import MainMenu
+import HomeScreen
+import StatusScreen
+#from PopUp import PopUpOkCancel # TESTING ONLY
 
 class CDBCore:
     # Constants for Defining Screen Locations
@@ -183,6 +183,6 @@ class CDBCore:
     # Initialize screens and objects
     @staticmethod
     def InitScreens():
-        CDBCore.MenuScreen = MainMenu()
-        CDBCore.CurrentScreen = HomeScreen()
-        CDBCore.StatusScreen = StatusScreen()
+        CDBCore.MenuScreen = MainMenu.MainMenu()
+        CDBCore.CurrentScreen = HomeScreen.HomeScreen()
+        CDBCore.StatusScreen = StatusScreen.StatusScreen()

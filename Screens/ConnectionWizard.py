@@ -11,7 +11,7 @@
 
 import sys
 import curses
-from CDBCore import CDBCore
+import CDBCore
 from Label import Label
 from TextBox import TextBox
 from Button import Button
@@ -20,6 +20,7 @@ from CheckBox import CheckBox
 from ResultStatus import ResultStatus
 from MySQLConnection import MySQLConnection
 from PostgresConnection import PostgresConnection
+import StatusScreen
 import SelectTaskScreen
 
 class ConnectionWizard(BaseScreen):
@@ -41,25 +42,25 @@ class ConnectionWizard(BaseScreen):
         
         # Passive widgets
         for i in range(len(self.Items)):
-            y = (ystart * (i + 1)) + CDBCore.MAIN_SCREEN_Y
+            y = (ystart * (i + 1)) + CDBCore.CDBCore.MAIN_SCREEN_Y
             if y >= 21:
-                y = (ystart * (i + 1 - 5)) + CDBCore.MAIN_SCREEN_Y
+                y = (ystart * (i + 1 - 5)) + CDBCore.CDBCore.MAIN_SCREEN_Y
                 self.PassiveWidgets.append(Label(self.Items[i], y, xlabel + 40))
             else:
                 self.PassiveWidgets.append(Label(self.Items[i], y, xlabel))
         
         # Active widgets
-        self.ActionWidgets.append(TextBox(1, 16, 3 + CDBCore.MAIN_SCREEN_Y, xaction))
-        self.ActionWidgets.append(TextBox(1, 16, 6 + CDBCore.MAIN_SCREEN_Y, xaction))
-        self.ActionWidgets.append(TextBox(1, 16, 9 + CDBCore.MAIN_SCREEN_Y, xaction))
-        self.ActionWidgets.append(TextBox(1, 16, 12 + CDBCore.MAIN_SCREEN_Y, xaction))
-        self.ActionWidgets.append(TextBox(1, 16, 15 + CDBCore.MAIN_SCREEN_Y, xaction))
-        self.ActionWidgets.append(CheckBox('X', ' ', 3 + CDBCore.MAIN_SCREEN_Y, xaction + 40))
-        self.ActionWidgets.append(CheckBox('X', ' ', 6 + CDBCore.MAIN_SCREEN_Y, xaction + 40))
-        self.ActionWidgets.append(Button("Connect", self.TestConnection, CDBCore.STATUS_SCREEN_Y - 3, 63))
+        self.ActionWidgets.append(TextBox(1, 16, 3 + CDBCore.CDBCore.MAIN_SCREEN_Y, xaction))
+        self.ActionWidgets.append(TextBox(1, 16, 6 + CDBCore.CDBCore.MAIN_SCREEN_Y, xaction))
+        self.ActionWidgets.append(TextBox(1, 16, 9 + CDBCore.CDBCore.MAIN_SCREEN_Y, xaction))
+        self.ActionWidgets.append(TextBox(1, 16, 12 + CDBCore.CDBCore.MAIN_SCREEN_Y, xaction))
+        self.ActionWidgets.append(TextBox(1, 16, 15 + CDBCore.CDBCore.MAIN_SCREEN_Y, xaction))
+        self.ActionWidgets.append(CheckBox('X', ' ', 3 + CDBCore.CDBCore.MAIN_SCREEN_Y, xaction + 40))
+        self.ActionWidgets.append(CheckBox('X', ' ', 6 + CDBCore.CDBCore.MAIN_SCREEN_Y, xaction + 40))
+        self.ActionWidgets.append(Button("Connect", self.TestConnection, CDBCore.CDBCore.STATUS_SCREEN_Y - 3, 63))
     
     def ResetScreen(self, message):
-        CDBCore.StatusScreen.AddStatusMessage(message)
+        CDBCore.CDBCore.StatusScreen.AddStatusMessage(message)
         self.MakeActive()
     
     # Test the user entered information to ensure a connection
@@ -77,7 +78,7 @@ class ConnectionWizard(BaseScreen):
         isMySQL = False
         if self.ActionWidgets[self.Input["MySQL"]].Value():
             isMySQL = True
-        print str(isMySQL)
+        #print str(isMySQL)
         # Retrieve the database if one has been provided
         database = None
         if len(self.ActionWidgets[self.Input["Database (Optional)"]].Text) > 0:
@@ -110,8 +111,8 @@ class ConnectionWizard(BaseScreen):
         # Attempt to connect with the given information
         results = con.Connect()
         if results.Success:
-            CDBCore.Connection = con
-            CDBCore.StatusScreen.AddStatusMessage("Connection established.")
+            CDBCore.CDBCore.Connection = con
+            CDBCore.CDBCore.StatusScreen.AddStatusMessage("Connection established.")
             curses.ungetch('\n') # Notify the core to move to next screen
             return
         else:
@@ -126,9 +127,9 @@ class ConnectionWizard(BaseScreen):
         return SelectTaskScreen.SelectTaskScreen()
         
 if __name__ == "__main__":
-    CDBCore.InitCurses(True)
-    CDBCore.InitColor()
-    CDBCore.InitScreens()
-    CDBCore.CurrentScreen.Hide()
-    CDBCore.CurrentScreen = ConnectionWizard()
-    CDBCore.Main()
+    CDBCore.CDBCore.InitCurses(True)
+    CDBCore.CDBCore.InitColor()
+    CDBCore.CDBCore.InitScreens()
+    CDBCore.CDBCore.CurrentScreen.Hide()
+    CDBCore.CDBCore.CurrentScreen = ConnectionWizard()
+    CDBCore.CDBCore.Main()

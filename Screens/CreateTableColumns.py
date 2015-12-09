@@ -11,7 +11,7 @@
 
 import sys
 import curses
-from CDBCore import CDBCore
+import CDBCore
 from Label import Label
 from TextBox import TextBox
 from Button import Button
@@ -37,11 +37,11 @@ class CreateTableColumns(BaseScreen):
         # Tracking variables for retrieving entries
         self.Fields = ["ColumnName", "ColumnType"]
         for c in range(self.Columns):
-            y = (c * 2) + CDBCore.MAIN_SCREEN_Y + 4
+            y = (c * 2) + CDBCore.CDBCore.MAIN_SCREEN_Y + 4
             xl = xlabel
             xa = xaction
             if y >= 17:
-                y = (c * 2) - 10 + CDBCore.MAIN_SCREEN_Y + 4
+                y = (c * 2) - 10 + CDBCore.CDBCore.MAIN_SCREEN_Y + 4
                 xl = xlabel + 40
                 xa = xaction + 40
             self.PassiveWidgets.append(Label(str(c), y, xl))
@@ -51,14 +51,14 @@ class CreateTableColumns(BaseScreen):
             yoffset += 3
             xaction = 6
         
-        self.PassiveWidgets.append(Label("Column Name", CDBCore.MAIN_SCREEN_Y + 2, 7))
-        self.PassiveWidgets.append(Label("Column Type", CDBCore.MAIN_SCREEN_Y + 2, 27))
+        self.PassiveWidgets.append(Label("Column Name", CDBCore.CDBCore.MAIN_SCREEN_Y + 2, 7))
+        self.PassiveWidgets.append(Label("Column Type", CDBCore.CDBCore.MAIN_SCREEN_Y + 2, 27))
         if self.Columns > 5:
-            self.PassiveWidgets.append(Label("Column Name", CDBCore.MAIN_SCREEN_Y + 2, 47))
-            self.PassiveWidgets.append(Label("Column Type", CDBCore.MAIN_SCREEN_Y + 2, 67))
-            self.ActionWidgets.append(Button("Create", self.CreateTable, CDBCore.STATUS_SCREEN_Y - 4, 37))
+            self.PassiveWidgets.append(Label("Column Name", CDBCore.CDBCore.MAIN_SCREEN_Y + 2, 47))
+            self.PassiveWidgets.append(Label("Column Type", CDBCore.CDBCore.MAIN_SCREEN_Y + 2, 67))
+            self.ActionWidgets.append(Button("Create", self.CreateTable, CDBCore.CDBCore.STATUS_SCREEN_Y - 4, 37))
         else:
-            self.ActionWidgets.append(Button("Create", self.CreateTable, CDBCore.STATUS_SCREEN_Y - 4, 18))
+            self.ActionWidgets.append(Button("Create", self.CreateTable, CDBCore.CDBCore.STATUS_SCREEN_Y - 4, 18))
 
     # Dynamically constructs the query to be executed
     def ConstructQuery(self):
@@ -85,7 +85,7 @@ class CreateTableColumns(BaseScreen):
             query = self.ConstructQuery()
             
             # Attempt to create the table
-            result = CDBCore.Connection.QueryString(query)
+            result = CDBCore.CDBCore.Connection.QueryString(query)
             
             # Ensure that the query was successful
             if not result.Success:
@@ -97,7 +97,7 @@ class CreateTableColumns(BaseScreen):
         except Exception as ex:
             # TODO: Add multi-line once status supports it
             msg = "Failed to create table:"
-            CDBCore.StatusScreen.AddStatusMessage(msg)
+            CDBCore.CDBCore.StatusScreen.AddStatusMessage(msg)
             self.Columns = 0
             self.Name = ""
             self.ActionWidgets[0].selected = True
@@ -120,9 +120,9 @@ if __name__ == "__main__":
     my = MySQLConnection(user, password, host, int(port), database)    
     result = my.Connect()
     if result.Success:
-        CDBCore.InitCurses()
-        CDBCore.CurrentScreen = CreateTableColumns(name, int(columns))
-        CDBCore.Connection = my
-        CDBCore.Main()    
+        CDBCore.CDBCore.InitCurses()
+        CDBCore.CDBCore.CurrentScreen = CreateTableColumns(name, int(columns))
+        CDBCore.CDBCore.Connection = my
+        CDBCore.CDBCore.Main()    
     else:
         print "Could not log in: " + result.Message        

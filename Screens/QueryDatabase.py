@@ -1,6 +1,6 @@
 import sys
 import curses
-from CDBCore import CDBCore
+import CDBCore
 from Label import Label
 from Label import BaseLabel
 from Button import BaseButton
@@ -13,14 +13,14 @@ from EditField import EditField
 
 class QueryDatabase(BaseScreen):
     def __init__(self, dbName="", table=""):
-        if not CDBCore.Connection:
+        if not CDBCore.CDBCore.Connection:
             raise Exception("No Connection object specified.")
 
         if dbName:
-            CDBCore.Connection.Database = dbName
-            CDBCore.Connection.QueryString("USE {}".format(dbName))
+            CDBCore.CDBCore.Connection.Database = dbName
+            CDBCore.CDBCore.Connection.QueryString("USE {}".format(dbName))
 
-        if not CDBCore.Connection.Database:
+        if not CDBCore.CDBCore.Connection.Database:
             raise Exception("No database specified.")
 
         self.Table = table
@@ -28,7 +28,7 @@ class QueryDatabase(BaseScreen):
         BaseScreen.__init__(self, screen_type="QueryTable")
 
     def Init(self):
-        self.DBName = CDBCore.Connection.Database
+        self.DBName = CDBCore.CDBCore.Connection.Database
 
         queryLabel = Label("Query:", 5, 4)
         queryBox = TextBox(1, 50, 5, 12)
@@ -52,13 +52,13 @@ class QueryDatabase(BaseScreen):
         queryText = self.QueryBox.Text
 
         if not queryText:
-            raise CDBCore.StatusScreen.AddStatusMessage("No query entered.")
+            raise CDBCore.CDBCore.StatusScreen.AddStatusMessage("No query entered.")
 
         else:
-            result = CDBCore.Connection.QueryString(queryText)
+            result = CDBCore.CDBCore.Connection.QueryString(queryText)
 
             if result.Success:
-                CDBCore.StatusScreen.AddStatusMessage("Query successful.")
+                CDBCore.CDBCore.StatusScreen.AddStatusMessage("Query successful.")
 
                 if result.Data:
                     if not self.DataScreen:
@@ -69,7 +69,7 @@ class QueryDatabase(BaseScreen):
                         self.DataScreen.LoadResult(reset=True)
 
             else:
-                CDBCore.StatusScreen.AddStatusMessage("Query failed.")
+                CDBCore.CDBCore.StatusScreen.AddStatusMessage("Query failed.")
 
     # def GenerateFields(self):
     #     resultsObj = self.DataScreen.Result

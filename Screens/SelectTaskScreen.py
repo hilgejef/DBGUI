@@ -16,6 +16,7 @@ import CDBCore
 import BaseScreen
 import Button
 import Label
+import ViewTables
 import ViewDatabases
 #from EditField import EditField
 from CreateTable import CreateTable
@@ -36,6 +37,7 @@ class SelectTaskScreen(BaseScreen.BaseScreen):
             ConnectionWizard,
             ViewDatabases.ViewDatabases,
             CreateTable,
+            ViewTables.ViewTables,
             CreateDatabase,
             QueryDatabase
         ]
@@ -66,7 +68,7 @@ class SelectTaskScreen(BaseScreen.BaseScreen):
             True
         ))
         self.ActionWidgets.append(Button.Button(
-            ">> Create a New Database",
+            ">> View Tables",
             self.SetNextScreen,
             CDBCore.CDBCore.MAIN_SCREEN_Y + 8,
             20,
@@ -74,13 +76,22 @@ class SelectTaskScreen(BaseScreen.BaseScreen):
             True
         ))
         self.ActionWidgets.append(Button.Button(
-            ">> Query Database",
+            ">> Create a New Database",
             self.SetNextScreen,
             CDBCore.CDBCore.MAIN_SCREEN_Y + 9,
             20,
             None,
             True
         ))
+        self.ActionWidgets.append(Button.Button(
+            ">> Query Database",
+            self.SetNextScreen,
+            CDBCore.CDBCore.MAIN_SCREEN_Y + 10,
+            20,
+            None,
+            True
+        ))
+        
         
         # EXIT BUTTON GOES LAST
         self.ActionWidgets.append(Button.Button(
@@ -106,7 +117,7 @@ class SelectTaskScreen(BaseScreen.BaseScreen):
             CDBCore.CDBCore.PopUp = PopUpOk(msg)
             CDBCore.CDBCore.PopUp.MakeActive()
         # if a connection is established but a database is not set
-        elif CDBCore.CDBCore.Connection and not CDBCore.CDBCore.Connection.Database and self.CurrentWidget == 4:
+        elif CDBCore.CDBCore.Connection and not CDBCore.CDBCore.Connection.Database and (self.CurrentWidget == 4 or self.CurrentWidget == 5):
             msg = "Error: No Database Detected.\nSelect or Create a Database first."
             CDBCore.CDBCore.StatusScreen.AddStatusMessage(msg)
             CDBCore.CDBCore.PopUp = PopUpOk(msg)
@@ -131,7 +142,7 @@ if __name__ == "__main__":
     my.Connect()
     CDBCore.CDBCore.InitCurses()
     CDBCore.CDBCore.InitScreens()
-    #CDBCore.InitColor()
+    CDBCore.InitColor()
     CDBCore.CDBCore.History.append(CDBCore.CurrentScreen)
     CDBCore.CDBCore.CurrentScreen.Hide()
     CDBCore.CDBCore.CurrentScreen = SelectTaskScreen()

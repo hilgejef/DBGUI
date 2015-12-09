@@ -89,7 +89,7 @@ class QueryDatabase(BaseScreen):
                             self.DataScreen = self.PassiveWidgets[-1]
                         else:
                             if self.ActionWidgets[-1].Type == "DataScreen":
-                                self.PassiveWidgets.append(self.ActionWidgets.pop(0))
+                                self.PassiveWidgets.append(self.ActionWidgets.pop())
                                 self.DataScreen.Result = result.Data
                                 self.DataScreen.LoadResult(reset=True)
                             elif self.PassiveWidgets[-1].Type == "DataScreen":

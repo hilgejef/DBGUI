@@ -132,5 +132,5 @@ class MySQLConnection(BaseConnection):
     def GetTables(self):
         return self.QueryString("SHOW TABLES")
 
-    def DescibeTable(self, tblName):
+    def DescribeTable(self, tblName):
         return self.QueryString("DESCRIBE {}".format(tblName))

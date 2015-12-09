@@ -76,7 +76,7 @@ class SelectTaskScreen(BaseScreen.BaseScreen):
         self.ActionWidgets.append(Button.Button(
             ">> Query Database",
             self.SetNextScreen,
-            CDBCore.MAIN_SCREEN_Y + 9,
+            CDBCore.CDBCore.MAIN_SCREEN_Y + 9,
             20,
             None,
             True
@@ -93,8 +93,8 @@ class SelectTaskScreen(BaseScreen.BaseScreen):
         ))
         
         #Passive Widgets[]:     0 - Label to Select Screen
-        self.PassiveWidgets.append(Label.Label("Select a Task:", CDBCore.MAIN_SCREEN_Y + 2, 30))
-        CDBCore.StatusScreen.AddStatusMessage("Use Tab to change and Enter to select")
+        self.PassiveWidgets.append(Label.Label("Select a Task:", CDBCore.CDBCore.MAIN_SCREEN_Y + 2, 30))
+        CDBCore.CDBCore.StatusScreen.AddStatusMessage("Use Tab to change and Enter to select")
         
         self.Show()
         

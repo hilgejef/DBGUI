@@ -91,15 +91,16 @@ class CreateTableColumns(BaseScreen):
             if not result.Success:
                 raise Exception(result.Message)
             
+            # Notify of successful
+            CDBCore.CDBCore.StatusScreen.AddStatusMessage("Successfully created table: " + self.Name)
+            
             # Move on to next screen
             curses.ungetch('\n')
             
         except Exception as ex:
             # TODO: Add multi-line once status supports it
-            msg = "Failed to create table:"
+            msg = "Failed to create table:" + self.Name
             CDBCore.CDBCore.StatusScreen.AddStatusMessage(msg)
-            self.Columns = 0
-            self.Name = ""
             self.ActionWidgets[0].selected = True
             self.ActionWidgets[0].Highlight()
             self.ActionWidgets[0].Active()

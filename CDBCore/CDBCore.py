@@ -168,7 +168,7 @@ class CDBCore:
     @staticmethod
     def InitColor():
         # Text color/text background
-        curses.init_pair(1, curses.COLOR_WHITE, curses.COLOR_CYAN)
+        curses.init_pair(1, curses.COLOR_BLACK, curses.COLOR_CYAN)
 
         # Window background/window border
         curses.init_pair(2, curses.COLOR_WHITE, curses.COLOR_BLUE)

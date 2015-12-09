@@ -12,4 +12,7 @@
 from CDBCore import CDBCore
 
 if __name__ == "__main__":
+    CDBCore.InitCurses(True)
+    CDBCore.InitColor()
+    CDBCore.InitScreens()
     CDBCore.Main()

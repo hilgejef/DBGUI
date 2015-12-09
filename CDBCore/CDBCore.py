@@ -172,18 +172,20 @@ class CDBCore:
     # Create color pairings and initialize screen background
     @staticmethod
     def InitColor():
-        # Text color/text background
-        curses.init_pair(1, curses.COLOR_BLACK, curses.COLOR_CYAN)
+        #check that terminal supports color
+        if curses.has_colors():
+            # Text color/text background
+            curses.init_pair(1, curses.COLOR_BLACK, curses.COLOR_CYAN)
 
-        # Window background/window border
-        curses.init_pair(2, curses.COLOR_WHITE, curses.COLOR_BLUE)
+            # Window background/window border
+            curses.init_pair(2, curses.COLOR_WHITE, curses.COLOR_BLUE)
 
-        # Screen background/screen border
-        curses.init_pair(3, curses.COLOR_BLUE, curses.COLOR_CYAN)
+            # Screen background/screen border
+            curses.init_pair(3, curses.COLOR_BLUE, curses.COLOR_CYAN)
 
-        # Initialize main background color
-        CDBCore.stdscr.bkgd(' ', curses.color_pair(3))
-        CDBCore.stdscr.box()
+            # Initialize main background color
+            CDBCore.stdscr.bkgd(' ', curses.color_pair(3))
+            CDBCore.stdscr.box()
 
     # Initialize screens and objects
     @staticmethod

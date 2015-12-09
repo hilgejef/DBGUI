@@ -21,7 +21,8 @@ class BaseWidget:
         "y_offset" : 0,
         "x_offset" : 0,
         "text_mode" : curses.A_NORMAL,
-        "disable_screen_switch" : False  # True = user cannot toggle to Main Menu or Status Screens when widget is active
+        "disable_screen_switch" : False, # True = user cannot toggle to Main Menu or Status Screens when widget is active
+        "disable_tab": False
     }
 
     def __init__(self, height, width, y, x, attr=None):
@@ -65,6 +66,7 @@ class BaseWidget:
         self.XOffset = attr["x_offset"]
         self.SetSyx = attr["setsyx"]
         self.DisableScreenSwitch = attr["disable_screen_switch"]
+        self.DisableTab = attr["disable_tab"]
 
         # Legacy support
         self.Lines = height

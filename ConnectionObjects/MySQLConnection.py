@@ -16,7 +16,7 @@ from BaseConnection import BaseConnection
 class MySQLConnection(BaseConnection):
     # MySQLConnection constructor
     def __init__(self, user, password, host = "127.0.0.1", port = 3306, database = None):
-        BaseConnection.__init__(self,user, password, host, port, database)
+        BaseConnection.__init__(self,user, password, host, port, database, "MySQL")
     
     # MySQLConnection destructor
     def __del__(self):

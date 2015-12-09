@@ -52,7 +52,7 @@ class QueryDatabase(BaseScreen):
         queryText = self.QueryBox.Text
 
         if not queryText:
-            raise CDBCore.CDBCore.StatusScreen.AddStatusMessage("No query entered.")
+            CDBCore.CDBCore.StatusScreen.AddStatusMessage("No query entered.")
 
         else:
             result = CDBCore.CDBCore.Connection.QueryString(queryText)

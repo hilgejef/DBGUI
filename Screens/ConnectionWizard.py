@@ -78,11 +78,16 @@ class ConnectionWizard(BaseScreen):
         isMySQL = False
         if self.ActionWidgets[self.Input["MySQL"]].Value():
             isMySQL = True
-        #print str(isMySQL)
+                
         # Retrieve the database if one has been provided
         database = None
         if len(self.ActionWidgets[self.Input["Database (Optional)"]].Text) > 0:
             database = self.ActionWidgets[self.Input["Database (Optional)"]].Text
+        
+        # If Postgres, make sure a database has been provided
+        if not isMySQL and database == None:
+            self.ResetScreen("Database required for PostgreSQL connection.")
+            return
         
         # Get the port
         port = 0

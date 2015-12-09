@@ -149,6 +149,7 @@ class ModTextBox(BaseWidget):
         self.Text = ""
         self.DisplayText = ' ' * (width - 1)
         self.DisplayMode = "STANDARD"
+        self.IsActive = False
         self.UpdateDisplay()
         
     def Value(self):
@@ -182,7 +183,6 @@ class ModTextBox(BaseWidget):
         #   TAB:       exits with capturing and moves to next widget
         
         self.CaptureText()
-            
         
     def CaptureText(self):
         # Special keys handled by CaptureText()
@@ -226,12 +226,14 @@ class ModTextBox(BaseWidget):
                 self.DisplayMode = "STANDARD"
                 self.Highlight()
                 capturing = False
+                curses.ungetch('\n')
             
             # TAB
             elif key in [ord('\t'), 9]:
                 self.DisplayMode = "STANDARD"
                 self.UnHighlight()
                 capturing = False
+                curses.ungetch('\t')
 
             # BACKSPACE
             # -- Added 8 and 127, additional possible backspace inputs (127 on my system)
@@ -242,7 +244,11 @@ class ModTextBox(BaseWidget):
                 self.DisplayMode = "TYPING"
             
             else:
-                self.Text += chr(key)
-                self.DisplayMode = "TYPING"
+                if len(chr(key)) > 1:
+                    pass
+                else:
+                    self.Text += chr(key)
+                    self.DisplayMode = "TYPING"
                 
             self.UpdateDisplay()
+

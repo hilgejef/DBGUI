@@ -1,6 +1,7 @@
 import sys
 import curses
 import CDBCore
+import SelectTaskScreen
 from Label import Label
 from Label import BaseLabel
 from Button import BaseButton
@@ -20,14 +21,14 @@ class ViewTables(BaseScreen):
         elif not CDBCore.CDBCore.Connection.Database:
             raise Exception("No database selected.")
 
-        BaseScreen.__init__(self)
-            
+        BaseScreen.__init__(self, screen_type="ViewTables")
+
+
     def Init(self):
         self.CurrentPage = 0
         self.NumTables = 0
 
         self.GetTables()
-        self.PassiveWidgets.append(Label("Viewing Tables", 5, 15))
 
         if self.ActionWidgets:
             self.ActionWidgets[0].Active()
@@ -60,21 +61,38 @@ class ViewTables(BaseScreen):
             self.DataScreen = dataScreen
             self.ActionWidgets.append(dataScreen)
 
+            if self.NumTables:
+                self.PassiveWidgets.append(Label("Viewing Tables", 5, 15))
+            else:
+                strLabel = "No tables -- ENTER to return to Select Task"
+                self.PassiveWidgets.append(Label(strLabel, 5, 15))
+
+
+
         except Exception as ex:
             # TODO: Add status update here
-            sys.exit(str(ex)) # FOR TESTING
+            CDBCore.CDBCore.StatusScreen.AddStatusMessage("Get tables failed") 
 
     # Buttons will send to Alter Table on Enter Press
     def SendToAlter(self):
-        table = self.DataScreen.ActionWidgets[self.DataScreen.CurrentWidget].Text
+        curses.ungetch('\n')
+        # table = self.DataScreen.ActionWidgets[self.DataScreen.CurrentWidget].Text
 
-        alterScreen = AlterTable(table, dbName=CDBCore.CDBCore.Connection.Database)
+        # alterScreen = AlterTable(table, dbName=CDBCore.CDBCore.Connection.Database)
 
-        CDBCore.CDBCore.History.append(CDBCore.CDBCore.CurrentScreen)
-        CDBCore.CDBCore.CurrentScreen.Clear()
-        CDBCore.CDBCore.CurrentScreen.Hide()
-        CDBCore.CDBCore.CurrentScreen = alterScreen
-        CDBCore.CDBCore.CurrentScreen.Show(active=False)
+        # CDBCore.CDBCore.History.append(CDBCore.CDBCore.CurrentScreen)
+        # CDBCore.CDBCore.CurrentScreen.Clear()
+        # CDBCore.CDBCore.CurrentScreen.Hide()
+        # CDBCore.CDBCore.CurrentScreen = alterScreen
+        # CDBCore.CDBCore.CurrentScreen.Show(active=False)
+
+    def Next(self):
+        if self.NumTables:
+            table = self.DataScreen.ActionWidgets[self.DataScreen.CurrentWidget].Text
+
+            return AlterTable(table)
+        else:
+            return SelectTaskScreen.SelectTaskScreen()
 
     # def AddTables(self):
     #         self.ActionWidgets = []
@@ -140,11 +158,3 @@ class ViewTables(BaseScreen):
 
     #     else:
     #         return NextMethod
-
-    # Sets Connection.Table to current table/advances to QueryTable
-    def SetTable(self):
-        pass
-
-    # TODO: Return the next screen
-    def Next(self):
-        return None

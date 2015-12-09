@@ -118,4 +118,7 @@ class PostgresConnection(BaseConnection):
         return self.QueryString("""SELECT pg_database.datname as "Database" FROM pg_database""")
     
     def GetTables(self):
-        return self.QueryString("""SELECT tablename FROM pg_catalog.pg_tables""")
+        return self.QueryString("""SELECT tablename FROM pg_catalog.pg_tables WHERE schemaname != 'pg_catalog' AND schemaname != 'information_schema'""")
+
+    def DescribeTable(self, tblName):
+        return self.QueryString("""SELECT column_name, data_type, character_maximum_length FROM INFORMATION_SCHEMA.COLUMNS WHERE table_name = '{}'""".format(tblName))

@@ -1,8 +1,8 @@
 ###############################################################################
-# Author:		Rich Gagliano
-# Date Created:		11/9/2015
-# Date Modified:	11/10/2015
-# File Name:		ConnectionWizard.py
+# Author:       Rich Gagliano
+# Date Created:     11/9/2015
+# Date Modified:    11/10/2015
+# File Name:        ConnectionWizard.py
 #
 # Overview:
 #
@@ -23,9 +23,13 @@ from PostgresConnection import PostgresConnection
 import StatusScreen
 import SelectTaskScreen
 
+# FOR QUICKLY TESTING, SET DEBUG TO DIFFERENT VALUE
+# SET TO 0 BEFORE PUSH!
+_DEBUG_ = 0
+
 class ConnectionWizard(BaseScreen):
     def __init__(self):
-        BaseScreen.__init__(self)
+        BaseScreen.__init__(self, screen_type="ConnectionWizard")
     
     def Init(self):
         # Tracking variables for retrieving entries
@@ -58,6 +62,9 @@ class ConnectionWizard(BaseScreen):
         self.ActionWidgets.append(CheckBox('X', ' ', 3 + CDBCore.CDBCore.MAIN_SCREEN_Y, xaction + 40))
         self.ActionWidgets.append(CheckBox('X', ' ', 6 + CDBCore.CDBCore.MAIN_SCREEN_Y, xaction + 40))
         self.ActionWidgets.append(Button("Connect", self.TestConnection, CDBCore.CDBCore.STATUS_SCREEN_Y - 3, 63))
+
+        if _DEBUG_:
+            self.Debug()
     
     def ResetScreen(self, message):
         CDBCore.CDBCore.StatusScreen.AddStatusMessage(message)
@@ -130,6 +137,33 @@ class ConnectionWizard(BaseScreen):
     # Go back to the selection screen
     def Next(self):
         return SelectTaskScreen.SelectTaskScreen()
+
+    def Debug(self):
+        # Jeff's testing values for MySQL
+        if _DEBUG_ == 1:
+            self.ActionWidgets[0].Text = "test"
+            self.ActionWidgets[1].Text = "test"
+            self.ActionWidgets[2].Text = "127.0.0.1"
+            self.ActionWidgets[3].Text = "3306"
+            self.ActionWidgets[4].Text = "tmptest"
+            self.ActionWidgets[5].Check()
+            self.CurrentWidget = len(self.ActionWidgets) - 1
+
+            self.Update()
+            self.MakeActive()
+
+        # Jeff's testing values for Postgres
+        elif _DEBUG_ == 2:
+            self.ActionWidgets[0].Text = "test"
+            self.ActionWidgets[1].Text = "test"
+            self.ActionWidgets[2].Text = "127.0.0.1"
+            self.ActionWidgets[3].Text = "5432"
+            self.ActionWidgets[4].Text = "tmptest"
+            self.ActionWidgets[6].Check()
+            self.CurrentWidget = len(self.ActionWidgets) - 1
+
+            self.Update()
+            self.MakeActive()
         
 if __name__ == "__main__":
     CDBCore.CDBCore.InitCurses(True)

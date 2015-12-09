@@ -15,19 +15,20 @@ class HomeScreen(BaseScreen):
         	              "-- Written By --\n" +
         	              "Richard Gagliano\n" +
         	              "Jon Moore\n" +
-        	              "Jeffrey Hilger", 13, 40, 5, 20, 
-        	              attr={"boxed": True, "y_offset" : 4, "x_offset": 5, "text_y_center": True, "text_x_center" : True})
+        	              "Jeffrey Hilger", 9, 40, 5, 20, 
+        	              attr={"boxed": True, "y_offset" : 1, "x_offset": 5, "text_y_center": True, "text_x_center" : True})
         self.PassiveWidgets.append(label)
         
-        self.ActionWidgets.append(Button.Button(
+        self.ActionWidgets.append(Button.BaseButton(
             "Connect!",
             self.GoToNextScreen,
-            CDBCore.CDBCore.MAIN_SCREEN_Y + 15,
-            20,
-            None,
-            True
+            3,
+            len("Connect!") + 2,
+            CDBCore.CDBCore.MAIN_SCREEN_Y + 12,
+            50,
+            attr={"boxed" : True, "y_offset" : 1, "x_offset" : 1}
         ))
-        
+
     def GoToNextScreen(self):
         curses.ungetch('\n');
         

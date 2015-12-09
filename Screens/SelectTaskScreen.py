@@ -28,7 +28,7 @@ from PopUp import PopUpOk
 
 class SelectTaskScreen(BaseScreen.BaseScreen):
     def __init__(self, query=None, data=None):
-        BaseScreen.BaseScreen.__init__(self)
+        BaseScreen.BaseScreen.__init__(self, screen_type="SelectTask")
         
     def Init(self):
         # next screen
@@ -122,7 +122,7 @@ class SelectTaskScreen(BaseScreen.BaseScreen):
             CDBCore.CDBCore.StatusScreen.AddStatusMessage(msg)
             CDBCore.CDBCore.PopUp = PopUpOk(msg)
             CDBCore.CDBCore.PopUp.MakeActive()
-        elif CDBCore.CDBCore.Connection and CDBCore.CDBCore.Connection.DBType == "PostgreSQL" and CDBCore.CDBCore.Connection.Database and self.CurrentWidget == 3:
+        elif CDBCore.CDBCore.Connection and CDBCore.CDBCore.Connection.DBType == "PostgreSQL" and self.CurrentWidget == 4:
             msg = "Error: Cannot create databases when using\nPostgreSQL connector.\n\nUse PSQL tool."
             CDBCore.CDBCore.StatusScreen.AddStatusMessage(msg)
             CDBCore.CDBCore.PopUp = PopUpOk(msg)

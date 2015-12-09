@@ -25,7 +25,7 @@ class DataScreen(BaseScreen):
         if dataMethod:
             self.DataMethod = dataMethod
         else:
-            self.DataMethod = self.EmptyMethod
+            self.DataMethod = None
 
         if attr:
             merged_attributes = DataScreen.default_attributes.copy()
@@ -56,6 +56,12 @@ class DataScreen(BaseScreen):
         self.TotalRows = len(self.Result[1])
         self.DisplayCols = min(self.TotalCols, self.Attr["display_cols"])
         self.DisplayRows = min(self.TotalRows, self.Attr["display_rows"])
+
+        if self.TotalCols < 5:
+            self.ColSize = (50/self.TotalCols)
+        else:
+            self.ColSize = Self.Attr["column_size"]
+
         self.DataX = 0
         self.DataY = 0
         self.CursorX = 0
@@ -67,11 +73,19 @@ class DataScreen(BaseScreen):
             self.TotalRows = len(self.Result[1])
             self.DisplayCols = min(self.TotalCols, self.Attr["display_cols"])
             self.DisplayRows = min(self.TotalRows, self.Attr["display_rows"])
+
+            if self.TotalCols < 5:
+                self.ColSize = (50/self.TotalCols)
+            else:
+                self.ColSize = Self.Attr["column_size"]
+
             self.DataX = 0
             self.DataY = 0
             self.CursorX = 0
             self.CursorY = 0  
             self.CurrentWidget = 0      
+
+            self.Hide()
 
         # Empty widget containers
         self.PassiveWidgets = []
@@ -157,7 +171,10 @@ class DataScreen(BaseScreen):
             self.DataY = 0
             self.CursorX = 0
             self.CursorY = 0  
-            self.CurrentWidget = 0      
+            self.CurrentWidget = 0
+
+            # Hide pre-existing widgets
+            self.Hide()      
 
         # Empty widget containers
         self.PassiveWidgets = []
@@ -210,7 +227,7 @@ class DataScreen(BaseScreen):
 
             for yidx, y in enumerate(range(self.DataY, min(self.TotalRows, self.DataY + self.DisplayRows))):
 
-                self.AlterWidgets.append([])
+                alterRow = []
 
                 # Define field attributes
                 fieldX = self.StartX + (self.ColSize) * xidx
@@ -231,12 +248,12 @@ class DataScreen(BaseScreen):
                     }
 
                 if x == 0:
-                    fieldButton = BaseButton(fieldText, self.EmptyMethod, fieldHeight,
+                    fieldButton = BaseButton(fieldText, None, fieldHeight,
                                              fieldWidth, fieldY, fieldX, attr)
                     fieldButton.UpdateDisplay()
                     self.ActionWidgets.append(fieldButton)
 
-                    self.AlterWidgets[yidx].append(fieldButton)
+                    alterRow.append(fieldButton)
 
                 if x == 1:
                     # Create textbox based on defined attributes
@@ -247,31 +264,30 @@ class DataScreen(BaseScreen):
                     # Add field textbox to action widgets
                     self.ActionWidgets.append(fieldTextBox)
 
-                    self.AlterWidgets[yidx].append(fieldTextBox)
+                    alterRow.append(fieldTextBox)
 
                 # Load Alter Method
                 if x == 2:
                     alterButton = BaseButton(fieldText, self.DataMethod[0], fieldHeight,
                                              fieldWidth, fieldY, fieldX, attr)
                     alterButton.UpdateDisplay()
-                    alterButton.Row = y
+                    alterButton.Row = yidx
                     self.ActionWidgets.append(alterButton)
 
-                    self.AlterWidgets[yidx].append(alterButton)
+                    alterRow.append(alterButton)
+
 
                 # Load Drop Method
                 elif x == 3:
                     dropButton = BaseButton(fieldText, self.DataMethod[1], fieldHeight,
                                             fieldWidth, fieldY, fieldX, attr)
-                    alterButton.UpdateDisplay()
-                    dropButton.Row = y
+                    dropButton.UpdateDisplay()
+                    dropButton.Row = yidx
                     self.ActionWidgets.append(dropButton)
 
-                    self.AlterWidgets[yidx].append(dropButton)
+                    alterRow.append(dropButton)
 
-
-
-            # self.AlterWidgets.append(AlterRow)
+                self.AlterWidgets.append(alterRow)
 
     # def DropMethod(self):
     #     rowNum = self.ActionWidgets[self.CurrentWidget].Row
@@ -290,6 +306,11 @@ class DataScreen(BaseScreen):
 
     # Load with WASD/arrow-key movement
     def Active(self):
+        if self.MajorScreen == "AlterTable":
+            loadFunc = self.LoadAlterTable
+        else:
+            loadFunc = self.LoadResult
+
         if not self.ActionWidgets:
             capturing = False
 
@@ -305,7 +326,7 @@ class DataScreen(BaseScreen):
                     pass
                 elif self.CursorY == self.DisplayRows - 1:
                     self.DataY += 1
-                    self.LoadResult()
+                    loadFunc()
                     self.SetCurrent()
                 else:
                     self.CursorY += 1
@@ -317,7 +338,7 @@ class DataScreen(BaseScreen):
                     pass
                 elif self.CursorY == 0:
                     self.DataY -= 1
-                    self.LoadResult()
+                    loadFunc()
                     self.SetCurrent()
                 else:
                     self.CursorY -= 1
@@ -329,7 +350,7 @@ class DataScreen(BaseScreen):
                     pass
                 elif self.CursorX == self.DisplayCols - 1:
                     self.DataX += 1
-                    self.LoadResult()
+                    loadFunc()
                     self.SetCurrent()
                 else:
                     self.CursorX += 1
@@ -341,7 +362,7 @@ class DataScreen(BaseScreen):
                     pass
                 elif self.CursorX == 0:
                     self.DataX -= 1
-                    self.LoadResult()
+                    loadFunc()
                     self.SetCurrent()
                 else:
                     self.CursorX -= 1
@@ -349,21 +370,42 @@ class DataScreen(BaseScreen):
 
             # tab
             elif key in [ord('\t'), 9]:  
+                if self.ActionWidgets[self.CurrentWidget].Type == "TextBox":
+                    if self.ActionWidgets[self.CurrentWidget].IsActive:
+                        self.ActionWidgets[self.CurrentWidget].IsActive = False
+
+                self.ActionWidgets[self.CurrentWidget].UnHighlight()
                 curses.ungetch("\t")
                 capturing = False
 
+            # enter - context dependent for textbox/button
             elif key in [curses.KEY_ENTER, ord('\n'), 10]:
-                if self.ActionWidgets:
-                    if self.ActionWidgets[self.CurrentWidget].Type == "TextBox":
-                        self.ActionWidgets[self.CurrentWidget].Active()
-                    elif self.ActionWidgets[self.CurrentWidget].Type == "Button":
-                        self.ActionWidgets[self.CurrentWidget].CallMethod()
-
                 capturing = False
 
-    # EmptyMethod to optionally pass to DataScreen
-    def EmptyMethod(self):
-        pass
+                if self.ActionWidgets:
+                    if self.ActionWidgets[self.CurrentWidget].Type == "TextBox":
+                        if not self.ActionWidgets[self.CurrentWidget].IsActive:
+                            self.ActionWidgets[self.CurrentWidget].IsActive = True
+                            self.ActionWidgets[self.CurrentWidget].Active()
+                            capturing = True
+                        else:
+                            self.ActionWidgets[self.CurrentWidget].IsActive = False
+                            capturing = True
+                    elif self.ActionWidgets[self.CurrentWidget].Type == "Button":
+                        if self.ActionWidgets[self.CurrentWidget].CallMethod:
+                            self.ActionWidgets[self.CurrentWidget].CallMethod()
+                        else:
+                            capturing = True
+
+            # menu key
+            elif key in [curses.KEY_F1, 77]:
+                capturing = False
+                curses.ungetch(77)
+
+            # status screen key
+            elif key in [curses.KEY_F8, 76]:
+                capturing = False
+                curses.ungetch(76)
 
     # Helper function determines Current Widget/Field
     def SetCurrent(self):
@@ -372,5 +414,14 @@ class DataScreen(BaseScreen):
             self.CurrentWidget = self.CursorY + self.CursorX * self.DisplayRows
             self.ActionWidgets[self.CurrentWidget].Highlight()
 
+    # UpdateDisplay updates all widgets
+    def UpdateDisplay(self):
+        for w in self.PassiveWidgets:
+            w.UpdateDisplay()
+        for w in self.ActionWidgets:
+            w.UpdateDisplay()
 
-
+    # On the other hand, highlight highlights only the current widget
+    def Highlight(self):
+        if self.ActionWidgets:
+            self.ActionWidgets[self.CurrentWidget].Highlight()

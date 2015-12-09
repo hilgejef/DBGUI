@@ -7,6 +7,7 @@ class BaseLabel(BaseWidget):
 	def __init__(self, text, height, width, y, x, attr=None):
 		BaseWidget.__init__(self, height, width, y, x, attr)
 		self.Text = text
+		self.Type = "Label"
 		self.UpdateDisplay()
 
 """ Label """

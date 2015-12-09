@@ -43,8 +43,10 @@ class StatusScreen(BaseScreen):
         self.PassiveWidgets.append(BaseWidget(self.ScreenHeight,
                                               80,
                                               self.ScreenStartY,
-                                              0))
-        self.PassiveWidgets[0].Win.border('|', '|', '-', '-', '+', '+', '+', '+')
+                                              0,
+                                              attr={'boxed' : True}))
+        # self.PassiveWidgets[0].Win.border('|', '|', '-', '-', '+', '+', '+', '+')
+        self.PassiveWidgets[0].UpdateDisplay()
         self.PassiveWidgets[0].ToBottom()
         
         # label widget for persistent messages

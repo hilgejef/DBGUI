@@ -51,8 +51,19 @@ class QueryDatabase(BaseScreen):
     def QueryMethod(self):
         queryText = self.QueryBox.Text
 
+        # ENSURE ALL CASES ARE TAKEN CARE OF:
+        # EMPTY QUERY
+        # FAILED QUERY
+        # EMPTY RESULT
+        # RESULT FIELDS ARE EMPTY
+        # RESULT FIELDS NOT EMPTY
+
+        # EMPTY QUERY
         if not queryText:
             CDBCore.CDBCore.StatusScreen.AddStatusMessage("No query entered.")
+
+            if self.DataScreen:
+                self.EmptyData()
 
         else:
             result = CDBCore.CDBCore.Connection.QueryString(queryText)
@@ -61,15 +72,49 @@ class QueryDatabase(BaseScreen):
                 CDBCore.CDBCore.StatusScreen.AddStatusMessage("Query successful.")
 
                 if result.Data:
-                    if not self.DataScreen:
-                        self.ActionWidgets.append(DataScreen(result.Data, dataMethod=None))
-                        self.DataScreen = self.ActionWidgets[-1]
+                    # RESULT FIELDS NOT EMPTY
+                    if result.Data[1]:
+                        if not self.DataScreen:
+                            self.ActionWidgets.append(DataScreen(result.Data, dataMethod=None))
+                            self.DataScreen = self.ActionWidgets[-1]
+                        else:
+                            if self.PassiveWidgets[-1].Type == "DataScreen":
+                                self.ActionWidgets.append(self.PassiveWidgets.pop())
+                            self.DataScreen.Result = result.Data
+                            self.DataScreen.LoadResult(reset=True)
+                    # RESULT FIELDS ARE EMPTY
                     else:
-                        self.DataScreen.Result = result.Data
-                        self.DataScreen.LoadResult(reset=True)
-
+                        if not self.DataScreen:
+                            self.PassiveWidgets.append(DataScreen(result.Data, dataMethod=None))
+                            self.DataScreen = self.PassiveWidgets[-1]
+                        else:
+                            if self.ActionWidgets[-1].Type == "DataScreen":
+                                self.PassiveWidgets.append(self.ActionWidgets.pop(0))
+                                self.DataScreen.Result = result.Data
+                                self.DataScreen.LoadResult(reset=True)
+                            elif self.PassiveWidgets[-1].Type == "DataScreen":
+                                self.DataScreen.Result = result.Data
+                                self.DataScreen.LoadResult(reset=True)
+                # EMPTY RESULT
+                else:
+                    self.EmptyData()
+            # FAILED QUERY
             else:
+                self.EmptyData()
+
                 CDBCore.CDBCore.StatusScreen.AddStatusMessage("Query failed.")
+
+        # Maintain active state on button
+        self.MakeActive()
+
+    def EmptyData(self):
+        if self.DataScreen:
+            if self.ActionWidgets[-1].Type == "DataScreen":
+                self.ActionWidgets.pop()
+            elif self.PassiveWidgets[-1].Type == "DataScreen":
+                self.PassiveWidgets.pop()
+            self.DataScreen.Hide()
+            self.DataScreen = None
 
     # def GenerateFields(self):
     #     resultsObj = self.DataScreen.Result

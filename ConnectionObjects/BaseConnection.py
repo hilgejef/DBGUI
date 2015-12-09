@@ -19,13 +19,14 @@
 ###############################################################################
 
 class BaseConnection:
-    def __init__(self, user, password, host, port, database):
+    def __init__(self, user, password, host, port, database, dbtype=""):
         self.User = user
         self.Password = password
         self.Host = host
         self.Port = port
         self.Database = database
         self.Connection = None
+        self.DBType = dbtype
     
     # Opens a connection to the DB server. To be overloaded in children.  
     def Connect(self):

@@ -111,6 +111,11 @@ class SelectTaskScreen(BaseScreen.BaseScreen):
             CDBCore.CDBCore.StatusScreen.AddStatusMessage(msg)
             CDBCore.CDBCore.PopUp = PopUpOk(msg)
             CDBCore.CDBCore.PopUp.MakeActive()
+        elif CDBCore.CDBCore.Connection and CDBCore.CDBCore.Connection.DBType == "PostgreSQL" and CDBCore.CDBCore.Connection.Database and self.CurrentWidget == 3:
+            msg = "Error: Cannot create databases when using\nPostgreSQL connector.\n\nUse PSQL tool."
+            CDBCore.CDBCore.StatusScreen.AddStatusMessage(msg)
+            CDBCore.CDBCore.PopUp = PopUpOk(msg)
+            CDBCore.CDBCore.PopUp.MakeActive()
         else:
             self.NextScreen = self.Screens[self.CurrentWidget]
             curses.ungetch('\n')

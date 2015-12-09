@@ -25,7 +25,7 @@ import SelectTaskScreen
 
 # FOR QUICKLY TESTING, SET DEBUG TO DIFFERENT VALUE
 # SET TO 0 BEFORE PUSH!
-_DEBUG_ = 1
+_DEBUG_ = 0
 
 class ConnectionWizard(BaseScreen):
     def __init__(self):

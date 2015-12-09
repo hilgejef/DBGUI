@@ -28,7 +28,7 @@ class BaseButton(BaseLabel):
                 selected = False
                 self.CallMethod()
             
-            elif key in [ord('\t'), 9]:
+            elif key in [ord('\t'), 9] and not self.DisableTab:
                 # stop highlighting current widget
                 self.UnHighlight()
                 selected = False

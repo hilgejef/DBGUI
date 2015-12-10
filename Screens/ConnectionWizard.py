@@ -121,6 +121,7 @@ class ConnectionWizard(BaseScreen):
                                      port)
         
         # Attempt to connect with the given information
+        CDBCore.CDBCore.StatusScreen.AddStatusMessage("Attempting to Connect to Database...")
         results = con.Connect()
         if results.Success:
             CDBCore.CDBCore.Connection = con
@@ -129,7 +130,8 @@ class ConnectionWizard(BaseScreen):
             return
         else:
             # TODO: Replace with error once multi line is supported
-            print results.Message
+            #print results.Message
+            CDBCore.CDBCore.StatusScreen.AddStatusMessage(results.Message)
             msg = "Could not connect to database."
             self.ResetScreen(msg)
             return

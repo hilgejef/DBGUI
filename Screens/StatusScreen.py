@@ -50,8 +50,8 @@ class StatusScreen(BaseScreen):
         self.PassiveWidgets[0].ToBottom()
         
         # label widget for persistent messages
-        self.PassiveWidgets.append(Label("Shift-M for Main Menu", genLabelY, genLabelX))
-        self.PassiveWidgets.append(Label("Shift-L for Message Log", genLabelY + 1, genLabelX))
+        self.PassiveWidgets.append(Label("F1/Shift-M: Main Menu", genLabelY, genLabelX))
+        self.PassiveWidgets.append(Label("F8/Shift-L: Message Log", genLabelY + 1, genLabelX))
         self.PassiveWidgets[1].ToTop()
         
         # label widgets for logged system messages
@@ -64,9 +64,36 @@ class StatusScreen(BaseScreen):
         
     def AddStatusMessage(self, msgString):
         # put new message at beginning of list
-        
+        msgString = self.FitMessageToSpace(msgString, 7, 48)
         self.Log.insert(0, msgString)
         self.UpdateLogLabels()
+        
+    #automatically assigns new lines characters 
+    def FitMessageToSpace(self, msg, y, x):
+        linesTaken = 0
+        msgIdx = 0
+        fitMsg = ""
+        while (linesTaken != y):
+            linesTaken += 1
+            # enough chars left in screen to display rest of msg
+            if len(msg[msgIdx:]) < x:
+                fitMsg += msg[msgIdx:]
+                break
+                
+            # if on last line available, just display what we can
+            elif linesTaken == y:
+                fitMsg += msg[msgIdx:msgIdx + x]
+            # otherwise make newline character at last possible space before we run out of room
+            else:
+                maxLine = msg[msgIdx:msgIdx + x]
+                lastSpaceIdx = maxLine.rfind(" ")
+                nextLine = msg[msgIdx:msgIdx + lastSpaceIdx]
+                fitMsg += nextLine
+                fitMsg += '\n'
+                msgIdx += lastSpaceIdx + 1
+        return fitMsg
+            
+                
         
     def UpdateLogLabels(self):
         # updates the labels on screen to show the last X messages

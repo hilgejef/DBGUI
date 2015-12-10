@@ -60,7 +60,7 @@ class DataScreen(BaseScreen):
         if self.TotalCols < 5:
             self.ColSize = (50/self.TotalCols)
         else:
-            self.ColSize = Self.Attr["column_size"]
+            self.ColSize = self.Attr["column_size"]
 
         self.DataX = 0
         self.DataY = 0
@@ -77,7 +77,7 @@ class DataScreen(BaseScreen):
             if self.TotalCols < 5:
                 self.ColSize = (50/self.TotalCols)
             else:
-                self.ColSize = Self.Attr["column_size"]
+                self.ColSize = self.Attr["column_size"]
 
             self.DataX = 0
             self.DataY = 0

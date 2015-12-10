@@ -62,6 +62,8 @@ class PostgresConnection(BaseConnection):
             cursor.close()
             return ResultStatus(True, None, data)
         except Exception as ex:
+            # Roll back the query
+            self.Connection.rollback()
             return ResultStatus(False, "Could not execute query:\n" + str(ex))
     
     # Executes a given query within the database. Open to SQL injection.

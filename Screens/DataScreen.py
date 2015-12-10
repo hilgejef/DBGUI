@@ -227,7 +227,7 @@ class DataScreen(BaseScreen):
 
             for yidx, y in enumerate(range(self.DataY, min(self.TotalRows, self.DataY + self.DisplayRows))):
 
-                alterRow = []
+                self.AlterWidgets.append([])
 
                 # Define field attributes
                 fieldX = self.StartX + (self.ColSize) * xidx
@@ -253,7 +253,7 @@ class DataScreen(BaseScreen):
                     fieldButton.UpdateDisplay()
                     self.ActionWidgets.append(fieldButton)
 
-                    alterRow.append(fieldButton)
+                    self.AlterWidgets[yidx].append(fieldButton)
 
                 if x == 1:
                     # Create textbox based on defined attributes
@@ -264,7 +264,7 @@ class DataScreen(BaseScreen):
                     # Add field textbox to action widgets
                     self.ActionWidgets.append(fieldTextBox)
 
-                    alterRow.append(fieldTextBox)
+                    self.AlterWidgets[yidx].append(fieldTextBox)
 
                 # Load Alter Method
                 if x == 2:
@@ -274,7 +274,7 @@ class DataScreen(BaseScreen):
                     alterButton.Row = yidx
                     self.ActionWidgets.append(alterButton)
 
-                    alterRow.append(alterButton)
+                    self.AlterWidgets[yidx].append(alterButton)
 
 
                 # Load Drop Method
@@ -285,9 +285,9 @@ class DataScreen(BaseScreen):
                     dropButton.Row = yidx
                     self.ActionWidgets.append(dropButton)
 
-                    alterRow.append(dropButton)
+                    self.AlterWidgets[yidx].append(dropButton)
 
-                self.AlterWidgets.append(alterRow)
+            # self.AlterWidgets.append(alterRow)
 
     # def DropMethod(self):
     #     rowNum = self.ActionWidgets[self.CurrentWidget].Row

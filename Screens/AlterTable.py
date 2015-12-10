@@ -123,7 +123,12 @@ class AlterTable(BaseScreen):
         colName = row[0].Text
         colType = row[1].Text
 
-        q = "ALTER TABLE {} MODIFY COLUMN {} {}".format(self.Table, colName, colType)
+        # raise Exception(colName, colType)
+
+        if CDBCore.CDBCore.Connection.DBType == "MySQL":
+            q = "ALTER TABLE {} MODIFY COLUMN {} {}".format(self.Table, colName, colType)
+        elif CDBCore.CDBCore.Connection.DBType == "PostgreSQL":
+            q = "ALTER TABLE {} ALTER COLUMN {} TYPE {}".format(self.Table, colName, colType)          
         result = CDBCore.CDBCore.Connection.QueryString(q)
 
         if result.Success:

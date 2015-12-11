@@ -17,7 +17,6 @@ import Label
 import ViewTables
 import ViewDatabases
 from CreateTable import CreateTable
-from QueryTable import QueryTable
 from QueryDatabase import QueryDatabase
 from CreateDatabase import CreateDatabase
 from ConnectionWizard import ConnectionWizard

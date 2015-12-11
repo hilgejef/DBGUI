@@ -54,9 +54,6 @@ class ConnectionWizard(BaseScreen):
         self.ActionWidgets.append(CheckBox('X', ' ', 3 + CDBCore.CDBCore.MAIN_SCREEN_Y, xaction + 40))
         self.ActionWidgets.append(CheckBox('X', ' ', 6 + CDBCore.CDBCore.MAIN_SCREEN_Y, xaction + 40))
         self.ActionWidgets.append(Button("Connect", self.TestConnection, CDBCore.CDBCore.STATUS_SCREEN_Y - 3, 63))
-
-        if _DEBUG_:
-            self.Debug()
     
     def ResetScreen(self, message):
         CDBCore.CDBCore.StatusScreen.AddStatusMessage(message)

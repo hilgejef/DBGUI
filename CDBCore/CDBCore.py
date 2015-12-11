@@ -96,8 +96,11 @@ class CDBCore:
                 CDBCore.CurrentScreen = CDBCore.StatusScreen
             CDBCore.CurrentScreen.MakeActive()
         else:
-            # TODO: Popup to notify user before exitting application that an issue occured
-            pass
+            # This means an unhandled character was passed to the core
+            # Notify the user that the application is going down...
+            msg = "Unexpected error occured.  Shutting down."
+            CDBCore.PopUp = PopUpOk(msg)
+            CDBCore.PopUp.MakeActive()
     
     # Used to test final program flow
     @staticmethod

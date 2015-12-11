@@ -1,3 +1,10 @@
+#########################################################
+# TextBox
+#
+# Allows the user to modify text when <ENTER> is pressed.
+#
+#########################################################
+
 import curses
 import curses.panel
 from BaseWidget import BaseWidget
@@ -72,9 +79,7 @@ class TextBox(BaseWidget):
         #   ESC:       exits without capturing anything, current widget still highlighted
         #   ENTER:     exits with capturing all previously entered text, current widget still highlighted
         #   TAB:       exits with capturing and moves to next widget
-        #   SHIFT-TAB: exits with capturing and moves to prev widget   NOTE! Shift+Tab does not appear to be capturable by ncurses
         #   BACKSPACE: removes last character from self.Text
-        
         
         capturing = True
         old_text = self.Text
@@ -116,13 +121,6 @@ class TextBox(BaseWidget):
                 self.UnHighlight()
                 capturing = False
                 curses.ungetch('\t') # Notify the core that tab was pressed
-            
-            # SHIFT+TAB
-            
-            # TODO: it does not appear to be possible to capture shift+tab in curses
-            
-                # TODO: give notification to screen object that SHIFT+TAB was pressed (for selecting next widget)
-                #       potentially can use curses.ungetch(key) here
             
             # -- Added 8 and 127, additional possible backspace inputs (127 on my system)
             # http://stackoverflow.com/questions/4363309/how-to-check-for-the-backspace-character-in-c
@@ -189,9 +187,7 @@ class ModTextBox(BaseWidget):
         #   ESC:       exits without capturing anything, current widget still highlighted
         #   ENTER:     exits with capturing all previously entered text, current widget still highlighted
         #   TAB:       exits with capturing and moves to next widget
-        #   SHIFT-TAB: exits with capturing and moves to prev widget   NOTE! Shift+Tab does not appear to be capturable by ncurses
         #   BACKSPACE: removes last character from self.Text
-        
         
         capturing = True
         old_text = self.Text

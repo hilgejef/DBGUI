@@ -1,13 +1,9 @@
-#################################################################
-# Authors:          Rich Gagliano, Jonathan Moore, Jeffrey Hilger
-# Date Created:     10/26/2015
-# Date Modified:    10/26/2015
-# File Name:        DataTable.py
+#########################################################
+# DataTable
 #
-# Overview:
-#    TODO: Project overview
+# Presents query results as navigable table
 #
-#################################################################
+#########################################################
 
 import curses
 import curses.panel

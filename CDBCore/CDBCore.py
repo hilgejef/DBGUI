@@ -94,6 +94,8 @@ class CDBCore:
     # Used to test final program flow
     @staticmethod
     def FinalMain(debug=False):      
+        CDBCore.StatusScreen.AddStatusMessage("Welcome to Curses Database!")
+        
         # Prepare curses for use
         CDBCore.InitCurses(debug)
         CDBCore.InitColor()
@@ -112,9 +114,6 @@ class CDBCore:
     # Used to test singular screens
     @staticmethod
     def Main():      
-        # Prepare curses for use
-        #InitCurses()
-        
         CDBCore.StatusScreen.AddStatusMessage("Welcome to Curses Database!")
         
         # Show the home screen
@@ -138,7 +137,6 @@ class CDBCore:
             curses.echo()
             curses.endwin()
         except:
-            # TODO: add universal logging (especially for dev)
             pass # exit anyways
     
     # Initializes the curses library for use, and registers cleanup

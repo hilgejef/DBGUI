@@ -1,11 +1,8 @@
 ###############################################################################
-# Author:		Rich Gagliano
-# Date Created:		12/3/2015
-# Date Modified:	12/3/2015
-# File Name:		PostgresConnection.py
+# PostgresConnection
 #
 # Overview:
-#	Provides a connection object for PostgresSQL databases.
+#	Provides a connection object for PostgreSQL databases.
 #
 ###############################################################################
 
@@ -116,11 +113,14 @@ class PostgresConnection(BaseConnection):
             result.Message += str(ex)
             return result
     
+    # Retrieves a listing of databases
     def GetDatabases(self):
         return self.QueryString("""SELECT pg_database.datname as "Database" FROM pg_database""")
     
+    # Retrieves a listing of tables
     def GetTables(self):
         return self.QueryString("""SELECT tablename FROM pg_catalog.pg_tables WHERE schemaname != 'pg_catalog' AND schemaname != 'information_schema'""")
-
+    
+    # Retrieve a given table's details
     def DescribeTable(self, tblName):
         return self.QueryString("""SELECT column_name, data_type, character_maximum_length FROM INFORMATION_SCHEMA.COLUMNS WHERE table_name = '{}'""".format(tblName))

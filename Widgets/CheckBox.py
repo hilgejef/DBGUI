@@ -1,3 +1,11 @@
+#########################################################
+# CheckBox
+#
+# Checks/Unchecks when <ENTER> is pressed.
+#
+#########################################################
+
+
 import curses
 import curses.panel
 from BaseWidget import BaseWidget

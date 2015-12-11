@@ -1,11 +1,9 @@
 ###############################################################################
-# Author:		Rich Gagliano
-# Date Created:		11/16/2015
-# Date Modified:	11/19/2015
-# File Name:		CreateDatabase.py
+# CreateDatabase
 #
 # Overview:
-#
+#	Allows the user to create a new database. Only supported under
+#	MySQL databases.
 #
 ###############################################################################
 
@@ -25,10 +23,12 @@ class CreateDatabase(BaseScreen):
         BaseScreen.__init__(self)
 
     def Init(self):
+        # Initialize this screens passive and action widgets
         self.PassiveWidgets.append(Label("Database Name:", CDBCore.CDBCore.MAIN_SCREEN_Y + 3, 3))
         self.ActionWidgets.append(TextBox(1, 16, CDBCore.CDBCore.MAIN_SCREEN_Y + 3, 25))
         self.ActionWidgets.append(Button("Create", self.Create, CDBCore.CDBCore.STATUS_SCREEN_Y - 3, 63))
 
+    # Attempt to create the database
     def Create(self):
         try:
             name = self.ActionWidgets[0].Text
@@ -39,7 +39,6 @@ class CreateDatabase(BaseScreen):
             else:
                 raise Exception(result.Message)
         except Exception as ex:
-            # TODO: Replace with error once multi line is supported
             msg = "Could not create database: " + name
             CDBCore.CDBCore.StatusScreen.AddStatusMessage(msg)
         

@@ -1,8 +1,5 @@
 ###############################################################################
-# Author:		Rich Gagliano
-# Date Created:		11/2/2015
-# Date Modified:	11/8/2015
-# File Name:		MySQLConnection.py
+# MySQLConnection
 #
 # Overview:
 #	Provides a connection object for MySQL databases.
@@ -54,7 +51,7 @@ class MySQLConnection(BaseConnection):
         try:
             self.Connection.close()
         except Exception as ex:
-            #print "Could not close database connection:\n" + str(ex) #TODO: Status notification?
+            # Fail silently.  The user does not need to see this.
             pass
     
     # Internal query function to handle both buffered and string queries
@@ -126,11 +123,14 @@ class MySQLConnection(BaseConnection):
             result.Message += str(ex)
             return result
     
+    # Retrieves a listing of databases
     def GetDatabases(self):
         return self.QueryString("SHOW DATABASES")
     
+    # Retrieves a listing of tables
     def GetTables(self):
         return self.QueryString("SHOW TABLES")
 
+    # Retrieve a given table's details
     def DescribeTable(self, tblName):
         return self.QueryString("DESCRIBE {}".format(tblName))

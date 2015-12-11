@@ -1,3 +1,10 @@
+#########################################################
+# Button
+#
+# Executes actions when <ENTER> is pressed.
+#
+#########################################################
+
 import curses
 import curses.panel
 from Label import BaseLabel
@@ -9,8 +16,8 @@ class BaseButton(BaseLabel):
         self.CallMethod = method
         self.Type = "Button"
         
-    # -- IMO, should be rewritten to be handled in Core, and
-    # keys passed to widget, which will have a key handler
+    # This widget now has the focus.  Read the user input,
+    # and decide what to do next.
     def Active(self):
         selected = True
         # highlight current widget to show it is active
@@ -21,9 +28,6 @@ class BaseButton(BaseLabel):
             
             # capture ENTER, TAB, and BACKTAB keystrokes
             if key in [curses.KEY_ENTER, ord('\n'), 10]:
-                # should I leave the deselecting of the widget for the screen handler object?
-                #   - I think this should be handled here so that the behavior will be consistent
-                #     accross the application. Can't think of a good reason not to do it here. - Rich
                 self.UnHighlight()
                 selected = False
                 self.CallMethod()
@@ -39,9 +43,6 @@ class BaseButton(BaseLabel):
             elif key in [curses.KEY_F1, 77, curses.KEY_F8, 76] and not self.DisableScreenSwitch:
                 selected = False
                 curses.ungetch(key)
-            # Temporary - deselection by any key other than Tab/Enter
-            #else:
-            #    selected = False
 
 """ Button """
 class Button(BaseButton):

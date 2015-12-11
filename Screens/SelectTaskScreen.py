@@ -119,7 +119,7 @@ class SelectTaskScreen(BaseScreen.BaseScreen):
             CDBCore.CDBCore.PopUp = PopUpOk(msg)
             CDBCore.CDBCore.PopUp.MakeActive()
         elif CDBCore.CDBCore.Connection and CDBCore.CDBCore.Connection.DBType == "PostgreSQL" and self.CurrentWidget == 1:
-            msg = "Select Database unavailable for PostgreSQL server.  Please Use a New Connection to access a different database."
+            msg = "Select Database unavailable for PostgreSQL\nserver.\n\nPlease Use a New Connection to access a\ndifferent database."
             CDBCore.CDBCore.StatusScreen.AddStatusMessage(msg)
             CDBCore.CDBCore.PopUp = PopUpOk(msg)
             CDBCore.CDBCore.PopUp.MakeActive()

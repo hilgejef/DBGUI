@@ -1,8 +1,7 @@
 #########################################################
-# Initial take on program flow. will be tested and
-# modified once screens are made.
+# CDBCore
 #
-# 
+# Handles the program flow
 #
 #########################################################
 
@@ -12,7 +11,7 @@ import atexit
 import MainMenu
 import HomeScreen
 import StatusScreen
-#from PopUp import PopUpOkCancel # TESTING ONLY
+from PopUp import PopUpOk
 
 class CDBCore:
     # Constants for Defining Screen Locations
@@ -29,19 +28,19 @@ class CDBCore:
     # Contains the main curses window
     stdscr = ""
   
-    # TODO: set to base connection string object
+    # Set to connection string object
     ConnectionString = ""
 
     # Overriden by Connection object in ConnectionWizard
     Connection = ""
     
-    # TODO: Set to home screen
+    # Set to home screen
     CurrentScreen = ""
     
-    # TODO: Create menu screen
+    # Set to menu screen
     MenuScreen = ""
     
-    # TODO: Create status screen
+    # Set to status screen
     StatusScreen = ""
     
     # Stores the history of screens the user has visited
@@ -56,9 +55,6 @@ class CDBCore:
         if key in [ord('\t'), 9]:
             CDBCore.CurrentScreen.NextWidget()
         # ENTER denotes move to next screen
-        # TODO: Decide if this needs to be expanded for screens with
-        #       multiple exit points, or if this will be handled within
-        #       the screen itself
         elif key in [curses.KEY_ENTER, ord('\n'), 10]:
             if CDBCore.CurrentScreen.Type == "MainMenu":
                 tmpScreen = CDBCore.History[-1]
@@ -69,13 +65,6 @@ class CDBCore:
                 CDBCore.CurrentScreen.Hide()
             CDBCore.CurrentScreen = CDBCore.CurrentScreen.Next()
             CDBCore.CurrentScreen.Show()
-        # # CTRL + TAB denotes go back to previous screen if there is one
-        elif key in [1]: # TODO: identify CTRL+TAB key possibilities
-            if len(CDBCore.History) > 0:
-                if CDBCore.CurrentScreen != CDBCore.MenuScreen:
-                    CDBCore.CurrentScreen.Hide()
-                CDBCore.CurrentScreen = CDBCore.History.pop()
-                CDBCore.CurrentScreen.Show()
         # Access Main Menu -  SHIFT-M or F1
         elif key in [curses.KEY_F1, 77]:
             CDBCore.CurrentScreen.UnHighlight()
@@ -95,9 +84,9 @@ class CDBCore:
                 CDBCore.History.append(CDBCore.CurrentScreen)
                 CDBCore.CurrentScreen = CDBCore.StatusScreen
             CDBCore.CurrentScreen.MakeActive()
+        # This means an unhandled character was passed to the core
+        # Notify the user that the application is going down...
         else:
-            # This means an unhandled character was passed to the core
-            # Notify the user that the application is going down...
             msg = "Unexpected error occured.  Shutting down."
             CDBCore.PopUp = PopUpOk(msg)
             CDBCore.PopUp.MakeActive()

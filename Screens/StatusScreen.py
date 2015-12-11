@@ -1,11 +1,9 @@
 ###############################################################################
-# Author:		    Jonathon Moore
-# Date Created:		11/13/2015
-# Date Modified:	12/10/2015
-# File Name:		StatusScreen.py
+# StatusScreen
 #
-# Overview:         StatusScreen displays messages from the system to the user
-#                   in a scrolling log format.
+# Overview:         
+#	StatusScreen displays messages from the system to the user in a 
+#	scrolling log format.
 #
 ###############################################################################
 

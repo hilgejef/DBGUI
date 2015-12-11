@@ -1,11 +1,8 @@
 ###############################################################################
-# Authors:		    Jeff Hilger, Richard Gagliano, Jonathon Moore
-# Date Created:		12/01/2015
-# Date Modified:	12/10/2015
-# File Name:		ViewTables.py
+# ViewTables
 #
-# Overview:         Displays available tables within a database
-#
+# Overview: 
+# 	Displays available tables
 #
 ###############################################################################
 import sys
@@ -86,15 +83,6 @@ class ViewTables(BaseScreen):
     # Buttons will send to Alter Table on Enter Press
     def SendToAlter(self):
         curses.ungetch('\n')
-        # table = self.DataScreen.ActionWidgets[self.DataScreen.CurrentWidget].Text
-
-        # alterScreen = AlterTable(table, dbName=CDBCore.CDBCore.Connection.Database)
-
-        # CDBCore.CDBCore.History.append(CDBCore.CDBCore.CurrentScreen)
-        # CDBCore.CDBCore.CurrentScreen.Clear()
-        # CDBCore.CDBCore.CurrentScreen.Hide()
-        # CDBCore.CDBCore.CurrentScreen = alterScreen
-        # CDBCore.CDBCore.CurrentScreen.Show(active=False)
 
     def Next(self):
         if self.NumTables:
@@ -103,68 +91,3 @@ class ViewTables(BaseScreen):
             return AlterTable(table)
         else:
             return SelectTaskScreen.SelectTaskScreen()
-
-    # def AddTables(self):
-    #         self.ActionWidgets = []
-
-    #         start = self.CurrentPage * _PAGESIZE_
-    #         end = min((self.CurrentPage + 1) * _PAGESIZE_, self.NumTables )
-
-    #         for offset, name in enumerate(self.Data[start:end]):
-    #             self.ActionWidgets.append(BaseButton(name[0], self.SetTable, 3, 40, 8 + offset * 2, 20,
-    #                 attr={
-    #                     "vert_border" : True,
-    #                     "text_x_center" : True,
-    #                     "y_offset" : 1
-    #                 }
-    #             ))
-
-    #         # Back button goes back 1 page
-    #         backButton = BaseButton("Back", self.BackFunc(), 3, 6, 16, 10,
-    #             attr={
-    #                 "boxed" : True,
-    #                 "text_x_center" : True,
-    #                 "y_offset" : 1
-    #             }
-    #         )
-
-    #         # Next button goes forward 1 page
-    #         nextButton = BaseButton("Next", self.NextFunc(), 3, 6, 16, 64,
-    #             attr={
-    #                 "boxed" : True,
-    #                 "text_x_center" : True,
-    #                 "y_offset" : 1
-    #             }
-    #         )
-
-    #         self.ActionWidgets.append(backButton)
-    #         self.ActionWidgets.append(nextButton)
-
-    # def BackFunc(self):
-    #     def EmptyMethod():
-    #         pass
-
-    #     def BackMethod():
-    #         self.CurrentPage -= 1
-    #         self.AddTables()
-
-    #     if self.CurrentPage == 0:
-    #         return EmptyMethod
-
-    #     else:
-    #         return BackMethod
-
-
-    # def NextFunc(self):
-    #     def EmptyMethod():
-    #         pass
-
-    #     def NextMethod():
-    #         self.CurrentPage += 1
-    #         self.AddTables()
-
-    #     if (self.CurrentPage + 1) * _PAGESIZE_ >= self.NumTables:
-    #         return EmptyMethod
-
-    #     else:
-    #         return NextMethod

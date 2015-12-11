@@ -1,10 +1,8 @@
 ###############################################################################
-# Author:		    Jonathon Moore
-# Date Created:		12/01/2015
-# Date Modified:	12/02/2015
-# File Name:		SelectTaskScreen.py
+# SelectTaskScreen
 #
-# Overview:         Gives options to User for screen to access
+# Overview:         
+#	Gives options to User for screen to access
 #
 #
 ###############################################################################
@@ -139,6 +137,7 @@ class SelectTaskScreen(BaseScreen.BaseScreen):
     def GoToCoreShutdown(self):
         sys.exit(0)
 
+# Test the screen separately
 if __name__ == "__main__":
     user = raw_input('Enter the MySQL db user: ')
     password = raw_input('Enter the MySQL db user password: ')

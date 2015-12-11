@@ -1,10 +1,8 @@
 ###############################################################################
-# Author:		Rich Gagliano
-# Date Created:		11/13/2015
-# Date Modified:	11/15/2015
-# File Name:		ViewDatabases.py
+# ViewDatabases
 #
-# Overview:     Displays databases available within existing connection object
+# Overview:     
+#	Displays databases available within existing connection object
 #
 #
 ###############################################################################
@@ -61,7 +59,7 @@ class ViewDatabases(BaseScreen):
             else:
                 raise Exception(result.Message)
         except Exception as ex:
-            # TODO: Once multi line is supported, add in error message
+            # Could not set the database
             msg = "Could not set the database to: " + name
             CDBCore.CDBCore.StatusScreen.AddStatusMessage(msg)
             self.ActionWidgets[self.CurrentWidget].selected = True
@@ -72,6 +70,7 @@ class ViewDatabases(BaseScreen):
     def Next(self):
         return SelectTaskScreen.SelectTaskScreen()
 
+# For Testing screen separately
 if __name__ == "__main__":
     db = raw_input('Database type (p for Postgres, m for MySQL: ')
     user = raw_input('Enter the db user: ')

@@ -139,10 +139,12 @@ class StatusScreen(BaseScreen):
             try:
                 key = self.PassiveWidgets[currentLabelIndex].Win.getch()
             except:
-                print "currentLabelIndex = ", currentLabelIndex
-                print "self.CursorPos = ", self.CursorPos
-                print "self.LogDisplayPos = ", self.LogDisplayPos
-                sys.exit()
+                CDBCore.CDBCore.StatusScreen.AddStatusMessage("Error displaying messages.  Exiting message log")
+                self.CursorPos = 0
+                self.CursorActive = False
+                self.UpdateLogLabels()
+                curses.ungetch(key);
+                return
             
             if key in [curses.KEY_DOWN, ord('s')]:
                 if self.CursorPos > 0:

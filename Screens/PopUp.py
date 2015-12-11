@@ -1,3 +1,13 @@
+###############################################################################
+# Author:		    Jeff Hilger, Richard Galgliano, Jonathon Moore
+# Date Created:		11/5/2015
+# Date Modified:	12/10/2015
+# File Name:		PopUp.py
+#
+# Overview:         Pop-up Button Objects for displaying various screen pop-ups
+#
+#
+###############################################################################
 import curses
 import curses.panel
 import CDBCore

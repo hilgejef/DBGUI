@@ -118,6 +118,11 @@ class SelectTaskScreen(BaseScreen.BaseScreen):
             CDBCore.CDBCore.StatusScreen.AddStatusMessage(msg)
             CDBCore.CDBCore.PopUp = PopUpOk(msg)
             CDBCore.CDBCore.PopUp.MakeActive()
+        elif CDBCore.CDBCore.Connection and CDBCore.CDBCore.Connection.DBType == "PostgreSQL" and self.CurrentWidget == 1:
+            msg = "Select Database unavailable for PostgreSQL server.  Please Use a New Connection to access a different database."
+            CDBCore.CDBCore.StatusScreen.AddStatusMessage(msg)
+            CDBCore.CDBCore.PopUp = PopUpOk(msg)
+            CDBCore.CDBCore.PopUp.MakeActive()
         elif CDBCore.CDBCore.Connection and CDBCore.CDBCore.Connection.DBType == "PostgreSQL" and self.CurrentWidget == 4:
             msg = "Error: Cannot create databases when using\nPostgreSQL connector.\n\nUse PSQL tool."
             CDBCore.CDBCore.StatusScreen.AddStatusMessage(msg)

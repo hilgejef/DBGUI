@@ -140,7 +140,7 @@ class DataTable(BaseWidget):
                 text = text + spaceFiller
                 if x == self.PosX and y == self.PosY and self.EnableCursor:
                     self.Pad.addstr(2 + y, self.RowLabelWidth + len(self.ColumnDelimiter) + (x * (self.ColWidth + len(self.ColumnDelimiter))), text, curses.A_REVERSE)
-                    self.Text = text
+                    self.Text = self.DataCells[y][x]
                 else:
                     self.Pad.addstr(2 + y, self.RowLabelWidth + len(self.ColumnDelimiter) + (x * (self.ColWidth + len(self.ColumnDelimiter))), text, curses.A_NORMAL)
                 self.Pad.addstr(2 + y, self.RowLabelWidth + len(self.ColumnDelimiter) + (x * (self.ColWidth + len(self.ColumnDelimiter))) + self.ColWidth, self.ColumnDelimiter, curses.A_NORMAL)

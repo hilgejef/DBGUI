@@ -115,6 +115,8 @@ class CDBCore:
         # Prepare curses for use
         #InitCurses()
         
+        CDBCore.StatusScreen.AddStatusMessage("Welcome to Curses Database!")
+        
         # Show the home screen
         CDBCore.CurrentScreen.Show()
         # Show the main menu

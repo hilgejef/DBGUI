@@ -1,3 +1,10 @@
+#########################################################
+# AlterTable
+#
+# Allows the user to add/drop/mod columns, and drop table
+#
+#########################################################
+
 import sys
 import curses
 import CDBCore
@@ -9,7 +16,6 @@ from ResultStatus import ResultStatus
 from MySQLConnection import MySQLConnection
 from TextBox import TextBox
 from DataScreen import DataScreen
-from EditField import EditField
 import SelectTaskScreen
 
 """ Alter Table """
@@ -79,14 +85,6 @@ class AlterTable(BaseScreen):
             }
         )
 
-        # submitButton = BaseButton("Submit", self.AlterMethod, 3, 8, 14, 65, attr=
-        #     {
-        #         'boxed' : True,
-        #         'x_offset' : 1,
-        #         'y_offset': 1
-        #     }
-        # )
-
         self.PassiveWidgets += [tableLabel, addColLabel, addTypeLabel]
         self.AlterScreen = alterScreen
         self.TableLabel = tableLabel
@@ -122,8 +120,6 @@ class AlterTable(BaseScreen):
 
         colName = row[0].Text
         colType = row[1].Text
-
-        # raise Exception(colName, colType)
 
         if CDBCore.CDBCore.Connection.DBType == "MySQL":
             q = "ALTER TABLE {} MODIFY COLUMN {} {}".format(self.Table, colName, colType)
@@ -170,11 +166,8 @@ class AlterTable(BaseScreen):
 
 
     def DropColMethod(self):
-        # rowNum = self.AlterScreen.DataY + self.AlterScreen.CursorY
         rowNum = self.AlterScreen.ActionWidgets[self.AlterScreen.CurrentWidget].Row
         row = self.AlterScreen.AlterWidgets[rowNum]
-
-        # raise Exception(len(self.AlterScreen.AlterWidgets))
 
         colName = row[0].Text
 
@@ -204,21 +197,8 @@ class AlterTable(BaseScreen):
         if result.Success:
             CDBCore.CDBCore.StatusScreen.AddStatusMessage("Drop Table success")
 
-            # Just send back to task screen? Nothing can be done now that the table is gone.
             curses.ungetch('\n')
 
-            # resultData = (["Field", "Type", "", ""], [])
-
-            # self.ActionWidgets.pop(0)
-            # self.PassiveWidgets.append(self.AlterScreen)
-            # self.CurrentWidget = 0
-
-            # self.Table
-
-            # self.AlterScreen.Result = resultData
-            # self.AlterScreen.LoadAlterTable(reset=True)
-
-            # self.MakeActive()
         else:
             CDBCore.CDBCore.StatusScreen.AddStatusMessage("Drop Table failed")
             self.MakeActive()
@@ -226,15 +206,3 @@ class AlterTable(BaseScreen):
     def Next(self):
         return SelectTaskScreen.SelectTaskScreen()
 
-    # def GenerateFields(self):
-    #     resultsObj = self.DataScreen.Result
-    #     fields = {}
-
-    #     dataY = self.DataScreen.DataY
-    #     cursorY = self.DataScreen.CursorY
-
-    #     for idx, field in enumerate(resultsObj[1][dataY + cursorY]):
-    #         header = resultsObj[0][idx]
-    #         fields[header] = field
-
-    #     return fields

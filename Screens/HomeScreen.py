@@ -1,13 +1,9 @@
-###############################################################################
-# Author:		    Jeff Hilger
-# Date Created:		11/5/2015
-# Date Modified:	12/10/2015
-# File Name:		HomeScreen.py
+############################################
+# HomeScreen
 #
-# Overview:         Home splash screen for program start
+# Home splash screen for program start
 #
-#
-###############################################################################
+############################################
 
 import CDBCore
 import Button

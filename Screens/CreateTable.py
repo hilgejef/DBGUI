@@ -1,11 +1,7 @@
 ###############################################################################
-# Author:		Rich Gagliano
-# Date Created:		11/21/2015
-# Date Modified:	11/23/2015
-# File Name:		CreateTable.py
+# CreateTable
 #
-# Overview:
-#
+# Allows user to enter table specification and creates table
 #
 ###############################################################################
 
@@ -55,7 +51,6 @@ class CreateTable(BaseScreen):
             # This is a new table name
             return True
         except Exception as ex:
-            # TODO: Replace with error once multi line is supported
             msg = "Could not retrieve list of tables."
             CDBCore.CDBCore.StatusScreen.AddStatusMessage(msg)
             return False
@@ -65,9 +60,7 @@ class CreateTable(BaseScreen):
             self.Name = self.ActionWidgets[0].Text
             self.Columns = int(self.ActionWidgets[1].Text)
             
-            # For now impose limit on columns until pagination
             if self.Columns > 10 or self.Columns < 1:
-                # TODO: Remove and include pagination
                 msg = "Arbitrary limitation of 1-10 columns not met!"
                 CDBCore.CDBCore.StatusScreen.AddStatusMessage(msg)
                 self.Columns = 0
@@ -104,6 +97,7 @@ class CreateTable(BaseScreen):
     def Next(self):
         return CreateTableColumns(self.Name, self.Columns)
 
+# STANDALONE TESTING
 if __name__ == "__main__":
     db = raw_input('Database type (p for Postgres, m for MySQL: ')
     user = raw_input('Enter the db user: ')

@@ -1,11 +1,7 @@
 ###############################################################################
-# Author:		    Jeff Hilger
-# Date Created:		11/5/2015
-# Date Modified:	12/10/2015
-# File Name:		DataScreen.py
+# DataScreen
 #
-# Overview:         Screen that displays Table data
-#
+# Collection of widgets that emulates a data table
 #
 ###############################################################################
 
@@ -15,10 +11,7 @@ from Label import BaseLabel
 from Button import BaseButton
 from TextBox import ModTextBox
 from BaseScreen import BaseScreen
-#import CDBCore
 
-# Data Screen is an intermediary between Widget and Screen
-# that allows a collection of Widgets to emulate a data table Widget
 """ DataScreen """
 class DataScreen(BaseScreen):
 
@@ -297,23 +290,6 @@ class DataScreen(BaseScreen):
                     self.ActionWidgets.append(dropButton)
 
                     self.AlterWidgets[yidx].append(dropButton)
-
-            # self.AlterWidgets.append(alterRow)
-
-    # def DropMethod(self):
-    #     rowNum = self.ActionWidgets[self.CurrentWidget].Row
-    #     row = self.AlterWidgets[rowNum]
-
-    #     colName = row[0]
-
-    #     q = "ALTER TABLE {} DROP COLUMN {}".format(self.Table, colName)
-    #     result = CDBCore.Connection.QueryString(q)
-
-    #     if result.Success:
-    #         q = ""
-    #         self.
-    #     else:
-    #         CDBCore.StatusScreen.AddStatusMessage("Drop Col failed")
 
     # Load with WASD/arrow-key movement
     def Active(self):

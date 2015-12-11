@@ -2,17 +2,7 @@
 # BaseConnection
 #
 # Overview:
-#	Provides the base connection framework for specific DB connection
-#	objects. (To include MySQL and PostgreSQL).
-#
-#	Choosing to limit common attributes to:
-#		- Username
-#		- Password
-#		- Host
-#		- Port
-#		- Database
-#		- DBType
-#
+#	Provides the base connection framework for specific DB connection objects. 
 #
 ###############################################################################
 

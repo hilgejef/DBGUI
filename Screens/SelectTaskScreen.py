@@ -18,7 +18,6 @@ import Button
 import Label
 import ViewTables
 import ViewDatabases
-#from EditField import EditField
 from CreateTable import CreateTable
 from QueryTable import QueryTable
 from QueryDatabase import QueryDatabase

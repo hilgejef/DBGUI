@@ -1,3 +1,13 @@
+###############################################################################
+# Authors:		    Jeff Hilger, Richard Gagliano, Jonathon Moore
+# Date Created:		12/01/2015
+# Date Modified:	12/10/2015
+# File Name:		QueryTable.py
+#
+# Overview:         Submits a mySQL/postgreSQL query 
+#
+#
+###############################################################################
 import sys
 import curses
 import CDBCore

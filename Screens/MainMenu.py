@@ -1,3 +1,14 @@
+###############################################################################
+# Author:		    Jeff Hilger
+# Date Created:		11/5/2015
+# Date Modified:	12/10/2015
+# File Name:		MainMenu.py
+#
+# Overview:         Main Menu screen for program
+#
+#
+###############################################################################
+
 import sys
 import curses
 from BaseScreen import BaseScreen

@@ -4,7 +4,7 @@
 # Date Modified:	11/15/2015
 # File Name:		ViewDatabases.py
 #
-# Overview:
+# Overview:     Displays databases available within existing connection object
 #
 #
 ###############################################################################

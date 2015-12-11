@@ -1,3 +1,13 @@
+###############################################################################
+# Authors:		    Jeff Hilger, Richard Gagliano, Jonathon Moore
+# Date Created:		12/01/2015
+# Date Modified:	12/10/2015
+# File Name:		ViewTables.py
+#
+# Overview:         Displays available tables within a database
+#
+#
+###############################################################################
 import sys
 import curses
 import CDBCore

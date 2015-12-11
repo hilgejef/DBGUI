@@ -1,3 +1,10 @@
+#########################################################
+# Label
+#
+# Presents text to the user.
+#
+#########################################################
+
 import curses
 import curses.panel
 from BaseWidget import BaseWidget

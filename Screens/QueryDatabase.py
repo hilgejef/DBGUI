@@ -1,3 +1,10 @@
+###############################################################################
+# QueryDatabase
+#
+# Allows the user to query the currently connected database
+#
+###############################################################################
+
 import sys
 import curses
 import CDBCore
@@ -9,7 +16,6 @@ from ResultStatus import ResultStatus
 from MySQLConnection import MySQLConnection
 from TextBox import TextBox
 from DataScreen import DataScreen
-from EditField import EditField
 
 class QueryDatabase(BaseScreen):
     def __init__(self, dbName="", table=""):
@@ -115,29 +121,3 @@ class QueryDatabase(BaseScreen):
                 self.PassiveWidgets.pop()
             self.DataScreen.Hide()
             self.DataScreen = None
-
-    # def GenerateFields(self):
-    #     resultsObj = self.DataScreen.Result
-    #     fields = {}
-
-    #     dataY = self.DataScreen.DataY
-    #     cursorY = self.DataScreen.CursorY
-
-    #     for idx, field in enumerate(resultsObj[1][dataY + cursorY]):
-    #         header = resultsObj[0][idx]
-    #         fields[header] = field
-
-    #     return fields
-
-
-    # def DataMethod(self):
-    #     dataX = self.DataScreen.DataX
-    #     cursorX = self.DataScreen.CursorX
-
-    #     col = self.DataScreen.Result[0][dataX + cursorX]
-    #     fields = self.GenerateFields()
-
-    #     CDBCore.History.append(CDBCore.CurrentScreen)
-    #     CDBCore.CurrentScreen.Clear()
-    #     CDBCore.CurrentScreen = EditField(allFields=fields, colToUpdate=col)
-    #     CDBCore.CurrentScreen.Show()

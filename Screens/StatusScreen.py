@@ -48,8 +48,8 @@ class StatusScreen(BaseScreen):
         self.PassiveWidgets[0].ToBottom()
         
         # label widget for persistent messages
-        self.PassiveWidgets.append(Label("F1/Shift-M: Main Menu", genLabelY, genLabelX))
-        self.PassiveWidgets.append(Label("F8/Shift-L: Message Log", genLabelY + 1, genLabelX))
+        self.PassiveWidgets.append(Label("Shift-M: Main Menu", genLabelY, genLabelX))
+        self.PassiveWidgets.append(Label("Shift-L: Message Log", genLabelY + 1, genLabelX))
         self.PassiveWidgets[1].ToTop()
         
         # label widgets for logged system messages
@@ -122,10 +122,11 @@ class StatusScreen(BaseScreen):
         self.Show()
         
     def UpdatePersistentMessage(self, msgString, n=1):
-        # updates the persistent message screen
-        self.PassiveWidgets[n] = Label(msgString[:self.logLabelX - 4], self.logLabelY, self.logLabelX)
-        self.PassiveWidgets[n].ToTop()
-        self.Show()
+        if (n == 1) or (n == 2):
+            # updates the persistent message screen
+            self.PassiveWidgets[n] = Label(msgString[:28], self.ScreenStartY + n, 1)
+            self.PassiveWidgets[n].ToTop()
+            self.Show()
         
     # overwrite BaseScreen function
     def MakeActive(self):

@@ -70,8 +70,10 @@ class CDBCore:
             CDBCore.CurrentScreen.UnHighlight()
             CDBCore.CurrentScreen.Update()
             if CDBCore.CurrentScreen.Type == "MainMenu":
+                CDBCore.StatusScreen.UpdatePersistentMessage("Shift-M: Main Menu", 1)
                 CDBCore.CurrentScreen = CDBCore.History.pop()
             else:
+                CDBCore.StatusScreen.UpdatePersistentMessage("Shift-M: Exit Main Menu", 1)
                 CDBCore.History.append(CDBCore.CurrentScreen)
                 CDBCore.CurrentScreen = CDBCore.MenuScreen
             CDBCore.CurrentScreen.MakeActive()
@@ -79,8 +81,10 @@ class CDBCore:
         elif key in [curses.KEY_F8, 76]:
             CDBCore.CurrentScreen.UnHighlight()
             if CDBCore.CurrentScreen.Type == "StatusScreen":
+                CDBCore.StatusScreen.UpdatePersistentMessage("Shift-L: Message Log", 2)
                 CDBCore.CurrentScreen = CDBCore.History.pop()
             else:
+                CDBCore.StatusScreen.UpdatePersistentMessage("Shift-L: Exit Message Log", 2)
                 CDBCore.History.append(CDBCore.CurrentScreen)
                 CDBCore.CurrentScreen = CDBCore.StatusScreen
             CDBCore.CurrentScreen.MakeActive()

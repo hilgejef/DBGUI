@@ -98,12 +98,12 @@ class CDBCore:
     # Used to test final program flow
     @staticmethod
     def FinalMain(debug=False):      
-        CDBCore.StatusScreen.AddStatusMessage("Welcome to Curses Database!")
-        
         # Prepare curses for use
         CDBCore.InitCurses(debug)
         CDBCore.InitColor()
         CDBCore.InitScreens()
+
+        CDBCore.StatusScreen.AddStatusMessage("Welcome to Curses Database!")
         
         # Show the home screen
         CDBCore.CurrentScreen.Show()

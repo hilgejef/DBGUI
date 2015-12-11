@@ -113,7 +113,7 @@ class SelectTaskScreen(BaseScreen.BaseScreen):
             CDBCore.CDBCore.PopUp = PopUpOk(msg)
             CDBCore.CDBCore.PopUp.MakeActive()
         # if a connection is established but a database is not set
-        elif CDBCore.CDBCore.Connection and not CDBCore.CDBCore.Connection.Database and (self.CurrentWidget == 4 or self.CurrentWidget == 5):
+        elif CDBCore.CDBCore.Connection and not CDBCore.CDBCore.Connection.Database and (self.CurrentWidget == 2 or self.CurrentWidget == 3 or self.CurrentWidget == 5):
             msg = "Error: No Database Detected.\nSelect or Create a Database first."
             CDBCore.CDBCore.StatusScreen.AddStatusMessage(msg)
             CDBCore.CDBCore.PopUp = PopUpOk(msg)

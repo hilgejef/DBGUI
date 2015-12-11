@@ -1,0 +1,110 @@
+###############################################################################
+Getting Started
+###############################################################################
+
+Software Requirements
+-------------------------------------------------------------------------------
+
+  The following software is required:
+  Linux OS (Debian/CentOS/Ubuntu officially supported)
+  Python 2.6
+  Python psycopg2 module
+  Python mysql.connector module
+
+  The following software is recommended:
+  MySQL
+  PostgreSQL
+
+  
+Software Installation
+-------------------------------------------------------------------------------
+
+  Installation instructions are included here for a full installation from 
+  scratch using a Debian based system.  Other Linux distributions will be able 
+  to run the application, but steps will be different for obtaining MySQL, 
+  PostgreSQL, Psycopg, and mysql.connector libraries.  The concept remains the 
+  same. You will need root access to fully complete the installation. If you do 
+  not use ‘sudo’, make sure to run the sudo commands under a root account instead.
+
+    1.	Begin by fully installing a basic Debian system. 
+        (Desktop environment is optional.)
+
+    2.	Perform a full system update/upgrade.
+	  sudo apt-get update
+	  sudo apt-get upgrade
+
+    3.	Install MySQL (If PostgreSQL is desired instead, skip to step 5.)
+	  sudo apt-get install mysql-server
+
+    4.	Test your installation.  When prompted Enter the password you created 
+        during installation.  (If you skipped step 3, move on to step 5.) 
+	  mysql –u root –p
+
+    5.	Install PostgreSQL (if MySQL was installed, this step is optional. 
+        Skip to step 7.)
+	  sudo apt-get install postgresql postgresql-client
+
+    6.	Open the PSQL shell and add a password to the default postgres user. 
+        Also add a database to use later. (If you skipped step 5, move on to step 7.) 
+	  sudo –u postgres psql
+	  ALTER USER postgres password ‘<ENTER A PASSORD HERE’>;
+	  CREATE DATABASE <DBNAME>;
+
+    7.	Install the Psycopg Python module.
+	  sudo apt-get install python-psycopg2
+
+    8.	Install the python-mysql.connector module.
+	  sudo apt-get install python-mysql.connector
+
+    9.	Place the CursesDatabase.py file and ‘app’ directory in a location on the 
+        newly setup Debian machine that a user can access to run the program.
+
+        
+Running the Application
+-------------------------------------------------------------------------------
+    
+    To start the application, open a terminal, and navigate to the directory where CursesDatabase.py is located. Run:
+	  python CursesDatabase.py
+
+	  
+User Controls
+-------------------------------------------------------------------------------
+
+  The user navigates the interface by using navigation commands.  
+
+  Change widget (TAB): 
+    Pressing <TAB> cycles through the widgets for a given screen.
+
+  Activate a Widget (ENTER): 
+    Pressing <ENTER> activates the currently highlighted widget.
+
+    Textbox: Pressing <ENTER> initiates text capture mode, where a user can enter text.  
+             Pressing <ENTER> again puts the text box back into read only mode.
+
+    Checkbox: Pressing <ENTER> toggles the checkbox on or off.
+
+    Button: Pressing <ENTER> executes the action associated with the button.
+
+  Go to Menu (SHIFT + M):
+    Pressing <SHIFT  + M> takes the user to the main menu.  
+    From here, <TAB> and <ENTER> can be used to navigate the menu like any other
+    screen.  Pressing <SHIFT + M> again will return control to the current main screen.
+
+  Go to Status Screen (SHIFT + L):
+    Pressing <SHIFT  + L> takes the user to the status screen, where a running log of 
+    statuses are kept.  From here, the user can press <W> to move up an entry in the 
+    log, or <S> to move down an entry in the log.  On any entry, the user can 
+    press <ENTER> to open a popup showing the full log entry.  Pressing <SHIFT + L> 
+    again will return control to the current main screen.
+
+  Datatable Navigation (ASDW):
+    The contents of a datatable navigated through the <A>, <S>, <D>, and <W> keys.
+    <A>: Move left one cell
+    <S>: Move down one cell
+    <D>: Move right one cell 
+    <W>: Move up one cell
+
+
+Complimentary Getting Started Video Guide
+-------------------------------------------------------------------------------
+http://web.engr.oregonstate.edu/~gaglianr/CS419/FinalGettingStarted/CS419_Group10_GettingStarted.wmv

@@ -1,11 +1,7 @@
 ###############################################################################
-# Author:		Rich Gagliano
-# Date Created:		11/21/2015
-# Date Modified:	11/23/2015
-# File Name:		CreateTableColumns.py
+# CreateTableColumns
 #
-# Overview:
-#
+# Allows user to enter column names/types and then creates table
 #
 ###############################################################################
 
@@ -109,7 +105,8 @@ class CreateTableColumns(BaseScreen):
     # Go back to the selection screen
     def Next(self):
         return SelectTaskScreen.SelectTaskScreen()
-        
+
+# STANDALONE TESTING
 if __name__ == "__main__":
     user = raw_input('Enter the MySQL db user: ')
     password = raw_input('Enter the MySQL db user password: ')

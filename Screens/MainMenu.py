@@ -1,13 +1,9 @@
-###############################################################################
-# Author:		    Jeff Hilger
-# Date Created:		11/5/2015
-# Date Modified:	12/10/2015
-# File Name:		MainMenu.py
+###################################################################
+# MainMenu
 #
-# Overview:         Main Menu screen for program
+# MainMenu allows the user to select task/exit on any screen
 #
-#
-###############################################################################
+###################################################################
 
 import sys
 import curses
@@ -23,8 +19,6 @@ class MainMenu(BaseScreen):
         self.NextScreen = SelectTaskScreen.SelectTaskScreen
         taskButton = BaseButton("Select Task", self.GoToTaskScreen, 3, 
                        len("Select Task") + 2, 1, 1, attr={"boxed": True, "y_offset" : 1, "x_offset" : 1})
-        # OptButton = BaseButton("Options", testMethod, 3, len("Options") + 2, 1, 
-        #                CWizButton.X + len(CWizButton) + 2, attr={"boxed": True, "y_offset" : 1, "x_offset" : 1})
         exitButton = BaseButton("Exit", sys.exit, 3, len("Exit") + 2, 1, 
                        taskButton.X + len(taskButton) + 2, attr={"boxed": True, "y_offset" : 1, "x_offset" : 1})
 

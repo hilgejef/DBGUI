@@ -1,3 +1,10 @@
+#########################################################
+# BaseScreen
+#
+# Implements core functionality for other screens
+#
+#########################################################
+
 class BaseScreen:
     def __init__(self, screen_type=""):
         self.Type = screen_type
